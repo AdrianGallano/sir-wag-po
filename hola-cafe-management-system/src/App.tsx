@@ -5,6 +5,8 @@ import { Navigate } from 'react-router-dom'
 
 /* Pages */
 import SamplePage from './pages/sample-page'
+import AnalyticsPage from './pages/analytics-page'
+import InventoryPage from './pages/inventory-page'
 
 function App(): ReactNode {
   return (
@@ -12,6 +14,8 @@ function App(): ReactNode {
       <Route path="/" element={<Layout />}  >
         <Route index path="" element={<Navigate to="sample" />} />
         <Route path="sample" element={<SamplePage />} />
+        <Route path="inventory" element={<InventoryPage />} />
+        <Route path="analytics" element={<AnalyticsPage />} />
       </Route>
     </Routes>
   )
