@@ -37,10 +37,10 @@ const StockAnalyticsCard = () => {
     /* Show the stock in a analytic card */
 
     return (
-        <Card className="flex items-center justify-between p-4 red">
+        <Card className="flex items-center p-4 red">
             <ShoppingBasket
                 className="bg-gray-300 p-2 rounded-full"
-                size={30}
+                size={36}
             />
             <div>
                 <CardHeader className="py-0">
@@ -52,8 +52,8 @@ const StockAnalyticsCard = () => {
                 <CardContent className="text-xl font-semibold py-0">100 avg
                 </CardContent>
             </div>
-            <div className="h-16 w-16">
-                <ChartContainer className="translate-y-1/2" config={chartConfig}>
+            <div className="h-16 w-24 flex">
+                <ChartContainer config={chartConfig}>
                     <LineChart
                         accessibilityLayer
                         data={stockData}

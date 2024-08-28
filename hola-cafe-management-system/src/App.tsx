@@ -4,9 +4,7 @@ import Layout from "./components/structure/Layout";
 import { Navigate } from "react-router-dom";
 
 /* Pages */
-import SamplePage from "./pages/sample-page";
 import AnalyticsPage from "./pages/analytics-page";
-import InventoryPage from "./pages/inventory-page";
 import PayrollPage from "./pages/payroll-page";
 
 function App(): ReactNode {
@@ -14,8 +12,6 @@ function App(): ReactNode {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index path="" element={<Navigate to="sample" />} />
-        <Route path="sample" element={<SamplePage />} />
-        <Route path="inventory" element={<InventoryPage />} />
         <Route path="payroll" element={<PayrollPage />} />
         <Route path="analytics" element={<AnalyticsPage />} />
       </Route>
