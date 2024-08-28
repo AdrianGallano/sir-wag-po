@@ -6,7 +6,7 @@ import SidebarFilter from './sidebar-filter'
 
 const InventorySidebarComponent = () => {
   return (
-    <div className="w-72 bg-white border-r p-4 text-white flex flex-col">
+    <div className="w-72 bg-white border-r-2  p-4 text-white flex flex-col">
       <SidebarHeader />
       <SidebarFilter />
     </div>

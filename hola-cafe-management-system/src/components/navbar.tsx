@@ -1,4 +1,4 @@
-import { Package2, Settings, LineChart, Wallet } from "lucide-react";
+import { Coffee, Settings, LineChart, Wallet, Blocks } from "lucide-react";
 import {
   Tooltip,
   TooltipTrigger,
@@ -14,9 +14,23 @@ const Navbar = () => {
           href="#"
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
-          <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
+          <Coffee className="h-4 w-4 transition-all group-hover:scale-110" />
           <span className="sr-only">Learning Buddy</span>
         </a>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href="/inventory"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              >
+                <Blocks className="h-5 w-5" />
+                <span className="sr-only">Inventory</span>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side="right">Inventory</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -25,12 +39,13 @@ const Navbar = () => {
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
                 <Wallet className="h-5 w-5" />
-                <span className="sr-only">Notes</span>
+                <span className="sr-only">Payroll</span>
               </a>
             </TooltipTrigger>
-            <TooltipContent side="right">Notes</TooltipContent>
+            <TooltipContent side="right">Payroll</TooltipContent>
           </Tooltip>
         </TooltipProvider>
+      
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
