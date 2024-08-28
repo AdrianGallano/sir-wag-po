@@ -1,8 +1,8 @@
 import React from 'react'
 
 //imported components
-import HeaderSearchbar from '../inventory-header/header-searchbar'
-import HeaderWrapper from '../inventory-header/header-wrapper'
+import InventoryProductCards from './inventory-product-cards'
+import HeaderWrapper from './inventory-header/header-wrapper'
 
 const MainInventory = () => {
   return (
@@ -10,9 +10,7 @@ const MainInventory = () => {
         {/* Header */}
         <HeaderWrapper />
         {/* Product List */}
-        <section className="flex-1 p-4 overflow-y-auto">
-          {/* Product list content */}
-        </section>
+        <InventoryProductCards />
     </div>
   )
 }
