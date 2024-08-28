@@ -12,7 +12,7 @@ import FIlterReset from './filter-product-reset'
 
 const SidebarFilter = () => {
   return (
-    <div className="p-4 bg-gray-900 text-white">
+    <div className="p-4 bg-white text-black">
       {/* Product Status */}
       <FilterProductStatus/>
       {/* Product Type */}

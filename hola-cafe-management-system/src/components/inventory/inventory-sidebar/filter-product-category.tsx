@@ -1,12 +1,55 @@
 import React from 'react'
+//imported dependencies
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu'
+import { Button } from '@/components/ui/button'
+
+
+type Checked = DropdownMenuCheckboxItemProps["checked"]
 
 const FilterProductCategory = () => {
+  const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
+  const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
+  const [showPanel, setShowPanel] = React.useState<Checked>(false)
   return (
     <div className='mb-4'>
-        <h3 className="text-gray-400 text-sm font-semibold">CATEGORY</h3>
-        <select className="w-full p-2 bg-gray-800 hover:bg-gray-600 text-white rounded">
-          <option>All product</option>
-        </select>
+        <h3 className="text-gray-800 text-xs font-semibold">CATEGORY</h3>
+        <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button className='w-full' variant="outline">All Product</Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent className="w-56">
+      <DropdownMenuLabel>Appearance</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuCheckboxItem
+        checked={showStatusBar}
+        onCheckedChange={setShowStatusBar}
+      >
+        Status Bar
+      </DropdownMenuCheckboxItem>
+      <DropdownMenuCheckboxItem
+        checked={showActivityBar}
+        onCheckedChange={setShowActivityBar}
+        disabled
+      >
+        Activity Bar
+      </DropdownMenuCheckboxItem>
+      <DropdownMenuCheckboxItem
+        checked={showPanel}
+        onCheckedChange={setShowPanel}
+      >
+        Panel
+      </DropdownMenuCheckboxItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
       </div>
   )
 }
