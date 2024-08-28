@@ -11,7 +11,7 @@ function App(): ReactNode {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index path="" element={<Navigate to="sample" />} />
+        <Route index path="" element={<Navigate to="payroll" />} />
         <Route path="payroll" element={<PayrollPage />} />
         <Route path="analytics" element={<AnalyticsPage />} />
       </Route>

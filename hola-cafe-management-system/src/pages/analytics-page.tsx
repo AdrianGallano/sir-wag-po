@@ -3,6 +3,9 @@ import ProfitAnalyticsCard from "@/components/analytics/profit-analytics-card"
 import StockAnalyticsCard from "@/components/analytics/inventory-analytics"
 import CustomerAnalyticsCard from "@/components/analytics/customer-analytics"
 import RevenueAnalyticsCard from "@/components/analytics/revenue-analytics"
+import { BigAnalytics } from "@/components/analytics/big-analytics"
+import { SideAnalytics } from "@/components/analytics/side-analytics"
+
 
 const AnalyticsPage = () => {
     /* 
@@ -23,6 +26,14 @@ const AnalyticsPage = () => {
                 <ProfitAnalyticsCard />
                 <CustomerAnalyticsCard />
                 <RevenueAnalyticsCard />
+            </div>
+            <div className="grid grid-cols-5 gap-4"> {/* first analytics 5 cards block  */}
+                <div className="col-span-3">
+                    <BigAnalytics />
+                </div>
+                <div className="col-span-2">
+                    <SideAnalytics/>
+                </div>
             </div>
         </main>
     )
