@@ -12,7 +12,7 @@ const TotalCostCard = () => {
         />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">₱28,334</div>
+        <div className="text-2xl font-bold text-zinc-800">₱28,334</div>
       </CardContent>
     </Card>
   );

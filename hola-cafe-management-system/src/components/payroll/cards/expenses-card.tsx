@@ -9,7 +9,7 @@ const ExpenseCard = () => {
         <Wallet className="p-2 bg-black text-white rounded-full" size={30} />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">₱28,000</div>
+        <div className="text-2xl font-bold text-zinc-800">₱28,000</div>
       </CardContent>
     </Card>
   );

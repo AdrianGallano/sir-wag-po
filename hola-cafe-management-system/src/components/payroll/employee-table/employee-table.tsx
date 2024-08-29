@@ -111,7 +111,7 @@ const EmployeeTable = () => {
   ];
 
   return (
-    <Card>
+    <Card className="border border-gray-300 rounded-md shadow-md">
       <CardHeader className="flex md:flex-row flex-col justify-between">
         <div>
           <CardTitle>Employee List</CardTitle>

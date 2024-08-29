@@ -2,6 +2,10 @@ import { TableRow, TableCell } from "../../ui/table";
 import ActionButton from "./action-btn";
 
 const EmployeeList = ({ employee }: any) => {
+  /* 
+
+  */
+
   return (
     <TableRow className="font-medium">
       <TableCell className="hidden sm:table-cell">{employee.id}</TableCell>
@@ -12,7 +16,7 @@ const EmployeeList = ({ employee }: any) => {
       </TableCell>
       <TableCell className="hidden md:table-cell">{employee.salary}</TableCell>
       <TableCell className="hidden md:table-cell">{employee.bonus}</TableCell>
-      <TableCell className="hidden md:table-cell ">
+      <TableCell className="hidden md:table-cell">
         <span
           className={`${
             employee.status === "Completed"
