@@ -1,6 +1,6 @@
 import React from 'react';
 import { Ellipsis } from 'lucide-react'; 
-import pumaImage from '../product-images/puma.jpg'
+import pumaImage from '../../product-images/puma.jpg'
 
 const products = [
   {
@@ -60,7 +60,7 @@ const products = [
   },
 ];
 
-export function InventoryProductCards() {
+export function InventoryProductHorizontalCards() {
   return (
     <div className="space-y-4 ml-4 w-[96.4%]">
       {products.map((product, index) => (
@@ -109,4 +109,4 @@ export function InventoryProductCards() {
   );
 }
 
-export default InventoryProductCards;
+export default InventoryProductHorizontalCards;

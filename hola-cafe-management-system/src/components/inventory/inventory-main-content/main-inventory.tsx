@@ -1,7 +1,8 @@
 import React from 'react'
 
 //imported components
-import InventoryProductCards from './inventory-product-cards'
+import InventoryProductHorizontalCards from './Product-list/inventory-product-horizontalcards'
+import InventoryProductVerticalCards from './Product-list/inventory-product-verticalcards'
 import HeaderWrapper from './inventory-header/header-wrapper'
 
 const MainInventory = () => {
@@ -10,7 +11,8 @@ const MainInventory = () => {
         {/* Header */}
         <HeaderWrapper />
         {/* Product List */}
-        <InventoryProductCards />
+        <InventoryProductHorizontalCards />
+        <InventoryProductVerticalCards />
     </div>
   )
 }
