@@ -1,5 +1,5 @@
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { History } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 
 const PendingPaymentCard = () => {
   return (
@@ -9,7 +9,7 @@ const PendingPaymentCard = () => {
         <History className="p-2 bg-black text-white rounded-full" size={30} />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">₱15,000</div>
+        <div className="text-2xl font-bold text-zinc-800">₱15,000</div>
       </CardContent>
     </Card>
   );

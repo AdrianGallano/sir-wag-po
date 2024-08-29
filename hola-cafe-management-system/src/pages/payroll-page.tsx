@@ -1,8 +1,8 @@
-import EmployeeCard from "@/components/payroll/employeecard";
-import EmployeeList from "@/components/payroll/employeelist";
-import ExpenseCard from "@/components/payroll/expensescard";
-import PendingPaymentCard from "@/components/payroll/pendingpaymentcard";
-import TotalCostCard from "@/components/payroll/totalpayrollcard";
+import EmployeeCard from "@/components/payroll/cards/employee-card";
+import ExpenseCard from "@/components/payroll/cards/expenses-card";
+import PendingPaymentCard from "@/components/payroll/cards/pendingpayment-card";
+import TotalCostCard from "@/components/payroll/cards/totalpayroll-card";
+import EmployeeTable from "@/components/payroll/employee-table/employee-table";
 
 const PayrollPage = () => {
   /* shows the overview of the payroll Disbursement*/
@@ -18,7 +18,7 @@ const PayrollPage = () => {
         <EmployeeCard />
       </div>
       <div className="">
-        <EmployeeList />
+        <EmployeeTable />
       </div>
     </main>
   );

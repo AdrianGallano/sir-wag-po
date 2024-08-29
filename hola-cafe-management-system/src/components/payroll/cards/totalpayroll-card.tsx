@@ -1,5 +1,5 @@
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { PhilippinePeso } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 
 const TotalCostCard = () => {
   return (
@@ -12,7 +12,7 @@ const TotalCostCard = () => {
         />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">₱28,334</div>
+        <div className="text-2xl font-bold text-zinc-800">₱28,334</div>
       </CardContent>
     </Card>
   );
