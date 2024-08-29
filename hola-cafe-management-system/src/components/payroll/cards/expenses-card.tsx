@@ -1,5 +1,5 @@
 import { Wallet } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "../../ui/card";
 
 const ExpenseCard = () => {
   return (
