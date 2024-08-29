@@ -12,7 +12,7 @@ function App(): ReactNode {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index path="" element={<Navigate to="invetory" />} />
+        <Route index path="" element={<Navigate to="inventory" />} />
         <Route path="inventory" element={<InventoryPage />} />
         <Route path="payroll" element={<PayrollPage />} />
         <Route path="analytics" element={<AnalyticsPage />} />
