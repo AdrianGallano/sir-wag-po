@@ -1,5 +1,5 @@
 import { UserRound } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "../../ui/card";
 
 const EmployeeCard = () => {
   return (
@@ -9,7 +9,7 @@ const EmployeeCard = () => {
         <UserRound className="p-2 bg-black text-white rounded-full" size={30} />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">22</div>
+        <div className="text-2xl font-bold text-zinc-800">22</div>
       </CardContent>
     </Card>
   );
