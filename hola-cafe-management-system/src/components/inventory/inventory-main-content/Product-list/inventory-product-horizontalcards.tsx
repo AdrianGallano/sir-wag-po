@@ -1,66 +1,12 @@
 import React from 'react';
-import { Ellipsis } from 'lucide-react'; 
-import pumaImage from '../../product-images/puma.jpg'
+import { Ellipsis } from 'lucide-react';
+import { Product } from '../../models/products-interface';
 
-const products = [
-  {
-    product_image: pumaImage,
-    product_name: "Adidas NEO Light Green 36",
-    variants: "",
-    category: "Man Shoes",
-    product_type: "Stacked Product",
-    stock: "12 in stock",
-    stock_status: "low",
-    retail_price: "$280.00",
-    wholesale_price: "$300.00",
-  },
-  {
-    product_image:pumaImage,
-    product_name: "Adidas NEO Light Green 36",
-    variants: "",
-    category: "Man Shoes",
-    product_type: "Stacked Product",
-    stock: "12 in stock",
-    stock_status: "low",
-    retail_price: "$280.00",
-    wholesale_price: "$300.00",
-  },
-  {
-    product_image:pumaImage,
-    product_name: "Adidas NEO Light Green 36",
-    variants: "",
-    category: "Man Shoes",
-    product_type: "Stacked Product",
-    stock: "12 in stock",
-    stock_status: "low",
-    retail_price: "$280.00",
-    wholesale_price: "$300.00",
-  },
-  {
-    product_image:pumaImage,
-    product_name: "Adidas NEO Light Green 36",
-    variants: "",
-    category: "Man Shoes",
-    product_type: "Stacked Product",
-    stock: "12 in stock",
-    stock_status: "low",
-    retail_price: "$280.00",
-    wholesale_price: "$300.00",
-  },
-  {
-    product_image:pumaImage,
-    product_name: "Adidas NEO Light Green 36",
-    variants: "",
-    category: "Man Shoes",
-    product_type: "Stacked Product",
-    stock: "12 in stock",
-    stock_status: "low",
-    retail_price: "$280.00",
-    wholesale_price: "$300.00",
-  },
-];
+interface InventoryProductHorizontalCardsProps {
+  products: Product[];
+}
 
-export function InventoryProductHorizontalCards() {
+export function InventoryProductHorizontalCards({ products }: InventoryProductHorizontalCardsProps) {
   return (
     <div className="space-y-4 ml-4 w-[96.4%]">
       {products.map((product, index) => (

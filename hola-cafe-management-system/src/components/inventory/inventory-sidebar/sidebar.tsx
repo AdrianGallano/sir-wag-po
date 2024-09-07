@@ -1,16 +1,18 @@
-import React from 'react'
+import React from 'react';
+import SidebarHeader from './sidebar-header';
+import SidebarFilter from './sidebar-filter';
 
-//imported components
-import SidebarHeader from './sidebar-header'
-import SidebarFilter from './sidebar-filter'
+interface SidebarComponentProps {
+  onFilterChange: (filter: { category?: string; stockStatus?: string }) => void;
+}
 
-const InventorySidebarComponent = () => {
+const InventorySidebarComponent: React.FC<SidebarComponentProps> = ({ onFilterChange }) => {
   return (
     <div className="w-72 bg-white border-r-2  p-4 text-white flex flex-col">
       <SidebarHeader />
-      <SidebarFilter />
+      <SidebarFilter onFilterChange={onFilterChange} />
     </div>
-  )
+  );
 }
 
-export default InventorySidebarComponent
+export default InventorySidebarComponent;
