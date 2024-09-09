@@ -4,12 +4,19 @@ import React from 'react'
 import HeaderSearchbar from './header-searchbar'
 import HeaderCrud from './header-crud'
 
-const HeaderWrapper = () => {
+interface HeaderWrapperProps {
+  onLayoutChange: (layout: 'horizontal' | 'vertical') => void;
+}
+
+const HeaderWrapper: React.FC<HeaderWrapperProps> = ({onLayoutChange}) => {
   return (
     <header className="p-4 bg-white w-full flex flex-row">
     {/* Header searchbar */}
-    <HeaderSearchbar />
+    <div className='flex-grow'>
+
+    <HeaderSearchbar onLayoutChange={onLayoutChange} />
     {/* Header CRUD */}
+    </div>
     <HeaderCrud />
     </header>
   )
