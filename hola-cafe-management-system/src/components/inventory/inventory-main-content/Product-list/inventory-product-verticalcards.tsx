@@ -6,7 +6,7 @@ interface InventoryProductVerticalCardsProps {
   onOpenPopup: (popup: 'open' | 'close', product: Product) => void;
 }
 
-const InventoryProductVerticalCards = ({ products, onOpenPopup }: InventoryProductVerticalCardsProps) => {
+const InventoryProductVerticalCards = ({ products = [], onOpenPopup }: InventoryProductVerticalCardsProps) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 ml-4 w-[96.4%]">
       {products.map((product, index) => (
