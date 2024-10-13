@@ -3,12 +3,12 @@ import { Product } from '../../models/products-interface';
 
 interface InventoryProductHorizontalCardsProps {
   products: Product[];
-  onOpenPopup: (popup: 'open' | 'close', product?: Product | null) => void;
+  onOpenPopup: (popup: 'open' | 'close', product: Product) => void;
 }
 
-export function InventoryProductHorizontalCards({ products, onOpenPopup }: InventoryProductHorizontalCardsProps) {
+export function InventoryProductHorizontalCards({ products = [], onOpenPopup }: InventoryProductHorizontalCardsProps) {
   return (
-    <div className="space-y-4 ml-4 w-[96.4%]">
+    <div className="space-y-1 ml-4 w-[96.4%]">
       {products.map((product, index) => (
         <div
           key={index}

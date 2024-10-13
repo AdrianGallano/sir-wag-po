@@ -2,7 +2,6 @@ import React from 'react'
 import { products } from '../models/products'
 
 const FilterProductStatus = () => {
-
   // function on counting products
   const onProductCount = () => {
     return products.length
