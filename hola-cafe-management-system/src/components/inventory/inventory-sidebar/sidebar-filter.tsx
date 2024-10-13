@@ -13,15 +13,15 @@ const SidebarFilter: React.FC<FilterProps> = ({ onFilterChange }) => {
   return (
     <div className="p-4 bg-white text-black">
       {/* Product Status */}
-      <FilterProductStatus/>
+      {/* <FilterProductStatus/> */}
       {/* Product Type */}
-      <FilterProductType/>
+      {/* <FilterProductType/> */}
       {/* Dropdowns */}
       <FilterProductDropdown onFilterChange={onFilterChange}/>
       {/* price */}
-      <FilterProductPrice/>
+      {/* <FilterProductPrice/> */}
       {/* Reset Filter */}
-      <FIlterReset onReset={() => onFilterChange({ category: '', stockStatus: '' })} />
+      {/* <FIlterReset onReset={() => onFilterChange({ category: '', stockStatus: '' })} /> */}
     </div>
   )
 }

@@ -17,24 +17,21 @@ const InventoryProductVerticalCards = ({ products = [], onOpenPopup }: Inventory
         >
           <img
             src={product.product_image}
-            alt={product.product_name}
+            alt={product.name}
             className="w-full h-40 object-cover rounded-md"
           />
-          <div className="mt-2 text-black font-bold">{product.product_name}</div>
+          <div className="mt-2 text-black font-bold">{product.name}</div>
           <div className="flex flex-col text-sm text-black mt-2">
-            {product.variants && <div>{product.variants}</div>}
-            <div>{product.category}</div>
-            <div>{product.product_type}</div>
-            <div className={`text-sm ${product.stock_status === 'low' || product.stock_status === 'out of stock' ? 'text-red-500' : 'text-green-500'}`}>
+            {/* <div className={`text-sm ${product.stock_status === 'low' || product.stock_status === 'out of stock' ? 'text-red-500' : 'text-green-500'}`}>
               {product.stock}
-            </div>
+            </div> */}
             <div className="flex mt-2">
-              <div className="flex-1 text-xs">RETAIL PRICE</div>
-              <div>{product.retail_price}</div>
+              <div className="flex-1 text-xs">PRICE</div>
+              <div>{product.price}</div>
             </div>
             <div className="flex mt-1">
-              <div className="flex-1 text-xs">WHOLESALE PRICE</div>
-              <div>{product.wholesale_price}</div>
+              <div className="flex-1 text-xs">COST PRICE</div>
+              <div>{product.cost_price}</div>
             </div>
           </div>
           <button className=" mt-auto border hover:bg-gray-100 hover:border-white rounded-lg bg-background p-2 h-[40px] w-[40px]">
