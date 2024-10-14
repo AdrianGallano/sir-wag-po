@@ -15,24 +15,17 @@ class SupplierSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category_id = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(), source="category"
-    )
-    supplier_id = serializers.PrimaryKeyRelatedField(
-        queryset=Supplier.objects.all(), source="supplier"
-    )
 
     class Meta:
         model = Product
         fields = "__all__"
 
-        
-    def create(self, validated_data):
-        return Product.objects.create(**validated_data)
 
-    def update(self, instance, validated_data):
-        instance.category = validated_data.get("category", instance.category)
-        instance.supplier = validated_data.get("supplier", instance.supplier)
-        instance.name = validated_data.get("name", instance.name)
-        instance.save()
-        return instance
+
+class ProductSupplierCategorySerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+    supplier = SupplierSerializer()
+
+    class Meta:
+        model = Product
+        fields = "__all__"
