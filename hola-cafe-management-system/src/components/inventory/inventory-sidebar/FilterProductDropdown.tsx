@@ -18,19 +18,19 @@ interface FilterProps {
 
 const FilterProductDropdown: React.FC<FilterProps> = ({ onFilterChange }) => {
 
-  // Function to get unique categories of products 
-  const getCategories = () => {
-    const categories = products.map(product => product.category);
-    return [...new Set(categories)];
-  };
-  const uniqueCategories = getCategories();
+  // // Function to get unique categories of products 
+  // const getCategories = () => {
+  //   const categories = products.map(product => product.category);
+  //   return [...new Set(categories)];
+  // };
+  // const uniqueCategories = getCategories();
 
-  // Function to get unique stock statuses
-  const getStock = () => {
-    const stocks = products.map(product => product.stock_status);
-    return [...new Set(stocks)];
-  };
-  const uniqueStocks = getStock();
+  // // Function to get unique stock statuses
+  // const getStock = () => {
+  //   const stocks = products.map(product => product.stock_status);
+  //   return [...new Set(stocks)];
+  // };
+  // const uniqueStocks = getStock();
 
   // Function to change category
   const handleCategoryChange = (value: string) => {
@@ -47,7 +47,7 @@ const FilterProductDropdown: React.FC<FilterProps> = ({ onFilterChange }) => {
   return (
     <div>
       {/* Sort */}
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <h3 className="text-gray-800 text-xs font-semibold">SORT BY</h3>
         <Select>
           <SelectTrigger className="w-full">
@@ -64,7 +64,7 @@ const FilterProductDropdown: React.FC<FilterProps> = ({ onFilterChange }) => {
             </SelectGroup>
           </SelectContent>
         </Select>
-      </div>
+      </div> */}
 
       {/* Stock */}
       <div className='mb-4'>
@@ -77,11 +77,11 @@ const FilterProductDropdown: React.FC<FilterProps> = ({ onFilterChange }) => {
             <SelectGroup>
               <SelectLabel>Stocks Status</SelectLabel>
               <SelectItem value="all">All stock</SelectItem> {/* Default value */}
-              {uniqueStocks.map((stock, index) => (
+              {/* {uniqueStocks.map((stock, index) => (
                 <SelectItem key={index} value={stock}>
                   {stock}
                 </SelectItem>
-              ))}
+              ))} */}
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -98,11 +98,11 @@ const FilterProductDropdown: React.FC<FilterProps> = ({ onFilterChange }) => {
             <SelectGroup className='text-xs'>
               <SelectLabel>Categories</SelectLabel>
               <SelectItem value="all">All product</SelectItem> {/* Default value */}
-              {uniqueCategories.map((category, index) => (
+              {/* {uniqueCategories.map((category, index) => (
                   <SelectItem key={index} value={category}>
                     {category}
                   </SelectItem>
-                ))}
+                ))} */}
             </SelectGroup>
           </SelectContent>
         </Select>
