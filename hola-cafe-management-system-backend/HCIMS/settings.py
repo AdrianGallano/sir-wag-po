@@ -17,7 +17,6 @@ import os
 from datetime import timedelta
 
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,14 +43,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    #dependencies
+    # dependencies
     "rest_framework",
     "rest_framework_simplejwt",
     "djoser",
     "drf_yasg",
     "corsheaders",
     "django_filters",
-    #local apps
+    # local apps
     "inventory",
 ]
 
@@ -144,12 +143,6 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=2),
-}
-
-
 INTERNAL_IPS = ["127.0.0.1"]
 
 
@@ -161,7 +154,7 @@ REST_FRAMEWORK = {
         # "rest_framework_yaml.renderers.YAMLRenderer",
         # "rest_framework_csv.renderers.CSVRenderer",
     ],
-    "DEFAULT_FILTER_BACKENDS": [    
+    "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
         "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
@@ -189,6 +182,8 @@ CORS_ALLOW_HEADERS = (*default_headers,)
 
 
 SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=2),
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
