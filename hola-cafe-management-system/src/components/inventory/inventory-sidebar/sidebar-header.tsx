@@ -1,18 +1,18 @@
-import React from 'react'
-import { products } from '../models/products'
+import { products } from "../models/products";
 
 const SidebarHeader = () => {
-
   // function for counting products
   const onProductCount = () => {
-    return products.length
-  }
+    return products.length;
+  };
   return (
-    <div className="w-full p-0 bg-white text-black flex flex-ro align-middle justify-center mb-4">
-      <h2 className="text-2xl font-semibold">Product</h2>
-      <p className="text-sm text-black flex align-middle ml-11 mt-2">{onProductCount()}</p>
+    <div className="w-full p-0 bg-white text-black flex flex-row  justify-between items-center mb-4 ">
+      <h2 className="text-2xl font-bold text-slate-800">Product</h2>
+      <p className="text-sm text-white font-medium  p-1.5 border border-gray-800 rounded-md bg-gray-800">
+        {onProductCount()} Total Products
+      </p>
     </div>
-  )
-}
+  );
+};
 
-export default SidebarHeader
+export default SidebarHeader;
