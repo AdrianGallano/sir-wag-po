@@ -1,4 +1,4 @@
-import { Coffee, LineChart, Blocks, LogOut } from "lucide-react";
+import { Coffee, LineChart, LogOut, Warehouse } from "lucide-react";
 import {
   Tooltip,
   TooltipTrigger,
@@ -8,9 +8,9 @@ import {
 
 const Navbar = () => {
   return (
-    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-custom-yellow sm:flex rounded-tr-lg rounded-br-lg">
+    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-4">
-        <a className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-custom-night text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base">
+        <a className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base">
           <Coffee className="h-4 w-4 transition-all group-hover:scale-110" />
           <span className="sr-only">Learning Buddy</span>
         </a>
@@ -20,7 +20,7 @@ const Navbar = () => {
             <TooltipTrigger asChild>
               <a
                 href="/analytics"
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-custom-night text-black transition-colors md:h-8 md:w-8 hover:bg-custom-night hover:text-white cursor-pointer"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
                 <LineChart className="h-5 w-5" />
                 <span className="sr-only">Analytics</span>
@@ -35,9 +35,9 @@ const Navbar = () => {
             <TooltipTrigger asChild>
               <a
                 href="/inventory"
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-custom-night text-black transition-colors md:h-8 md:w-8 hover:bg-custom-night hover:text-white cursor-pointer"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
-                <Blocks className="h-5 w-5" />
+                <Warehouse className="h-5 w-5" />
                 <span className="sr-only">Inventory</span>
               </a>
             </TooltipTrigger>
@@ -49,7 +49,10 @@ const Navbar = () => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <a className="flex h-9 w-9 items-center justify-center rounded-lg border border-custom-night text-black transition-colors md:h-8 md:w-8 hover:bg-custom-night hover:text-white cursor-pointer">
+              <a
+                href="#"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              >
                 <LogOut className="h-5 w-5" />
                 <span className="sr-only">Settings</span>
               </a>

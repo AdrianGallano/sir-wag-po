@@ -1,9 +1,9 @@
-import React from 'react';
-import FilterProductStatus from './filter-product-status';
-import FilterProductType from './filter-product-type';
-import FilterProductDropdown from './FilterProductDropdown';
-import FilterProductPrice from './filter-product-price';
-import FIlterReset from './filter-product-reset';
+import React from "react";
+import FilterProductStatus from "./filter-product-status";
+import FilterProductType from "./filter-product-type";
+import FilterProductDropdown from "./FilterProductDropdown";
+import FilterProductPrice from "./filter-product-price";
+import FIlterReset from "./filter-product-reset";
 
 interface FilterProps {
   onFilterChange: (filter: { category?: string; stockStatus?: string }) => void;
@@ -11,19 +11,21 @@ interface FilterProps {
 
 const SidebarFilter: React.FC<FilterProps> = ({ onFilterChange }) => {
   return (
-    <div className="p-4 bg-white text-black">
+    <div className="h-fit px-4 py-6 bg-white text-black border border-gray-500 rounded-md">
       {/* Product Status */}
-      {/* <FilterProductStatus/> */}
+      <FilterProductStatus />
       {/* Product Type */}
-      {/* <FilterProductType/> */}
+      <FilterProductType />
       {/* Dropdowns */}
-      <FilterProductDropdown onFilterChange={onFilterChange}/>
+      <FilterProductDropdown onFilterChange={onFilterChange} />
       {/* price */}
-      {/* <FilterProductPrice/> */}
+      <FilterProductPrice />
       {/* Reset Filter */}
-      {/* <FIlterReset onReset={() => onFilterChange({ category: '', stockStatus: '' })} /> */}
+      <FIlterReset
+        onReset={() => onFilterChange({ category: "", stockStatus: "" })}
+      />
     </div>
-  )
-}
+  );
+};
 
 export default SidebarFilter;
