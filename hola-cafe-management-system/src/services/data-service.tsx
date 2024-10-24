@@ -1,22 +1,33 @@
-import axios from "axios"
-
-const headers = {
-    "Content-Type": "application/json",
-}
+import axios from "axios";
 
 const api = axios.create({
     baseURL: "http://127.0.0.1:8000/",
-})
+});
 
-export default async function dataFetch(endpoint: string, method: string = "GET", data: object | null = null, config: object = {}) {
+const getHeaders = (token?: string) => {
+    const headers: { [key: string]: string } = {
+        "Content-Type": "application/json",
+    };
 
+    if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    return headers;
+};
+
+export default async function dataFetch(
+    endpoint: string,
+    method: string = "GET",
+    data: object | null = null,
+    token?: string 
+) {
     try {
         const response = await api.request({
             url: endpoint,
             method,
             data,
-            headers: headers,
-            ...config,
+            headers: getHeaders(token), 
         });
         return response.data;
     } catch (error: unknown) {
