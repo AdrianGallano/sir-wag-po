@@ -1,40 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "recharts";
-import dataFetch from '@/services/data-service';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import hola_bg from "./../assets/images/hola_bg.jpg";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/context/authContext";
 
 const Login = () => {
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const { login } = useAuth();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Reset any previous error
-
-    const payload = {
-      username,
-      password,
-    };
-
-    try {
-      const response = await dataFetch('/api/auth/jwt/create/', 'POST', payload);
-      console.log('Login successful:', response);
-
-      const token = response.access; 
-      
-      localStorage.setItem('token', token);
-      console.log('Token saved:', token);
-
-      // Redirect to the analytics page after successful login
-      navigate('/analytics'); 
-    } catch (err) {
-      console.error("Error during login:", err);
-      setError('Login failed. Please check your username and password.');
-    }
+    login(username, password);
   };
 
   return (
@@ -47,7 +26,7 @@ const Login = () => {
               Enter your email below to login to your account
             </p>
           </div>
-          {error && <div className="text-red-500 text-center">{error}</div>} {/* Error message */}
+          {/* Error message */}
           <form onSubmit={handleLogin}>
             <div className="grid gap-4">
               <div className="grid gap-2">
@@ -62,6 +41,13 @@ const Login = () => {
                 />
               </div>
               <div className="grid gap-2">
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
                 <div className="flex items-center">
                   <Label>Password</Label>
                   <a
@@ -71,33 +57,23 @@ const Login = () => {
                     Forgot your password?
                   </a>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
               </div>
               <Button type="submit" className="w-full">
                 Login
-              </Button>
-              <Button variant="outline" className="w-full">
-                Login with Google
               </Button>
             </div>
           </form>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
-            <a href="#" className="underline">
+            <Link to="/register" className="underline">
               Sign up
-            </a>
+            </Link>
           </div>
         </div>
       </div>
       <div className="hidden bg-muted lg:block">
         <img
-          src="/placeholder.svg"
+          src={hola_bg}
           alt="Image"
           width="1920"
           height="1080"
