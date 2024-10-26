@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "recharts";
 import hola_bg from "./../assets/images/hola_bg.jpg";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/authContext";
+import { Label } from "@/components/ui/label";
 
 const Login = () => {
   const [username, setUsername] = useState<string>("");
@@ -41,6 +41,7 @@ const Login = () => {
                 />
               </div>
               <div className="grid gap-2">
+                <Label>Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -49,7 +50,6 @@ const Login = () => {
                   required
                 />
                 <div className="flex items-center">
-                  <Label>Password</Label>
                   <a
                     href="/forgot-password"
                     className="ml-auto inline-block text-sm underline"
