@@ -6,16 +6,26 @@ import HeaderCrud from './header-crud';
 import CreateProducts from '../popup/CreateProducts';
 import dataFetch from '@/services/data-service';
 import { Product } from '../models/products-interface';
+import CreateCategory from '../popup/CreateCategories';
+import CreateSuppliers from '../popup/CreateSuppliers';
 
 interface HeaderWrapperProps {
   onLayoutChange: (layout: string) => void;
 }
 
 const HeaderWrapper: React.FC<HeaderWrapperProps> = ({ onLayoutChange }) => {
-  const [isPopupOpen, setIsPopupOpen] = React.useState<boolean>(false);
+  const [isProductPopupOpen, setIsProductPopupOpen] = React.useState<boolean>(false);
+  const [isCategoryPopupOpen, setIsCategoryPopupOpen] = React.useState<boolean>(false);
+  const [isSupplierPopupOpen, setIsSupplierPopupOpen] = React.useState<boolean>(false);
 
-  const handlePopup = (selectedPopup: "open" | "close") => {
-    setIsPopupOpen(selectedPopup === "open");
+  const handlePopup = (popupType: "product" | "category" | "supplier", action: "open" | "close") => {
+    if (popupType === "product") {
+      setIsProductPopupOpen(action === "open");
+    } else if (popupType === "category") {
+      setIsCategoryPopupOpen(action === "open");
+    } else if (popupType === "supplier") {
+      setIsSupplierPopupOpen(action === "open");
+    }
   };
 
   // Function to handle Create product
@@ -26,12 +36,40 @@ const HeaderWrapper: React.FC<HeaderWrapperProps> = ({ onLayoutChange }) => {
 
         const response = await dataFetch(endpoint, 'POST', productData, token); // Include token in the request
         console.log('Product saved:', response);
-        setIsPopupOpen(false); 
+        setIsProductPopupOpen(false); 
     } catch (error) { // Error handling
         console.error("Error saving product:", error);
         console.log('Product not saved:', productData);
     }
 };
+  // Function to handle Create category
+  const handleCategorySubmit = async (categoryData: any) => {
+    try {
+      const endpoint = '/api/categories/';
+      const token = localStorage.getItem('token') || undefined;
+
+      const response = await dataFetch(endpoint, 'POST', categoryData, token); // Include token in the request
+      console.log('Category saved:', response);
+      setIsCategoryPopupOpen(false);
+    } catch (error) { // Error handling
+      console.error("Error saving category:", error);
+      console.log('Category not saved:', categoryData);
+    }
+  }
+  // Function to handle Create supplier
+  const handleSupplierSubmit = async (supplierData: any) => {
+    try {
+      const endpoint = '/api/suppliers/';
+      const token = localStorage.getItem('token') || undefined;
+
+      const response = await dataFetch(endpoint, 'POST', supplierData, token); // Include token in the request
+      console.log('Supplier saved:', response);
+      setIsSupplierPopupOpen(false);
+    } catch (error) { // Error handling
+      console.error("Error saving supplier:", error);
+      console.log('Supplier not saved:', supplierData);
+    }
+  }
 
   return (
     <div className='flex items-center space-x-4 w-full mb-4 pl-2 pr-2'>
@@ -51,15 +89,30 @@ const HeaderWrapper: React.FC<HeaderWrapperProps> = ({ onLayoutChange }) => {
       </Tabs>
 
       <div className="ml-4">
-        <HeaderCrud onOpenPopup={() => handlePopup('open')} />
+        <HeaderCrud onOpenSupplierPopup={()=>{handlePopup('supplier','open')}} onOpenCategoryPopup={()=>{handlePopup('category','open')}} onOpenPopup={() => handlePopup('product','open')} />
       </div>
 
-      {isPopupOpen && (
+      {isProductPopupOpen && (
         <CreateProducts
-          onClose={() => handlePopup('close')}
+          onClose={() => handlePopup('product', 'close')}
           onSubmit={handleProductSubmit}
         />
       )}
+
+      {isCategoryPopupOpen && (
+        <CreateCategory
+          onClose={() => handlePopup('category', 'close')}
+          onSubmit={handleCategorySubmit}
+        />
+      )}
+
+      {isSupplierPopupOpen && (
+        <CreateSuppliers
+          onClose={() => handlePopup('supplier', 'close')}
+          onSubmit={handleSupplierSubmit}
+        />
+      )}
+
     </div>
   );
 };
