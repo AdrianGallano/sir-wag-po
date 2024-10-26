@@ -4,6 +4,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { TooltipContent } from "@radix-ui/react-tooltip";
+import { Link } from "react-router-dom";
 
 const PageNotFound = () => {
   return (
@@ -27,9 +28,8 @@ const PageNotFound = () => {
       </TooltipProvider>
 
       <button className="mt-5">
-        <a className="relative inline-block text-sm font-medium text-[#fbdb06] group active:text-yellow-700 focus:outline-none focus:ring">
+        <a href="/" className="relative inline-block text-sm font-medium text-[#fbdb06] group active:text-yellow-700 focus:outline-none focus:ring">
           <span className="absolute inset-0 transition-transform translate-x-0.5 translate-y-0.5 bg-[#fbdb06] group-hover:translate-y-0 group-hover:translate-x-0"></span>
-
           <span className="relative block px-8 py-3  bg-gray-50 border border-current">
             Go Home
           </span>
