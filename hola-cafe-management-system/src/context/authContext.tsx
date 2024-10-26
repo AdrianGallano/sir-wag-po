@@ -21,7 +21,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState(localStorage.getItem("user") || null);
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
