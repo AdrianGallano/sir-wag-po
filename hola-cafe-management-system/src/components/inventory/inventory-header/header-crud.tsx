@@ -9,8 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { on } from 'events';
-
 
 interface HeaderCrudProps {
   onOpenPopup: (popup: 'open' | 'close', product: Product) => void;
