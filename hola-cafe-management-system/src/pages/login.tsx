@@ -17,70 +17,77 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
-      <div className="flex items-center justify-center py-12">
-        <div className="mx-auto grid w-[350px] gap-6">
-          <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">Login</h1>
-            <p className="text-balance text-muted-foreground">
-              Enter your email below to login to your account
-            </p>
-          </div>
-          {/* Error message */}
-          <form onSubmit={handleLogin}>
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <Label>Username</Label>
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="m@example.com"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <div className="flex items-center">
-                  <a
-                    href="/forgot-password"
-                    className="ml-auto inline-block text-sm underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-              </div>
-              <Button type="submit" className="w-full">
+    <>
+      <div className="flex flex-wrap min-h-screen w-full content-center justify-center bg-custom-paleButter py-10 ]">
+        <div className="flex shadow-md ">
+          <div className="flex flex-wrap content-center justify-center rounded-l-lg bg-white w-[30rem] h-[32rem] ">
+            <div className="w-80">
+              {/* Heading */}
+              <h1 className="text-3xl font-semibold text-center text-custom-goldenMustard">
                 Login
-              </Button>
+              </h1>
+              <p className="text-muted-foreground text-sm text-center text-nowrap">
+                Welcome to Hola Cafe Inventory System!
+              </p>
+              <form className="mt-2" onSubmit={handleLogin}>
+                <div className="grid gap-4 mt-2">
+                  <div className="grid gap-2">
+                    <Label>Username</Label>
+                    <Input
+                      id="username"
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <div className="flex items-center">
+                      <a
+                        href="/forgot-password"
+                        className="ml-auto inline-block text-sm "
+                      >
+                        Forgot your password?
+                      </a>
+                    </div>
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full hover:bg-custom-goldenMustard bg-custom-sunnyGold"
+                  >
+                    Login
+                  </Button>
+                </div>
+              </form>
+              {/* Footer */}
+              <div className="mt-4 text-center text-sm">
+                Don&apos;t have an account?{" "}
+                <Link
+                  to="/register"
+                  className="underline hover:text-custom-goldenMustard text-custom-sunnyGold"
+                >
+                  Sign up
+                </Link>
+              </div>
             </div>
-          </form>
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link to="/register" className="underline">
-              Sign up
-            </Link>
+          </div>
+          <div className="flex flex-wrap content-center justify-center rounded-r-lg w-[29rem] h-[32rem]">
+            <img
+              className="w-full h-full bg-center bg-no-repeat bg-cover rounded-r-lg"
+              src={hola_bg}
+            />
           </div>
         </div>
       </div>
-      <div className="hidden bg-muted lg:block">
-        <img
-          src={hola_bg}
-          alt="Image"
-          width="1920"
-          height="1080"
-          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
-      </div>
-    </div>
+    </>
   );
 };
 

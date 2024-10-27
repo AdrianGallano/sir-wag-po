@@ -30,73 +30,79 @@ const Register = () => {
   };
 
   return (
-    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
-      <div className="hidden bg-muted lg:block">
-        <img
-          src={hola_bg}
-          alt="Image"
-          width="1920"
-          height="1080"
-          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale object-right"
-        />
-      </div>
-      <div className="flex items-center justify-center py-12">
-        <div className="mx-auto grid w-[350px] gap-6">
-          <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">Register</h1>
-            <p className="text-balance text-muted-foreground">
-              Please fill out the fields to complete your registration.
-            </p>
+    <>
+      <div className="flex flex-wrap min-h-screen w-full content-center justify-center bg-custom-paleButter py-10 ]">
+        <div className="flex shadow-md ">
+          <div className="flex flex-wrap content-center justify-center rounded-l-lg w-[29rem] h-[32rem]">
+            <img
+              className="w-full h-full bg-center bg-no-repeat bg-cover rounded-l-lg"
+              src={hola_bg}
+            />
           </div>
-          <form onSubmit={handleRegister}>
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <Label>Username</Label>
-                <Input
-                  id="username"
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="HolaCafe"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="m@example.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="**********"
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full">
+          <div className="flex flex-wrap content-center justify-center rounded-r-lg bg-white w-[30rem] h-[32rem] ">
+            <div className="w-80">
+              {/* Heading */}
+              <h1 className="text-3xl font-semibold text-center text-custom-goldenMustard">
                 Register
-              </Button>
+              </h1>
+              <p className="text-muted-foreground text-sm text-center text-nowrap">
+                Welcome to Hola Cafe Inventory System!
+              </p>
+              <form className="mt-2" onSubmit={handleRegister}>
+                <div className="grid gap-4 mt-2">
+                  <div className="grid gap-2">
+                    <Label>Username</Label>
+                    <Input
+                      id="username"
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Email</Label>
+                    <Input
+                      type="text"
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full hover:bg-custom-goldenMustard bg-custom-sunnyGold"
+                  >
+                    Register
+                  </Button>
+                </div>
+              </form>
+              {/* Footer */}
+              <div className="mt-4 text-center text-sm">
+                Already have an account?{" "}
+                <Link
+                  to="/login"
+                  className="underline hover:text-custom-goldenMustard text-custom-sunnyGold"
+                >
+                  Sign in
+                </Link>
+              </div>
             </div>
-          </form>
-          <div className="mt- text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link to="/login" className="underline">
-              Sign in
-            </Link>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
