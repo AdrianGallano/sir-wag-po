@@ -52,8 +52,11 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         custom: {
-          night: "#292929",
-          yellow: "#fedc01",
+          charcoalOlive: "#504C41",
+          goldenMustard: "#D0A823",
+          sunnyGold: "#F7D327",
+          paleButter: "#FEED9F",
+          ivoryMist: "#FBFBF5",
         },
       },
       borderRadius: {
