@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from "react";
-import InventoryProductHorizontalCards from "./Product-list/inventory-product-horizontalcards";
 import InventoryProductVerticalCards from "./Product-list/inventory-product-verticalcards";
 import HeaderWrapper from "../inventory-header/header-wrapper";
-import { products } from "../models/products";
-import InventoryPopUp from "../popup/InventoryPopUp";
-import { Product } from "../models/products-interface";
-import InventorySidebarComponent from "../inventory-sidebar/sidebar";
+import { Product } from "@/models/product";
+import ProductTable from "@/components/hcims/producttable";
+import { useAuth } from "@/context/authContext";
+import dataFetch from "@/services/data-service";
 
-interface MainInventoryProps {
-  filters: { category?: string; stockStatus?: string };
-}
-
-const MainInventory: React.FC<MainInventoryProps> = ({ filters }) => {
+const MainInventory = () => {
   const [layout, setLayout] = useState<"horizontal" | "vertical">("horizontal");
-  const [filteredProducts, setFilteredProducts] = useState(products);
-  const [popUp, setPopup] = useState<"open" | "close">("close");
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [filters, setFilters] = useState({ category: "", stockStatus: "" });
+
+  const { token } = useAuth();
+  const [products, setProducts] = useState<Product[]>([]);
 
   // Allowing the layout to be changed based on tab value
   const handleLayoutChange = (selectedLayout: string) => {
@@ -25,31 +21,31 @@ const MainInventory: React.FC<MainInventoryProps> = ({ filters }) => {
     }
   };
 
-  // Opening and closing of popup
-  const handlePopup = (
-    selectedPopup: "open" | "close",
-    product: Product | null = null
-  ) => {
-    setSelectedProduct(product);
-    setPopup(selectedPopup);
-  };
-
-  // Filtering products based on category and stock status
   useEffect(() => {
-    if (!filters) return;
+    const fetchProducts = async () => {
+      try {
+        const products = (await dataFetch(
+          "api/products/",
+          "GET",
+          {},
+          token!
+        )) as Product[];
+        setProducts(products);
+        console.log("Fetched products:", products);
+      } catch (error) {
+        console.error("Failed to fetch products", error);
+      }
+    };
 
-    const updatedProducts = products.filter((product) => {
-      const matchesCategory = filters.category
-        ? product.quantity === filters.category
-        : true;
-      const matchesStockStatus = filters.stockStatus
-        ? product.cost_price === filters.stockStatus
-        : true;
-      return matchesCategory && matchesStockStatus;
-    });
+    fetchProducts();
+  }, []);
 
-    setFilteredProducts(updatedProducts);
-  }, [filters]);
+  const handleFilterChange = (filter: {
+    category?: string;
+    stockStatus?: string;
+  }) => {
+    setFilters((prevFilters) => ({ ...prevFilters, ...filter }));
+  };
 
   return (
     <div className="flex-1 flex flex-col bg-white">
@@ -57,23 +53,9 @@ const MainInventory: React.FC<MainInventoryProps> = ({ filters }) => {
       <HeaderWrapper onLayoutChange={handleLayoutChange} />
       {/* Product List based on layout */}
       {layout === "horizontal" ? (
-        <InventoryProductHorizontalCards
-          products={filteredProducts}
-          onOpenPopup={handlePopup}
-        />
+        <ProductTable products={products} />
       ) : (
-        <InventoryProductVerticalCards
-          products={filteredProducts}
-          onOpenPopup={handlePopup}
-        />
-      )}
-
-      {/* Popup for product details */}
-      {popUp === "open" && selectedProduct && (
-        <InventoryPopUp
-          product={selectedProduct}
-          onClose={() => handlePopup("close")}
-        />
+        <InventoryProductVerticalCards products={products}/>
       )}
     </div>
   );

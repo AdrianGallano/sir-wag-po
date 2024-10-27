@@ -4,6 +4,7 @@ import ProductTable from "@/components/hcims/producttable";
 import { useAuth } from "@/context/authContext";
 import { Product } from "@/models/product";
 import dataFetch from "@/services/data-service";
+import MainInventory from "@/components/inventory/inventory-main-content/main-inventory";
 
 const InventoryPage = () => {
   const [filters, setFilters] = useState({ category: "", stockStatus: "" });
@@ -42,9 +43,9 @@ const InventoryPage = () => {
       {/* This is the sidebar */}
       <InventorySidebarComponent onFilterChange={handleFilterChange} />
 
-      <ProductTable products={products} />
+      {/* <ProductTable products={products} /> */}
       {/* Main inventory area */}
-      {/* <MainInventory filters={filters} /> */}
+      <MainInventory />
     </div>
   );
 };
