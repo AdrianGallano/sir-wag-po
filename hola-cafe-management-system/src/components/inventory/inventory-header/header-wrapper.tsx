@@ -8,6 +8,7 @@ import dataFetch from '@/services/data-service';
 import { Product } from '../models/products-interface';
 import CreateCategory from '../popup/CreateCategories';
 import CreateSuppliers from '../popup/CreateSuppliers';
+import { useAuth } from '@/context/authContext';
 
 interface HeaderWrapperProps {
   onLayoutChange: (layout: string) => void;
@@ -27,12 +28,17 @@ const HeaderWrapper: React.FC<HeaderWrapperProps> = ({ onLayoutChange }) => {
       setIsSupplierPopupOpen(action === "open");
     }
   };
+  const {token} = useAuth(); // Get the token from the useAuth function
 
   // Function to handle Create product
   const handleProductSubmit = async (productData: Product) => {
     try {
         const endpoint = '/api/products/';
-        const token = localStorage.getItem('token') || undefined;
+
+        if(!token) {
+          console.error('Token not found in response');
+          throw new Error('Token not found in response');
+        }
 
         const response = await dataFetch(endpoint, 'POST', productData, token); // Include token in the request
         console.log('Product saved:', response);
@@ -45,8 +51,12 @@ const HeaderWrapper: React.FC<HeaderWrapperProps> = ({ onLayoutChange }) => {
   // Function to handle Create category
   const handleCategorySubmit = async (categoryData: any) => {
     try {
-      const endpoint = '/api/categories/';
-      const token = localStorage.getItem('token') || undefined;
+      const endpoint = '/api/categories/'
+
+      if(!token) {
+        console.error('Token not found in response');
+        throw new Error('Token not found in response');
+      }
 
       const response = await dataFetch(endpoint, 'POST', categoryData, token); // Include token in the request
       console.log('Category saved:', response);
@@ -59,8 +69,12 @@ const HeaderWrapper: React.FC<HeaderWrapperProps> = ({ onLayoutChange }) => {
   // Function to handle Create supplier
   const handleSupplierSubmit = async (supplierData: any) => {
     try {
-      const endpoint = '/api/suppliers/';
-      const token = localStorage.getItem('token') || undefined;
+      const endpoint = '/api/suppliers/'
+
+      if(!token) {
+        console.error('Token not found in response');
+        throw new Error('Token not found in response');
+      }
 
       const response = await dataFetch(endpoint, 'POST', supplierData, token); // Include token in the request
       console.log('Supplier saved:', response);
