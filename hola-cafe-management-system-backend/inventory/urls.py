@@ -18,8 +18,18 @@ urlpatterns = [
             {"get": "retrieve", "put": "update", "delete": "destroy"}
         ),
     ),
+    path("images/", views.ImageViewSet.as_view({
+        "get":"list",
+        "post":"upload"
+    })),
+    path("images/<int:pk>/",
+          views.ImageViewSet.as_view( 
+            {"get": "retrieve", 
+             "delete": "destroy"})),
     path(
-        "suppliers/", views.SupplierViewSet.as_view({"get": "list", "post": "create"})
+        "suppliers/", views.SupplierViewSet.as_view({
+            "get": "list",
+             "post": "create"})
     ),
     path(
         "suppliers/<int:pk>/",

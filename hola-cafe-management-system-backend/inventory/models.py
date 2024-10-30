@@ -32,6 +32,10 @@ class Category(models.Model):
         indexes = [models.Index(fields=["name"])]
 
 
+class Image(models.Model):
+    image_url = models.URLField(max_length=300, null=True)
+
+
 class Product(models.Model):
     name = models.CharField(max_length=255, null=True)
     description = models.TextField()
@@ -42,14 +46,19 @@ class Product(models.Model):
     cost_price = models.DecimalField(
         default=0, max_digits=10, decimal_places=2, null=True
     )
+    image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True)
     supplier = models.ForeignKey(Supplier, on_delete=models.PROTECT)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
-
+    expiration_date = models.DateTimeField(auto_now_add=True, null=True)
+   
+   
     def __str__(self):
         return self.name
 
     class Meta:
         indexes = [models.Index(fields=["name"])]
+
+
