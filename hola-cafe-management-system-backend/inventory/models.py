@@ -34,7 +34,12 @@ class Category(models.Model):
 
 class Image(models.Model):
     image_url = models.URLField(max_length=300, null=True)
+    
+    def __str__(self):
+        return self.image_url
 
+    class Meta:
+        indexes = [models.Index(fields=["image_url"])]
 
 class Product(models.Model):
     name = models.CharField(max_length=255, null=True)
