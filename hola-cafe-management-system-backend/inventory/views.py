@@ -126,19 +126,48 @@ class ImageViewSet(viewsets.ModelViewSet):
 
     def upload(self, request):
         uploaded_images = []
-    # only accepts jpg
+
+        request_images = request.FILES.getlist("images")
+        image_not_accepted = []
+
+        if('images' not in request.FILES):
+
+            return Response({
+                "error":"images field is required."
+            }, 400)
+        
+        if len(request_images) < 1:
+            return Response({
+                "error":"no (supported) image/s has been found."
+            }, 400)
+    
         try:
             for image in request.FILES.getlist("images"):
-                image_path = os.path.join('media',f"{str(uuid4())}.jpg") 
-                uploaded_image = Image.objects.create(image_url=os.path.abspath(image_path))
-
-                uploaded_images.append(uploaded_image)
+                image_path = os.path.join('media',f"{str(uuid4())}") 
 
                 with PilImage.open(image) as im:
-                    im.save(image_path, "JPEG")
+
+                    if(str(image).endswith("jpg") or str(image).endswith('jpeg')):
+                        image_path += ".jpg"
+                        im.save(image_path, "JPEG")
+                        
+                    elif(str(image).endswith("png")):
+                        image_path += ".png"
+                        im.save(image_path, "PNG")
+                    else:
+                        image_not_accepted.append(str(image))
+                        continue
+
+                uploaded_image = Image.objects.create(image_url=os.path.abspath(image_path))
+                uploaded_images.append(uploaded_image)
+
         except Exception as e:
-            raise "uploading of image triggered an error"
+            return Response({"error":f"uploading of image triggered an error: {e}"},400)
             
             
         serialized_image = ImageSerializer(uploaded_images, many=True)
-        return Response(serialized_image.data) 
+        return Response({
+            "data": serialized_image.data,
+            "images_not_accepted": image_not_accepted,
+            "info": "we only support png, jpg, and jpeg formats"
+        }) 
