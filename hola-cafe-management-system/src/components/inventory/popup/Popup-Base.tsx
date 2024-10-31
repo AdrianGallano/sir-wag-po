@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import ImageManager from './ImageManager';
 import {
   Dialog,
   DialogContent,
@@ -8,83 +8,136 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 interface PopupBaseProps {
   title: string;
   initialData: any;
-  fields: Array<{ label: string; key: string; type?: string }>;
+  fields: Array<{ label: string; key: string; type?: string; options?: Array<{ id: string | number; label: string }> }>;
   onClose: () => void;
   onSubmit: (data: any) => void;
+  isNeededToOpen?: boolean; 
+  categories: Array<{ id: number; label: string }>; 
+  suppliers: Array<{ id: number; label: string }>; 
+  children?: React.ReactNode;
 }
 
-const PopupBase: React.FC<PopupBaseProps> = ({ title, initialData, fields, onClose, onSubmit }) => {
+const PopupBase: React.FC<PopupBaseProps> = ({
+  title,
+  initialData,
+  fields,
+  onClose,
+  onSubmit,
+  isNeededToOpen = false, 
+  categories,  
+  suppliers,   
+}) => {
   const [formData, setFormData] = useState(initialData);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({}); 
+  const [isImageManagerOpen, setIsImageManagerOpen] = useState(false);
+  const [selectedImageId, setSelectedImageId] = useState<number | undefined>(undefined);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const handleChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [key]: e.target.value });
+  const handleChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const value = e.target.type === 'file' && e.target.files ? e.target.files[0] : e.target.value;
+    setFormData({ ...formData, [key]: value });
+    setErrors((prev) => ({ ...prev, [key]: '' }));
+  };
 
-    // Clear the specific error when the user starts typing
-    setErrors((prevErrors) => ({ ...prevErrors, [key]: '' }));
+  const handleImageSelect = (imageId: string) => {
+    const parsedId = parseInt(imageId);
+    setSelectedImageId(parsedId);
+    setFormData({ ...formData, image: parsedId });
   };
 
   const handleSubmit = () => {
     const newErrors: { [key: string]: string } = {};
 
     fields.forEach((field) => {
-      if (!formData[field.key].trim()) {
-        newErrors[field.key] = 'This Field is Required'; // Set error message for empty fields
+      const value = formData[field.key];
+      if (!value || (typeof value === 'string' && !value.trim())) {
+        newErrors[field.key] = `${field.label} is required`;
       }
     });
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      // Clear the errors after 3 seconds
-      setTimeout(() => {
-        setErrors({});
-      }, 3000);
       return;
     }
 
-    onSubmit(formData);
+    const finalData = {
+      ...formData,
+      category: formData.category || undefined,
+      supplier: formData.supplier || undefined,
+      image: selectedImageId || undefined,
+    };
+
+    onSubmit(finalData);
     onClose();
   };
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>Fill in the details.</DialogDescription>
         </DialogHeader>
 
+        {isNeededToOpen && (
+          <Button onClick={() => setIsImageManagerOpen(true)} className="mb-4">
+            Open Image Manager
+          </Button>
+        )}
+
         <div className="grid gap-4 py-4">
-          {fields.map((field) => (
-            <div key={field.key} className="grid grid-cols-1 gap-2">
-              <Label htmlFor={field.key} className="text-left">{field.label}</Label>
-              <Input
+        {fields.map((field) => (
+          <div key={field.key} className="grid grid-cols-1 gap-2">
+            <Label htmlFor={field.key}>{field.label}</Label>
+            {field.type === 'select' ? (
+              <select
                 id={field.key}
-                value={formData[field.key]}
+                value={formData[field.key] || ''}
+                onChange={handleChange(field.key)}
+                className={`border ${errors[field.key] ? 'border-red-500' : ''}`}
+              >
+                <option value="">Select {field.label}</option>
+                {field.key === 'category' && categories.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+                {field.key === 'supplier' && suppliers.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                id={field.key}
+                value={formData[field.key] || ''}
                 onChange={handleChange(field.key)}
                 type={field.type || 'text'}
-                className={`border ${
-                  errors[field.key] ? 'border-red-500' : 'border-gray-300'
-                } rounded-md p-2`}
                 placeholder={`Enter ${field.label}`}
+                className={`border ${errors[field.key] ? 'border-red-500' : ''}`} 
               />
-              {/* Display error message */}
-              {errors[field.key] && (
-                <span className="text-red-500 text-sm">{errors[field.key]}</span>
-              )}
-            </div>
-          ))}
+            )}
+            {errors[field.key] && <span className="text-red-500">{errors[field.key]}</span>}
+          </div>
+        ))}
+
         </div>
 
         <DialogFooter>
-          <Button onClick={handleSubmit} type="button" className="w-full">Save changes</Button>
+          <Button onClick={handleSubmit} className="mb-2">Save changes</Button>
         </DialogFooter>
+
+        <ImageManager
+          isOpen={isImageManagerOpen}
+          onClose={() => setIsImageManagerOpen(false)}
+          onSelectImage={handleImageSelect}
+        />
       </DialogContent>
     </Dialog>
   );

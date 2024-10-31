@@ -2,34 +2,34 @@ import { Product } from "@/models/product";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "../ui/table";
-
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
 import placeholder from "./../../assets/images/hola_logo.jpg";
 import { dateFormatter, toTitleCase } from "@/utils/formatter";
 import { Button } from "../ui/button";
 import { EyeIcon } from "lucide-react";
 import { useState } from "react";
 import ProductPreview from "./productpreview";
+import { Category } from "@/models/category";
+import { Supplier } from "@/models/supplier";
 
 interface ProductTableProps {
   products: Product[];
+  categories: Category[]; 
+  suppliers: Supplier[];  
 }
 
-const ProductTable = ({ products }: ProductTableProps) => {
+const ProductTable = ({ products, categories, suppliers }: ProductTableProps) => {
   const [selectedItem, setSelectedItem] = useState<Product | null>(null);
 
   return (
@@ -37,24 +37,12 @@ const ProductTable = ({ products }: ProductTableProps) => {
       <Table className="overflow-hidden rounded-md w-full shadow-md">
         <TableHeader className="bg-custom-paleButter hover:bg-custom-paleButter ">
           <TableRow>
-            <TableHead className="text-center text-custom-charcoalOlive">
-              Items
-            </TableHead>
-            <TableHead className="text-center text-custom-charcoalOlive ">
-              Quantity
-            </TableHead>
-            <TableHead className="text-center text-custom-charcoalOlive">
-              Price{" "}
-            </TableHead>
-            <TableHead className="text-center text-custom-charcoalOlive">
-              Cost Price
-            </TableHead>
-            <TableHead className="text-center text-custom-charcoalOlive">
-              Supplier
-            </TableHead>
-            <TableHead className="text-center text-custom-charcoalOlive">
-              Created at
-            </TableHead>
+            <TableHead className="text-center text-custom-charcoalOlive">Items</TableHead>
+            <TableHead className="text-center text-custom-charcoalOlive ">Quantity</TableHead>
+            <TableHead className="text-center text-custom-charcoalOlive">Price</TableHead>
+            <TableHead className="text-center text-custom-charcoalOlive">Cost Price</TableHead>
+            <TableHead className="text-center text-custom-charcoalOlive">Supplier</TableHead>
+            <TableHead className="text-center text-custom-charcoalOlive">Created at</TableHead>
             <TableHead className="text-center text-custom-charcoalOlive"></TableHead>
           </TableRow>
         </TableHeader>
@@ -71,15 +59,9 @@ const ProductTable = ({ products }: ProductTableProps) => {
               </TableCell>
               <TableCell className="text-center">{product.quantity}</TableCell>
               <TableCell className="text-center">{product.price}</TableCell>
-              <TableCell className="text-center">
-                {product.cost_price}
-              </TableCell>
-              <TableCell className="text-center">
-                {product.supplier.name}
-              </TableCell>
-              <TableCell className="text-center">
-                {dateFormatter(product.created_at)}
-              </TableCell>
+              <TableCell className="text-center">{product.cost_price}</TableCell>
+              <TableCell className="text-center">{product.supplier.name}</TableCell>
+              <TableCell className="text-center">{dateFormatter(product.created_at)}</TableCell>
               <TableCell>
                 <Sheet>
                   <SheetTrigger asChild>
@@ -91,7 +73,11 @@ const ProductTable = ({ products }: ProductTableProps) => {
                     </Button>
                   </SheetTrigger>
                   <SheetContent className="min-w-[35%]">
-                    <ProductPreview product={selectedItem} />
+                    <ProductPreview 
+                      product={selectedItem} 
+                      categories={categories} 
+                      suppliers={suppliers}
+                    />
                   </SheetContent>
                 </Sheet>
               </TableCell>

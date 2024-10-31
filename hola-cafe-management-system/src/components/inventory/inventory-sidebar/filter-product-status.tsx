@@ -1,8 +1,9 @@
-import { products } from "../models/products";
+import { Product } from "@/models/product";
 
 const FilterProductStatus = () => {
   // function on counting products
   const onProductCount = () => {
+    const products: Product[] = JSON.parse(localStorage.getItem("products") || "[]");
     return products.length;
   };
 
