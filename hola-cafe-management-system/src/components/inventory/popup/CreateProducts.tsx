@@ -11,8 +11,8 @@ interface CreateProductsProps {
   onClose: () => void;
   onSubmit: (data: Product) => void;
   initialImageId?: string; 
-  categories: Category[];
-  suppliers: Supplier[];
+  // categories: Category[];
+  // suppliers: Supplier[];
 }
 
 const CreateProducts: React.FC<CreateProductsProps> = ({ product, onClose, onSubmit, initialImageId }) => {
