@@ -39,10 +39,26 @@ const PopupBase: React.FC<PopupBaseProps> = ({
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   // Handle form field changes
   const handleChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const value = e.target.type === 'file' && e.target.files ? e.target.files[0] : e.target.value;
+    const value = e.target.value;
+  
+    // Update formData and clear any existing errors for this field
     setFormData({ ...formData, [key]: value });
     setErrors((prev) => ({ ...prev, [key]: '' }));
+  
+    // Log the selected category or supplier ID and label
+    if (key === 'category') {
+      const selectedCategory = categories.find(category => category.id === Number(value));
+      if (selectedCategory) {
+        console.log(`Category Selected: ID = ${selectedCategory.id}, Label = ${selectedCategory.label}`);
+      }
+    } else if (key === 'supplier') {
+      const selectedSupplier = suppliers.find(supplier => supplier.id === Number(value));
+      if (selectedSupplier) {
+        console.log(`Supplier Selected: ID = ${selectedSupplier.id}, Label = ${selectedSupplier.label}`);
+      }
+    }
   };
+  
   // Handle image selection
   const handleImageSelect = (imageId: string) => {
     const parsedId = parseInt(imageId);
