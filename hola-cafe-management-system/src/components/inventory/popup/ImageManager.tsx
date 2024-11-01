@@ -48,7 +48,7 @@ const ImageManager: React.FC<ImageManagerProps> = ({ isOpen, onClose, onSelectIm
     console.log('Image ID clicked:', image.id);
     console.log('Image URL clicked:', image.image_url);
   };
-
+  //for deletion of images
   const handleDeleteImage = async (imageId: string) => {
     const endpoint = `/api/images/${imageId}/`;
 
@@ -65,7 +65,7 @@ const ImageManager: React.FC<ImageManagerProps> = ({ isOpen, onClose, onSelectIm
       console.error('Error deleting image:', error);
     }
   };
-
+  //for submission of images
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if(!token) {

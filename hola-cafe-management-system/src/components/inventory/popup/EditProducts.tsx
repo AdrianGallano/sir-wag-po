@@ -63,13 +63,13 @@ const EditProducts: React.FC<EditProductsProps> = ({
         getCategories();
         getSuppliers();
     }, []); 
-
+    // Fetch Categories and Suppliers on component mount
     const initialData = {
         ...product,
         category: product.category ? product.category.id : '',
         supplier: product.supplier ? product.supplier.id : '',
     };
-
+    // Define the fields for the form
     const fields = [
         {
             label: 'Category',
@@ -87,7 +87,7 @@ const EditProducts: React.FC<EditProductsProps> = ({
         { label: 'Description', key: 'description', type: 'textarea' },
         { label: 'Product Price', key: 'price', type: 'number' },
     ];
-
+    // Handle form submission
     const handleSubmit = (data: any) => {
         const updatedProduct = {
             ...product,
@@ -104,7 +104,7 @@ const EditProducts: React.FC<EditProductsProps> = ({
     };
     
   
-
+    
     return (
           <PopupBase
           title="Edit Product"

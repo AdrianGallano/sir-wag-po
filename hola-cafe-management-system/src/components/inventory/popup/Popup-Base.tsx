@@ -37,19 +37,19 @@ const PopupBase: React.FC<PopupBaseProps> = ({
   const [isImageManagerOpen, setIsImageManagerOpen] = useState(false);
   const [selectedImageId, setSelectedImageId] = useState<number | undefined>(undefined);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
+  // Handle form field changes
   const handleChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const value = e.target.type === 'file' && e.target.files ? e.target.files[0] : e.target.value;
     setFormData({ ...formData, [key]: value });
     setErrors((prev) => ({ ...prev, [key]: '' }));
   };
-
+  // Handle image selection
   const handleImageSelect = (imageId: string) => {
     const parsedId = parseInt(imageId);
     setSelectedImageId(parsedId);
     setFormData({ ...formData, image: parsedId });
   };
-
+  // Handle form submission
   const handleSubmit = () => {
     const newErrors: { [key: string]: string } = {};
 
@@ -64,7 +64,6 @@ const PopupBase: React.FC<PopupBaseProps> = ({
       setErrors(newErrors);
       return;
     }
-
     const finalData = {
       ...formData,
       category: formData.category || undefined,
@@ -128,7 +127,7 @@ const PopupBase: React.FC<PopupBaseProps> = ({
         ))}
 
         </div>
-
+        
         <DialogFooter>
           <Button onClick={handleSubmit} className="mb-2">Save changes</Button>
         </DialogFooter>

@@ -7,7 +7,6 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { toTitleCase } from "@/utils/formatter";
-import ImageManager from "../inventory/popup/ImageManager";
 import { useContext, useState } from "react";
 import { Button } from "../ui/button";
 import { useAuth } from "@/context/authContext";
