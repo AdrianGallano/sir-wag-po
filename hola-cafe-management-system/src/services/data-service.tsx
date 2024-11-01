@@ -4,13 +4,15 @@ const api = axios.create({
   baseURL: "http://127.0.0.1:8000/",
 });
 
-const getHeaders = (token?: string) => {
-  const headers: { [key: string]: string } = {
-    "Content-Type": "application/json",
-  };
+const getHeaders = (token?: string, isFormData?: boolean) => {
+  const headers: { [key: string]: string } = {};
 
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  if (!isFormData) {
+    headers["Content-Type"] = "application/json";
   }
 
   return headers;
@@ -19,15 +21,17 @@ const getHeaders = (token?: string) => {
 export default async function dataFetch(
   endpoint: string,
   method: string,
-  data?: object,
+  data?: any,
   token?: string
 ) {
   try {
+    const isFormData = data instanceof FormData;
+
     const response = await api.request({
       url: endpoint,
       method,
       data,
-      headers: getHeaders(token),
+      headers: getHeaders(token, isFormData),
     });
     return response.data;
   } catch (error: unknown) {

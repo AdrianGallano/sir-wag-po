@@ -1,6 +1,6 @@
 import React from 'react';
-import { Ellipsis } from 'lucide-react';
-import { Product } from '../models/products-interface';
+import { Menu } from 'lucide-react';
+import { Product } from '@/models/product';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 interface HeaderCrudProps {
   onOpenPopup: (popup: 'open' | 'close', product: Product) => void;
@@ -30,20 +30,20 @@ const HeaderCrud = ({ onOpenPopup, onOpenCategoryPopup, onOpenSupplierPopup }: H
   };
 
   return (
-    <div className='ml-8 flex flex-row space-x-2'>
-      <div className='flex flex-row w-full rounded-lg bg-background md:w-[20px] lg:w-[200px] space-x-2'>
+    <div className='ml-4 mr-20 flex flex-row space-x-2'>
+      <div className='flex flex-row w-full rounded-lg bg-background space-x-2'>
           <DropdownMenu>
-            <DropdownMenuTrigger><Ellipsis className='h-full w-full text-muted-foreground'/></DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuTrigger>
+              <Menu className='h-full w-full text-muted-foreground' />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-48"> 
               <DropdownMenuLabel>Menu</DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleAddProduct}>Add Product</DropdownMenuItem>
               <DropdownMenuItem onClick={handleAddCategory}>Add Category</DropdownMenuItem>
               <DropdownMenuItem onClick={handleAddSupplier}>Add Supplier</DropdownMenuItem>
             </DropdownMenuContent>
-        </DropdownMenu>
-        <button onClick={handleAddProduct} className='border hover:bg-gray-900 hover:border-gray-100 rounded-lg bg-gray-800 text-white p-2 h-[40px] w-full text-sm text-muted-foreground'>
-          Add Products
-        </button>
+          </DropdownMenu>
       </div>
     </div>
   );
