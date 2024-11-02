@@ -13,4 +13,5 @@ export interface Product {
   user: number;
   category: Category;
   supplier: Supplier;
+  image?: string;
 }

@@ -5,8 +5,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import HeaderCrud from './header-crud';
 import CreateProducts from '../popup/CreateProducts';
 import dataFetch from '@/services/data-service';
-import { Product } from '../models/products-interface';
 import CreateCategory from '../popup/CreateCategories';
+import { Product } from '@/models/product';
 import CreateSuppliers from '../popup/CreateSuppliers';
 import { useAuth } from '@/context/authContext';
 
