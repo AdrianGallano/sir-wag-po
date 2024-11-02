@@ -110,7 +110,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
 class ImageViewSet(viewsets.ModelViewSet):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     filterset_fields = [
@@ -125,6 +125,7 @@ class ImageViewSet(viewsets.ModelViewSet):
 
 
     def upload(self, request):
+        host_address =  os.getenv("WEB_HOST")
         uploaded_images = []
 
         request_images = request.FILES.getlist("images")
@@ -158,7 +159,7 @@ class ImageViewSet(viewsets.ModelViewSet):
                         image_not_accepted.append(str(image))
                         continue
 
-                uploaded_image = Image.objects.create(image_url=os.path.abspath(image_path))
+                uploaded_image = Image.objects.create(image_url=f"{host_address}{image_path}")
                 uploaded_images.append(uploaded_image)
 
         except Exception as e:
