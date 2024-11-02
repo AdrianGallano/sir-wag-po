@@ -127,6 +127,7 @@ class ImageViewSet(viewsets.ModelViewSet):
     ]
 
     ordering_fields = "__all__"
+    host_address =  os.getenv("WEB_HOST")
 
 
     def get_throttles(self):
@@ -140,7 +141,6 @@ class ImageViewSet(viewsets.ModelViewSet):
         return [throttle() for throttle in self.throttle_classes]
     
     def upload(self, request):
-        host_address =  os.getenv("WEB_HOST")
         uploaded_images = []
 
         request_images = request.FILES.getlist("images")
@@ -174,7 +174,7 @@ class ImageViewSet(viewsets.ModelViewSet):
                         image_not_accepted.append(str(image))
                         continue
 
-                uploaded_image = Image.objects.create(image_url=f"{host_address}{image_path}")
+                uploaded_image = Image.objects.create(image_url=f"{self.host_address}{image_path}")
                 uploaded_images.append(uploaded_image)
 
         except Exception as e:
@@ -187,3 +187,12 @@ class ImageViewSet(viewsets.ModelViewSet):
             "images_not_accepted": image_not_accepted,
             "info": "we only support png, jpg, and jpeg formats"
         }) 
+    
+    def destroy(self, request, *args, **kwargs):
+
+        image_object = self.get_object()
+        without_host_image_url = image_object.image_url.replace( self.host_address ,"")
+        relative_image_url = os.path.join(".", without_host_image_url)
+        os.remove(relative_image_url)
+
+        return super().destroy(request, *args, **kwargs)
