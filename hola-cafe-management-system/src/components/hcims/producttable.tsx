@@ -25,43 +25,67 @@ import { Supplier } from "@/models/supplier";
 
 interface ProductTableProps {
   products: Product[];
-  categories: Category[]; 
-  suppliers: Supplier[];  
+  categories: Category[];
+  suppliers: Supplier[];
 }
 
-const ProductTable = ({ products, categories, suppliers }: ProductTableProps) => {
+const ProductTable = ({
+  products,
+  categories,
+  suppliers,
+}: ProductTableProps) => {
   const [selectedItem, setSelectedItem] = useState<Product | null>(null);
 
   return (
     <>
-      <Table className="overflow-hidden rounded-md w-full shadow-md">
+      <Table className="overflow-hidden rounded-md w-full shadow-md ">
         <TableHeader className="bg-custom-paleButter hover:bg-custom-paleButter ">
           <TableRow>
-            <TableHead className="text-center text-custom-charcoalOlive">Items</TableHead>
-            <TableHead className="text-center text-custom-charcoalOlive ">Quantity</TableHead>
-            <TableHead className="text-center text-custom-charcoalOlive">Price</TableHead>
-            <TableHead className="text-center text-custom-charcoalOlive">Cost Price</TableHead>
-            <TableHead className="text-center text-custom-charcoalOlive">Supplier</TableHead>
-            <TableHead className="text-center text-custom-charcoalOlive">Created at</TableHead>
-            <TableHead className="text-center text-custom-charcoalOlive"></TableHead>
+            <TableHead className=" text-custom-charcoalOlive">Items</TableHead>
+            <TableHead className=" text-custom-charcoalOlive ">
+              Quantity
+            </TableHead>
+            <TableHead className=" text-custom-charcoalOlive">Price</TableHead>
+            <TableHead className=" text-custom-charcoalOlive">
+              Cost Price
+            </TableHead>
+            <TableHead className=" text-custom-charcoalOlive">
+              Supplier
+            </TableHead>
+            <TableHead className=" text-custom-charcoalOlive">
+              Expiration Date
+            </TableHead>
+            <TableHead className=" text-custom-charcoalOlive"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {products.map((product) => (
             <TableRow key={product.id}>
-              <TableCell className="font-medium inline-flex items-center gap-1">
+              <TableCell className="font-medium flex items-center gap-1 px-6 py-4">
                 <img
                   src={placeholder}
                   alt={product.name}
                   className="w-12 object-center rounded-sm"
                 />
-                <span className="text-center">{toTitleCase(product.name)}</span>
+                <span className="md:text-base sm:text-sm ">
+                  {toTitleCase(product.name)}
+                </span>
               </TableCell>
-              <TableCell className="text-center">{product.quantity}</TableCell>
-              <TableCell className="text-center">{product.price}</TableCell>
-              <TableCell className="text-center">{product.cost_price}</TableCell>
-              <TableCell className="text-center">{product.supplier.name}</TableCell>
-              <TableCell className="text-center">{dateFormatter(product.created_at)}</TableCell>
+              <TableCell className="md:text-base sm:text-sm">
+                {product.quantity}
+              </TableCell>
+              <TableCell className="md:text-base sm:text-sm">
+                {product.price}
+              </TableCell>
+              <TableCell className="md:text-base sm:text-sm">
+                {product.cost_price}
+              </TableCell>
+              <TableCell className="md:text-base sm:text-sm">
+                {product.supplier.name}
+              </TableCell>
+              <TableCell className="md:text-base sm:text-sm">
+                {dateFormatter(product.expiration_date)}
+              </TableCell>
               <TableCell>
                 <Sheet>
                   <SheetTrigger asChild>
@@ -73,9 +97,9 @@ const ProductTable = ({ products, categories, suppliers }: ProductTableProps) =>
                     </Button>
                   </SheetTrigger>
                   <SheetContent className="min-w-[35%]">
-                    <ProductPreview 
-                      product={selectedItem} 
-                      categories={categories} 
+                    <ProductPreview
+                      product={selectedItem}
+                      categories={categories}
                       suppliers={suppliers}
                     />
                   </SheetContent>
