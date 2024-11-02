@@ -172,9 +172,17 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.UserRateThrottle",
+        "inventory.throttles.UploadImageThrottle",
+        "inventory.throttles.GeneralImageThrottle",
+        "inventory.throttles.GeneralRequestThrottle",
+
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "user": "10000/day",
+        "upload_image": "2/min",
+        "general_image": "5/min",
+        "general_request": "5/min",
+
+
     },
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",

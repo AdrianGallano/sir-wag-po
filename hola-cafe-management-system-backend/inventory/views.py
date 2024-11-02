@@ -16,8 +16,11 @@ from rest_framework.permissions import IsAuthenticated
 from PIL import Image as PilImage
 import os
 from uuid import uuid4
+from .throttles import GeneralRequestThrottle,GeneralImageThrottle,UploadImageThrottle
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
+    throttle_classes = [GeneralRequestThrottle]
     permission_classes = [IsAuthenticated]
     filterset_fields = [
         "name",
@@ -40,6 +43,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class SupplierViewSet(viewsets.ModelViewSet):
+    throttle_classes = [GeneralRequestThrottle]
     permission_classes = [IsAuthenticated]
 
     filterset_fields = [
@@ -69,6 +73,7 @@ class SupplierViewSet(viewsets.ModelViewSet):
 
 
 class ProductViewSet(viewsets.ModelViewSet):
+    throttle_classes = [GeneralRequestThrottle]
     permission_classes = [IsAuthenticated]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -124,6 +129,16 @@ class ImageViewSet(viewsets.ModelViewSet):
     ordering_fields = "__all__"
 
 
+    def get_throttles(self):
+
+        if self.action == "upload":
+            self.throttle_classes = [UploadImageThrottle]
+        else:
+            self.throttle_classes = [GeneralImageThrottle]
+
+
+        return [throttle() for throttle in self.throttle_classes]
+    
     def upload(self, request):
         host_address =  os.getenv("WEB_HOST")
         uploaded_images = []
