@@ -5,7 +5,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { dateFormatter, toTitleCase } from "@/utils/formatter";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dataFetch from "@/services/data-service";
 import EditProducts from "../inventory/popup/EditProducts";
 import { Category } from "@/models/category";
@@ -20,32 +20,38 @@ import {
 import StockStatus from "./stockstatus";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
 import { useAuth } from "@/context/authContext";
-import { todo } from "node:test";
+import PopupBase from "../inventory/popup/Popup-Base";
 
 interface ProductPreviewProps {
   product: Product | null;
   categories: Category[];
   suppliers: Supplier[];
+  onClose: () => void; 
 }
 
 const ProductPreview = ({
   product: initialProduct,
   categories,
   suppliers,
+  onClose,
 }: ProductPreviewProps) => {
   const [product, setProduct] = useState<Product | null>(initialProduct);
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | undefined>(
     product?.image?.image_url || ""
   );
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
-  // for now we'll use the quantity as the threshold
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const threshold = product?.quantity || 100;
   const { token } = useAuth();
 
-  console.log("Product Preview:", product);
+  // monitor product changes
+  useEffect(() => {
+    if (!product) {
+      onClose(); 
+    }
+  }, [product]);
 
-  // For editing products
-
+  // updating products
   const updateProduct = async (data: Product) => {
     try {
       const endpoint = `/api/products/${data.id}/`;
@@ -53,7 +59,6 @@ const ProductPreview = ({
 
       const response = await dataFetch(endpoint, "PUT", data, token);
       console.log("Product updated:", response);
-
       setProduct(response as Product);
     } catch (error) {
       console.error("Error updating product:", error);
@@ -66,7 +71,27 @@ const ProductPreview = ({
     setIsEditPopupOpen(false);
   };
 
-  if (!product) return null;
+  // deleting products
+  const deleteProducts = async () => {
+    if (product) {
+      const endpoint = `/api/products/${product.id}/`;
+      try {
+        if (!token) throw new Error("Token not found in response");
+        await dataFetch(endpoint, "DELETE", {}, token);
+        console.log("Product deleted:", product.name);
+  
+        // reset the product state
+        setProduct(null);
+        onClose()
+      } catch (error) {
+        console.error("Error deleting product:", error);
+      } finally {
+        setIsDeletePopupOpen(false);
+      }
+    }
+  };
+
+  if (!product) return null; 
 
   return (
     <div className="w-full">
@@ -78,7 +103,7 @@ const ProductPreview = ({
           <DropdownMenuContent className="relative w-40 left-24 -top-10 bg-white p-2 border border-slate-400 rounded-md space-y-1">
             <DropdownMenuItem>
               <button
-                className=" text-slate-600 "
+                className="text-slate-600"
                 onClick={() => setIsEditPopupOpen(true)}
               >
                 Edit
@@ -87,8 +112,8 @@ const ProductPreview = ({
             <hr className="bg-gray-200" />
             <DropdownMenuItem>
               <button
-                className=" text-slate-600 "
-                onClick={() => setIsEditPopupOpen(true)}
+                className="text-slate-600"
+                onClick={() => setIsDeletePopupOpen(true)}
               >
                 Delete
               </button>
@@ -96,7 +121,7 @@ const ProductPreview = ({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <SheetDescription className="w-full  ">
+        <SheetDescription className="w-full">
           <img
             src={selectedImageUrl}
             alt={product.name}
@@ -104,7 +129,7 @@ const ProductPreview = ({
           />
         </SheetDescription>
 
-        <SheetTitle className="md:text-3xl sm:text-sm  ">
+        <SheetTitle className="md:text-3xl sm:text-sm">
           {toTitleCase(product.name)}
         </SheetTitle>
         <SheetDescription className="md:text-base sm:text-sm text-gray-600">
@@ -128,12 +153,10 @@ const ProductPreview = ({
               <span>Expiration Date:</span>{" "}
               {dateFormatter(product.expiration_date)}
             </p>
-
             <p className="md:text-base sm:text-sm text-gray-600">
               <span>Category:</span> {toTitleCase(product.category.name)}
             </p>
 
-            {/* supplier more information | not final  */}
             <Popover>
               <PopoverTrigger>
                 <p className="md:text-base sm:text-sm text-gray-600">
@@ -144,7 +167,6 @@ const ProductPreview = ({
                 <p className="md:text-base sm:text-sm text-gray-600">
                   <span>Name:</span> {toTitleCase(product.supplier.name)}
                 </p>
-
                 <p className="md:text-base sm:text-sm text-gray-600">
                   <span>Contact Person:</span>{" "}
                   {toTitleCase(product.supplier.contact_person)}
@@ -180,6 +202,16 @@ const ProductPreview = ({
           categories={categories}
           suppliers={suppliers}
           onOpenImageManager={() => setSelectedImageUrl(undefined)}
+        />
+      )}
+
+      {isDeletePopupOpen && (
+        <PopupBase
+          title="Delete Product"
+          actionType="delete"
+          product={product}
+          onSubmit={deleteProducts}
+          onClose={() => setIsDeletePopupOpen(false)}
         />
       )}
     </div>

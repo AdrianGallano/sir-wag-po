@@ -47,6 +47,7 @@ const MainInventory = () => {
         )) as Product[];
         setProducts(products);
         setTotalProducts(products.length);
+        console.log("Products fetched", products);
       } catch (error) {
         console.error("Failed to fetch products", error);
       }
@@ -86,7 +87,8 @@ const MainInventory = () => {
           categories={[]}
         />
       ) : (
-        <InventoryProductVerticalCards products={paginatedProducts} />
+        <InventoryProductVerticalCards products={paginatedProducts}  suppliers={[]}
+        categories={[]} />
       )}
       {/* should be at the bottom of the page and should displayed when there are 
       products*/}

@@ -3,8 +3,6 @@ import { Product } from '@/models/product';
 import PopupBase from './Popup-Base';
 import dataFetch from '@/services/data-service';
 import { useAuth } from '@/context/authContext';
-import { Category } from '@/models/category';
-import { Supplier } from '@/models/supplier';
 
 interface CreateProductsProps {
   product?: Product;
