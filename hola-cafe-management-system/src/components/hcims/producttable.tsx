@@ -18,7 +18,7 @@ import placeholder from "./../../assets/images/hola_logo.jpg";
 import { dateFormatter, toTitleCase } from "@/utils/formatter";
 import { Button } from "../ui/button";
 import { EyeIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductPreview from "./productpreview";
 import { Category } from "@/models/category";
 import { Supplier } from "@/models/supplier";
@@ -35,6 +35,22 @@ const ProductTable = ({
   suppliers,
 }: ProductTableProps) => {
   const [selectedItem, setSelectedItem] = useState<Product | null>(null);
+
+  // monitor product changes
+  useEffect(() => {
+    if (!selectedItem) {
+      console.log("No product selected");
+      closeSheet();
+    } else {
+      console.log("Selected product:", selectedItem);
+    }
+  }, [selectedItem]);
+
+  // close the sheet
+  const closeSheet = () => {
+    setSelectedItem(null);
+    console.log("Closing preview");
+  };
 
   return (
     <>
@@ -63,7 +79,7 @@ const ProductTable = ({
             <TableRow key={product.id}>
               <TableCell className="font-medium flex items-center gap-1 px-6 py-4">
                 <img
-                  src={placeholder}
+                  src={product.image?.image_url || placeholder}
                   alt={product.name}
                   className="w-12 object-center rounded-sm"
                 />
@@ -87,7 +103,7 @@ const ProductTable = ({
                 {dateFormatter(product.expiration_date)}
               </TableCell>
               <TableCell>
-                <Sheet>
+                <Sheet open={!!selectedItem} onOpenChange={(open) => { if (!open) closeSheet(); }}>
                   <SheetTrigger asChild>
                     <Button
                       onClick={() => setSelectedItem(product)}
@@ -101,6 +117,7 @@ const ProductTable = ({
                       product={selectedItem}
                       categories={categories}
                       suppliers={suppliers}
+                      onClose={closeSheet} 
                     />
                   </SheetContent>
                 </Sheet>
