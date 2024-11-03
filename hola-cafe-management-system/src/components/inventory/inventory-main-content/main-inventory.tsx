@@ -80,46 +80,51 @@ const MainInventory = () => {
       {/* Header with Tabs */}
       <HeaderWrapper onLayoutChange={handleLayoutChange} />
       {/* Product List based on layout */}
-      {layout === "horizontal" ? (
-        <ProductTable
-          products={paginatedProducts}
-          suppliers={[]}
-          categories={[]}
-        />
-      ) : (
-        <InventoryProductVerticalCards products={paginatedProducts}  suppliers={[]}
-        categories={[]} />
-      )}
-      {/* should be at the bottom of the page and should displayed when there are 
-      products*/}
-      <Pagination className="my-5">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              className="cursor-pointer active:bg-custom-paleButter"
-              onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-            />
-          </PaginationItem>
-          {[...Array(totalPages)].map((_, index) => (
-            <PaginationItem key={index}>
-              <PaginationLink
+      <div className="flex-grow">
+        {layout === "horizontal" ? (
+          <ProductTable
+            products={paginatedProducts}
+            suppliers={[]}
+            categories={[]}
+          />
+        ) : (
+          <InventoryProductVerticalCards
+            products={paginatedProducts}
+            suppliers={[]}
+            categories={[]}
+          />
+        )}
+      </div>
+      {totalProducts > 0 && (
+        <Pagination className="my-5">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
                 className="cursor-pointer active:bg-custom-paleButter"
-                onClick={() => handlePageChange(index + 1)}
-              >
-                {index + 1}
-              </PaginationLink>
+                onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+              />
             </PaginationItem>
-          ))}
-          <PaginationItem>
-            <PaginationNext
-              className="cursor-pointer active:bg-custom-paleButter"
-              onClick={() =>
-                handlePageChange(Math.min(currentPage + 1, totalPages))
-              }
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+            {[...Array(totalPages)].map((_, index) => (
+              <PaginationItem key={index}>
+                <PaginationLink
+                  className="cursor-pointer active:bg-custom-paleButter"
+                  onClick={() => handlePageChange(index + 1)}
+                >
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            <PaginationItem>
+              <PaginationNext
+                className="cursor-pointer active:bg-custom-paleButter"
+                onClick={() =>
+                  handlePageChange(Math.min(currentPage + 1, totalPages))
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
     </div>
   );
 };
