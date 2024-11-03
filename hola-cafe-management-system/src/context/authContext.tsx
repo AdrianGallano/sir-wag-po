@@ -21,7 +21,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
+  const [token, setToken] = useState(sessionStorage.getItem("token") || null);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       setToken(token);
-      localStorage.setItem("token", token);
+      sessionStorage.setItem("token", token);
       console.log("Login successful, token saved:", token);
 
       navigate("/analytics");
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setToken(null);
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     navigate("/login");
   };
 

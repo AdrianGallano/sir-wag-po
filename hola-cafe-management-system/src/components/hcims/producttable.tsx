@@ -54,10 +54,12 @@ const ProductTable = ({
 
   return (
     <>
-      <Table className="overflow-hidden rounded-md w-full shadow-md ">
-        <TableHeader className="bg-custom-paleButter hover:bg-custom-paleButter ">
+      <Table className="overflow-hidden rounded-md w-full shadow-md">
+        <TableHeader className="bg-custom-sunnyGold hover:bg-custom-paleButter ">
           <TableRow>
-            <TableHead className=" text-custom-charcoalOlive">Items</TableHead>
+            <TableHead className=" text-custom-charcoalOlive  ">
+              Items
+            </TableHead>
             <TableHead className=" text-custom-charcoalOlive ">
               Quantity
             </TableHead>
@@ -74,9 +76,9 @@ const ProductTable = ({
             <TableHead className=" text-custom-charcoalOlive"></TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="bg-white ">
           {products.map((product) => (
-            <TableRow key={product.id}>
+            <TableRow key={product.id} className=" border border-gray-300 ">
               <TableCell className="font-medium flex items-center gap-1 px-6 py-4">
                 <img
                   src={product.image?.image_url || placeholder}
@@ -103,7 +105,12 @@ const ProductTable = ({
                 {dateFormatter(product.expiration_date)}
               </TableCell>
               <TableCell>
-                <Sheet open={!!selectedItem} onOpenChange={(open) => { if (!open) closeSheet(); }}>
+                <Sheet
+                  open={!!selectedItem}
+                  onOpenChange={(open) => {
+                    if (!open) closeSheet();
+                  }}
+                >
                   <SheetTrigger asChild>
                     <Button
                       onClick={() => setSelectedItem(product)}
@@ -112,12 +119,17 @@ const ProductTable = ({
                       <EyeIcon className="w-5 text-black " />
                     </Button>
                   </SheetTrigger>
-                  <SheetContent className="min-w-[35%]">
+                  <SheetContent
+                    style={{
+                      scrollbarWidth: "none",
+                    }}
+                    className=" min-w-[35%] min-h-screen overflow-y-scroll"
+                  >
                     <ProductPreview
                       product={selectedItem}
                       categories={categories}
                       suppliers={suppliers}
-                      onClose={closeSheet} 
+                      onClose={closeSheet}
                     />
                   </SheetContent>
                 </Sheet>

@@ -41,7 +41,7 @@ const InventoryPage = () => {
   return (
     <div className="flex min-h-screen bg-white">
       {/* This is the sidebar */}
-      <InventorySidebarComponent onFilterChange={handleFilterChange} />
+      {/* <InventorySidebarComponent onFilterChange={handleFilterChange} /> */}
 
       {/* <ProductTable products={products} /> */}
       {/* Main inventory area */}

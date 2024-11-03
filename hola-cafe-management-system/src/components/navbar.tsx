@@ -17,9 +17,9 @@ const Navbar = () => {
   };
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-[#f7d327] rounded-tr-md rounded-br-md sm:flex">
+    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-custom-charcoalOlive rounded-tr-2xl rounded-br-2xl sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-4">
-        <a className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-[#504c41] text-lg font-semibold text-[#feed9f] md:h-8 md:w-8 md:text-base">
+        <a className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-custom-sunnyGold text-lg font-semibold text-custom-charcoalOlive md:h-8 md:w-8 md:text-base">
           <Coffee className="h-4 w-4 transition-all group-hover:scale-110 " />
           <span className="sr-only">Hola Cafe</span>
         </a>
@@ -29,13 +29,13 @@ const Navbar = () => {
             <TooltipTrigger asChild>
               <Link
                 to="/analytics"
-                className={`flex h-9 w-9 items-center justify-center rounded-lg -colors  md:h-8 transition md:w-8 ${
+                className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
                   location.pathname === "/analytics"
-                    ? "bg-[#504c41] text-[#feed9f] hover:text-[#f7d327]"
-                    : "bg-transparent text-muted-foreground hover:text-foreground"
+                    ? "bg-custom-sunnyGold text-custom-charcoalOlive "
+                    : "bg-transparent text-muted-foreground hover:text-white"
                 }`}
               >
-                <LineChart className="h-5 w-5" />
+                <LineChart className="h-4 w-4 transition-all group-hover:scale-110 " />
                 <span className="sr-only">Analytics</span>
               </Link>
             </TooltipTrigger>
@@ -48,13 +48,13 @@ const Navbar = () => {
             <TooltipTrigger asChild>
               <Link
                 to="/inventory"
-                className={`flex h-9 w-9 items-center justify-center rounded-lg -colors  md:h-8 transition md:w-8 ${
+                className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
                   location.pathname === "/inventory"
-                    ? "bg-[#504c41] text-[#feed9f] hover:text-[#f7d327]"
-                    : "bg-transparent text-muted-foreground hover:text-foreground"
+                    ? "bg-custom-sunnyGold text-custom-charcoalOlive "
+                    : "bg-transparent text-muted-foreground hover:text-white"
                 }`}
               >
-                <Warehouse className="h-5 w-5" />
+                <Warehouse className="h-4 w-4 transition-all group-hover:scale-110 " />
                 <span className="sr-only">Inventory</span>
               </Link>
             </TooltipTrigger>
@@ -68,9 +68,9 @@ const Navbar = () => {
             <TooltipTrigger asChild>
               <button
                 onClick={handleLogout}
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                className="group flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-white md:h-8 md:w-8"
               >
-                <LogOut className="h-5 w-5" />
+                <LogOut className="h-4 w-4 transition-all group-hover:scale-110 " />
                 <span className="sr-only">Settings</span>
               </button>
             </TooltipTrigger>
