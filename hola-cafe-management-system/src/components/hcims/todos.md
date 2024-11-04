@@ -1,3 +1,5 @@
-[]restyle forms
-[]delete product function
-[]pagination position
+[x]restyle forms
+[/]delete product function
+[/]pagination position
+[/]image manager
+[x]product table overhaul
