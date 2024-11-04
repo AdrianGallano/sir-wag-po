@@ -110,19 +110,21 @@ const ImageManager: React.FC<ImageManagerProps> = ({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="min-w-[60%] h-[80vh] overflow-y-auto">
-          <DialogTitle>
-            <h2 className="text-xl font-semibold">Image Manager</h2>
-          </DialogTitle>
+        <DialogContent className="min-w-[60%] h-[80vh] overflow-y-auto flex flex-col">
+          <DialogHeader>
+            <DialogTitle>
+              <h2 className="text-xl font-semibold">Image Manager</h2>
+            </DialogTitle>
+          </DialogHeader>
 
-          <Tabs defaultValue="upload">
-            <TabsList className="w-full flex justify-around ">
+          <Tabs defaultValue="upload" className="sticky top-0 z-10 bg-white">
+            <TabsList className="w-full flex justify-around border-b border-gray-200">
               <TabsTrigger value="upload">Upload</TabsTrigger>
               <TabsTrigger value="folder">Folders</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="upload">
-              <div className="grid w-full max-w-sm items-center gap-1.5">
+            <TabsContent value="upload" className="">
+              <div>
                 <Label htmlFor="picture">Picture</Label>
                 <Input
                   type="file"
