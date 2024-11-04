@@ -125,7 +125,7 @@ const ProductPreview = ({
           <img
             src={selectedImageUrl}
             alt={product.name}
-            className="w-full h-52 rounded-md border border-gray-300"
+            className="w-full h-52 rounded-md border border-gray-300 object-cover"
           />
         </SheetDescription>
 
