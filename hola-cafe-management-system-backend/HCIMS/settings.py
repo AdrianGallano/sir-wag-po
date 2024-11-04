@@ -178,10 +178,10 @@ REST_FRAMEWORK = {
 
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "user": "5/min",
-        "upload_image": "2/min",
-        "general_image": "5/min",
-        "general_request": "5/min",
+        "user": "500/day",
+        "upload_image": "200/day",
+        "general_image": "500/day",
+        "general_request": "500/day",
 
 
     },
