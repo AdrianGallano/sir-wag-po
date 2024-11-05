@@ -6,6 +6,7 @@ interface AuthContextType {
   token: string | null;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
+  success: boolean;
   error: string | null;
 }
 
@@ -23,6 +24,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState(sessionStorage.getItem("token") || null);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const login = async (username: string, password: string) => {
@@ -39,7 +41,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       );
 
       const token = response.access;
-      console.log("Parsed response data access:", token);
 
       if (!token) {
         throw new Error("Token not found in response");
@@ -47,11 +48,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       setToken(token);
       sessionStorage.setItem("token", token);
-      console.log("Login successful, token saved:", token);
-
-      navigate("/analytics");
+      setSuccess(true);
     } catch (err) {
       console.error("Error during login:", err);
+      setSuccess(false);
       setError("Login failed. Please check your username and password.");
     }
   };
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, login, logout, error }}>
+    <AuthContext.Provider value={{ token, login, logout, success, error }}>
       {children}
     </AuthContext.Provider>
   );
