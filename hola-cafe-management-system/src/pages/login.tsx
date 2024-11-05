@@ -1,19 +1,38 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import hola_bg from "./../assets/images/hola_bg.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/authContext";
 import { Label } from "@/components/ui/label";
+import MessagePopup from "@/components/messagepopup";
 
 const Login = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { login } = useAuth();
+  const { login, success } = useAuth();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const navigate = useNavigate();
+
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleClosePopup = () => {
+    setPopupOpen(false);
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    login(username, password);
+    await login(username, password);
+    if (success) {
+      setMessage("Login successful!");
+      setTimeout(() => {
+        navigate("/analytics");
+      }, 2000);
+    } else {
+      setMessage("Login failed! Please try again.");
+    }
+    setPopupOpen(true);
   };
 
   return (
@@ -87,6 +106,11 @@ const Login = () => {
           </div>
         </div>
       </div>
+      <MessagePopup
+        message={message}
+        onClose={handleClosePopup}
+        onOpen={isPopupOpen}
+      />
     </>
   );
 };
