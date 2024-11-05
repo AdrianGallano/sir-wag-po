@@ -27,12 +27,16 @@ interface ProductTableProps {
   products: Product[];
   categories: Category[];
   suppliers: Supplier[];
+  onproductDeleted: () => void;
+  onproductUpdated: () => void;
 }
 
 const ProductTable = ({
   products,
   categories,
   suppliers,
+  onproductDeleted,
+  onproductUpdated,
 }: ProductTableProps) => {
   const [selectedItem, setSelectedItem] = useState<Product | null>(null);
 
@@ -130,6 +134,8 @@ const ProductTable = ({
                       categories={categories}
                       suppliers={suppliers}
                       onClose={closeSheet}
+                      onproductDeleted={onproductDeleted}
+                      onproductUpdated={onproductUpdated}
                     />
                   </SheetContent>
                 </Sheet>

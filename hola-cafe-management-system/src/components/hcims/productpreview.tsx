@@ -21,12 +21,15 @@ import StockStatus from "./stockstatus";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
 import { useAuth } from "@/context/authContext";
 import PopupBase from "../inventory/popup/Popup-Base";
+import MessagePopup from "../messagepopup";
 
 interface ProductPreviewProps {
   product: Product | null;
   categories: Category[];
   suppliers: Supplier[];
   onClose: () => void; 
+  onproductDeleted: () => void;
+  onproductUpdated: () => void;
 }
 
 const ProductPreview = ({
@@ -34,6 +37,8 @@ const ProductPreview = ({
   categories,
   suppliers,
   onClose,
+  onproductDeleted,
+  onproductUpdated,
 }: ProductPreviewProps) => {
   const [product, setProduct] = useState<Product | null>(initialProduct);
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | undefined>(
@@ -42,10 +47,12 @@ const ProductPreview = ({
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const threshold = product?.quantity || 100;
+  const [message, setMessage] = useState<string>("");
+  const [isMessagePopupOpen, setIsMessagePopupOpen] = useState<boolean>(false);
   const { token } = useAuth();
 
   // monitor product changes
-  useEffect(() => {
+    useEffect(() => {
     if (!product) {
       onClose(); 
     }
@@ -60,6 +67,10 @@ const ProductPreview = ({
       const response = await dataFetch(endpoint, "PUT", data, token);
       console.log("Product updated:", response);
       setProduct(response as Product);
+      setMessage("Product updated successfully");
+      setIsMessagePopupOpen(true);// Open the message popup
+      onproductUpdated();
+      onClose();
     } catch (error) {
       console.error("Error updating product:", error);
     }
@@ -77,11 +88,13 @@ const ProductPreview = ({
       const endpoint = `/api/products/${product.id}/`;
       try {
         if (!token) throw new Error("Token not found in response");
+        setMessage("Product deleted successfully");
+        setIsMessagePopupOpen(true);// Open the message popup
         await dataFetch(endpoint, "DELETE", {}, token);
         console.log("Product deleted:", product.name);
-  
         // reset the product state
         setProduct(null);
+        onproductDeleted();
         onClose()
       } catch (error) {
         console.error("Error deleting product:", error);
@@ -125,7 +138,7 @@ const ProductPreview = ({
           <img
             src={selectedImageUrl}
             alt={product.name}
-            className="w-full h-52 rounded-md border border-gray-300"
+            className="w-full h-52 rounded-md border border-gray-300 object-cover"
           />
         </SheetDescription>
 
@@ -214,6 +227,16 @@ const ProductPreview = ({
           onClose={() => setIsDeletePopupOpen(false)}
         />
       )}
+
+      {isMessagePopupOpen && (
+        <MessagePopup
+          message={message}
+          onClose={() => setIsMessagePopupOpen(false)}
+          onOpen={isMessagePopupOpen}
+        />
+      )}
+
+
     </div>
   );
 };
