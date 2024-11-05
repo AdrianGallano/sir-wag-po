@@ -9,15 +9,19 @@ import CreateCategory from '../popup/CreateCategories';
 import { Product } from '@/models/product';
 import CreateSuppliers from '../popup/CreateSuppliers';
 import { useAuth } from '@/context/authContext';
+import MessagePopup from '@/components/messagepopup';
 
 interface HeaderWrapperProps {
   onLayoutChange: (layout: string) => void;
+  onProductCreated: () => void;
 }
 
-const HeaderWrapper: React.FC<HeaderWrapperProps> = ({ onLayoutChange }) => {
+const HeaderWrapper: React.FC<HeaderWrapperProps> = ({ onLayoutChange, onProductCreated }) => {
   const [isProductPopupOpen, setIsProductPopupOpen] = React.useState<boolean>(false);
   const [isCategoryPopupOpen, setIsCategoryPopupOpen] = React.useState<boolean>(false);
   const [isSupplierPopupOpen, setIsSupplierPopupOpen] = React.useState<boolean>(false);
+  const [isMessagePopupOpen, setIsMessagePopupOpen] = React.useState<boolean>(false);
+  const [message, setMessage] = React.useState<string>("");
 
   const handlePopup = (popupType: "product" | "category" | "supplier", action: "open" | "close") => {
     if (popupType === "product") {
@@ -30,60 +34,58 @@ const HeaderWrapper: React.FC<HeaderWrapperProps> = ({ onLayoutChange }) => {
   };
   const {token} = useAuth(); // Get the token from the useAuth function
 
-  // Function to handle Create product
+  // Function to handle product submit
   const handleProductSubmit = async (productData: Product) => {
     try {
-        const endpoint = '/api/products/';
+      const endpoint = '/api/products/';
+      if (!token) throw new Error('Token not found');
+  
+      const response = await dataFetch(endpoint, 'POST', productData, token);
+      console.log('Product saved:', response);
 
-        if(!token) {
-          console.error('Token not found in response');
-          throw new Error('Token not found in response');
-        }
-
-        const response = await dataFetch(endpoint, 'POST', productData, token); // Include token in the request
-        console.log('Product saved:', response);
-        setIsProductPopupOpen(false); 
-    } catch (error) { // Error handling
-        console.error("Error saving product:", error);
-        console.log('Product not saved:', productData);
+      // Call the onProductCreated to refetch products
+      onProductCreated(); // Refetch products after creating a new one
+  
+      setIsProductPopupOpen(false);
+      setMessage('Product saved successfully');
+      setIsMessagePopupOpen(true); // Open the message popup
+    } catch (error) {
+      console.error("Error saving product:", error);
     }
-};
-  // Function to handle Create category
+  };
+  // Function to handle category submit
   const handleCategorySubmit = async (categoryData: any) => {
     try {
-      const endpoint = '/api/categories/'
-
-      if(!token) {
-        console.error('Token not found in response');
-        throw new Error('Token not found in response');
-      }
-
-      const response = await dataFetch(endpoint, 'POST', categoryData, token); // Include token in the request
+      const endpoint = '/api/categories/';
+      if (!token) throw new Error('Token not found');
+  
+      const response = await dataFetch(endpoint, 'POST', categoryData, token);
       console.log('Category saved:', response);
+  
       setIsCategoryPopupOpen(false);
-    } catch (error) { // Error handling
+      setMessage('Category saved successfully');
+      setIsMessagePopupOpen(true); // Open the message popup
+    } catch (error) {
       console.error("Error saving category:", error);
-      console.log('Category not saved:', categoryData);
     }
-  }
-  // Function to handle Create supplier
+  };
+  // Function to handle supplier submit 
   const handleSupplierSubmit = async (supplierData: any) => {
     try {
-      const endpoint = '/api/suppliers/'
-
-      if(!token) {
-        console.error('Token not found in response');
-        throw new Error('Token not found in response');
-      }
-
-      const response = await dataFetch(endpoint, 'POST', supplierData, token); // Include token in the request
+      const endpoint = '/api/suppliers/';
+      if (!token) throw new Error('Token not found');
+  
+      const response = await dataFetch(endpoint, 'POST', supplierData, token);
       console.log('Supplier saved:', response);
+  
       setIsSupplierPopupOpen(false);
-    } catch (error) { // Error handling
+      setMessage('Supplier saved successfully');
+      setIsMessagePopupOpen(true); // Open the message popup
+    } catch (error) {
       console.error("Error saving supplier:", error);
-      console.log('Supplier not saved:', supplierData);
     }
-  }
+  };
+  
 
   return (
     <div className='flex items-center space-x-4 w-full mb-4 pl-2 pr-2'>
@@ -124,6 +126,14 @@ const HeaderWrapper: React.FC<HeaderWrapperProps> = ({ onLayoutChange }) => {
         <CreateSuppliers
           onClose={() => handlePopup('supplier', 'close')}
           onSubmit={handleSupplierSubmit}
+        />
+      )}
+
+      {isMessagePopupOpen && (
+        <MessagePopup
+          message={message}
+          onClose={() => setIsMessagePopupOpen(false)}
+          onOpen={isMessagePopupOpen}
         />
       )}
 

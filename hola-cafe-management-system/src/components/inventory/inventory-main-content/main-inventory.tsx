@@ -28,34 +28,35 @@ const MainInventory = () => {
   // context
   const { token } = useAuth();
 
-  // Allowing the layout to be changed based on tab value
+  // Fetch products function
+  const fetchProducts = async () => {
+    try {
+      const products = (await dataFetch(
+        "api/products/",
+        "GET",
+        {},
+        token!
+      )) as Product[];
+      setProducts(products);
+      setTotalProducts(products.length);
+      console.log("Products fetched", products);
+    } catch (error) {
+      console.error("Failed to fetch products", error);
+    }
+  };
+
+  // useEffect to fetch products on mount
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
   const handleLayoutChange = (selectedLayout: string) => {
-    // Casting string to "horizontal" | "vertical"
     if (selectedLayout === "horizontal" || selectedLayout === "vertical") {
       setLayout(selectedLayout);
     }
   };
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const products = (await dataFetch(
-          "api/products/",
-          "GET",
-          {},
-          token!
-        )) as Product[];
-        setProducts(products);
-        setTotalProducts(products.length);
-        console.log("Products fetched", products);
-      } catch (error) {
-        console.error("Failed to fetch products", error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
+  // Handle filter change
   const handleFilterChange = (filter: {
     category?: string;
     stockStatus?: string;
@@ -77,21 +78,23 @@ const MainInventory = () => {
 
   return (
     <div className="flex-1 flex flex-col bg-white p-2">
-      {/* Header with Tabs */}
-      <HeaderWrapper onLayoutChange={handleLayoutChange} />
-      {/* Product List based on layout */}
+      <HeaderWrapper onLayoutChange={handleLayoutChange} onProductCreated={fetchProducts} />
       <div className="flex-grow">
         {layout === "horizontal" ? (
           <ProductTable
             products={paginatedProducts}
             suppliers={[]}
             categories={[]}
+            onproductUpdated={fetchProducts} // Pass the callback
+            onproductDeleted={fetchProducts} // Pass the callback
           />
         ) : (
           <InventoryProductVerticalCards
             products={paginatedProducts}
             suppliers={[]}
             categories={[]}
+            onproductDeleted={fetchProducts} // Pass the callback
+            onproductUpdated={fetchProducts} // Pass the callback
           />
         )}
       </div>

@@ -19,13 +19,11 @@ const EditProducts: React.FC<EditProductsProps> = ({
     product,
     onClose,
     onSubmit,
-    onOpenImageManager,
 }) => {
     const { token } = useAuth();
     const [categories, setCategories] = useState<{ id: number; label: string }[]>([]);
     const [suppliers, setSuppliers] = useState<{ id: number; label: string }[]>([]);
     const [imageId, setImageId] = useState<number | undefined>(undefined);
-
 
     // Fetch Categories
     const getCategories = async () => {
@@ -69,6 +67,7 @@ const EditProducts: React.FC<EditProductsProps> = ({
         category: product.category ? product.category.id : '',
         supplier: product.supplier ? product.supplier.id : '',
     };
+    console.log('Initial Data:', initialData);
     // Define the fields for the form
     const fields = [
         {

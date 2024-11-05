@@ -13,10 +13,12 @@ interface InventoryProductVerticalCardsProps {
   products: Product[];
   categories: Category[];
   suppliers: Supplier[];
+  onproductDeleted: () => void;
+  onproductUpdated: () => void;
 }
 
 const InventoryProductVerticalCards = ({ products,   categories,
-  suppliers, }: InventoryProductVerticalCardsProps) => {
+  suppliers, onproductDeleted, onproductUpdated}: InventoryProductVerticalCardsProps) => {
   const [selectedItem, setSelectedItem] = useState<Product | null>(null);
 
   // monitor product changes
@@ -68,11 +70,15 @@ const InventoryProductVerticalCards = ({ products,   categories,
               </Button>
             </SheetTrigger>
             <SheetContent className="min-w-[35%]">
-              {selectedItem && <ProductPreview
+              {selectedItem && 
+                <ProductPreview
                 product={selectedItem}
                 categories={categories}
                 onClose={closeSheet} 
-                suppliers={suppliers} />}
+                suppliers={suppliers}
+                onproductDeleted={onproductDeleted}
+                onproductUpdated={onproductUpdated}
+                />}
             </SheetContent>
           </Sheet>
         </div>
