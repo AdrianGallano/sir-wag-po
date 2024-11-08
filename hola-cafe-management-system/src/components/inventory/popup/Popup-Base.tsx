@@ -44,6 +44,8 @@ interface PopupBaseProps {
   children?: React.ReactNode;
   product?: Product;
   actionType?: "delete" | "other";
+  category?: any;
+  supplier?: any;
 }
 
 const PopupBase: React.FC<PopupBaseProps> = ({
@@ -276,7 +278,6 @@ const PopupBase: React.FC<PopupBaseProps> = ({
         <CategoryManager
           isOpen={isCategoryManagerOpen}
           onClose={() => setIsCategoryManagerOpen(false)}
-          onSelectCategory={null}
         />
 
         <SupplierManger
