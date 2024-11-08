@@ -221,8 +221,8 @@ const ProductPreview = ({
           actionType="delete"
           product={product}
           onSubmit={deleteProducts}
-          onClose={() => setIsDeletePopupOpen(false)}
-        />
+          onClose={() => setIsDeletePopupOpen(false)} 
+          popupType={"product"}        />
       )}
 
       <Toaster position="top-right" />

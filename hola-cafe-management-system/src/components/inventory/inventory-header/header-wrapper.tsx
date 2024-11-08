@@ -15,11 +15,15 @@ import { Toaster } from "@/components/ui/sonner";
 interface HeaderWrapperProps {
   onLayoutChange: (layout: string) => void;
   onProductCreated: () => void;
+  onCategoryCreated: () => void;
+  onSupplierCreated: () => void;
 }
 
 const HeaderWrapper: React.FC<HeaderWrapperProps> = ({
   onLayoutChange,
   onProductCreated,
+  onCategoryCreated,
+  onSupplierCreated,
 }) => {
   const [isProductPopupOpen, setIsProductPopupOpen] =
     React.useState<boolean>(false);
@@ -69,6 +73,7 @@ const HeaderWrapper: React.FC<HeaderWrapperProps> = ({
       const response = await dataFetch(endpoint, "POST", categoryData, token);
       console.log("Category saved:", response);
 
+      onCategoryCreated(); // Refetch categories after creating a new one
       setIsCategoryPopupOpen(false);
       toast.success("Category saved successfully");
     } catch (error) {
@@ -84,6 +89,7 @@ const HeaderWrapper: React.FC<HeaderWrapperProps> = ({
       const response = await dataFetch(endpoint, "POST", supplierData, token);
       console.log("Supplier saved:", response);
 
+      onSupplierCreated(); // Refetch suppliers after creating
       setIsSupplierPopupOpen(false);
       toast.success("Supplier saved successfully");
     } catch (error) {

@@ -13,12 +13,16 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Category } from "@/models/category";
+import { Supplier } from "@/models/supplier";
 
 const MainInventory = () => {
   // state
   const [layout, setLayout] = useState<"horizontal" | "vertical">("horizontal");
   const [filters, setFilters] = useState({ category: "", stockStatus: "" });
   const [products, setProducts] = useState<Product[]>([]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   // pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,9 +49,43 @@ const MainInventory = () => {
     }
   };
 
+  // Fetch suppliers
+  const fetchSuppliers = async () => {
+    try {
+      const suppliers = (await dataFetch(
+        "api/suppliers/",
+        "GET",
+        {},
+        token!
+      )) as Supplier[];
+      setSuppliers(suppliers);
+      console.log("Suppliers fetched", suppliers);
+    } catch (error) {
+      console.error("Failed to fetch suppliers", error);
+    }
+  };
+
+  // Fetch categories
+  const fetchCategories = async () => {
+    try {
+      const categories = (await dataFetch(
+        "api/categories/",
+        "GET",
+        {},
+        token!
+      )) as Category[];
+      setCategories(categories);
+      console.log("Categories fetched", categories);
+    } catch (error) {
+      console.error("Failed to fetch categories", error);
+    }
+  };
+
   // useEffect to fetch products on mount
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
+    fetchSuppliers();
   }, []);
 
   const handleLayoutChange = (selectedLayout: string) => {
@@ -78,15 +116,20 @@ const MainInventory = () => {
 
   return (
     <div className="flex-1 flex flex-col bg-white p-2">
-      <HeaderWrapper onLayoutChange={handleLayoutChange} onProductCreated={fetchProducts} />
+      <HeaderWrapper onLayoutChange={handleLayoutChange} onProductCreated={fetchProducts} onCategoryCreated={fetchCategories} onSupplierCreated={fetchSuppliers} />
       <div className="flex-grow">
         {layout === "horizontal" ? (
           <ProductTable
             products={paginatedProducts}
-            suppliers={[]}
-            categories={[]}
+            categories={categories} 
+            suppliers={suppliers} 
             onproductUpdated={fetchProducts} // Pass the callback
             onproductDeleted={fetchProducts} // Pass the callback
+            onCategoryUpdated={fetchCategories} // Pass the callback
+            onCategoryDeleted={fetchCategories} // Pass the callback
+            onSupplierUpdated={fetchSuppliers} // Pass the callback
+            onSupplierDeleted={fetchSuppliers} // Pass the callback
+
           />
         ) : (
           <InventoryProductVerticalCards
