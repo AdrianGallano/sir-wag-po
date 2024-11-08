@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import dataFetch from "@/services/data-service";
 import { useAuth } from "@/context/authContext";
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,7 +13,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Folder } from "lucide-react";
 
 interface Image {
   id: string;
@@ -181,12 +179,3 @@ const ImageManager: React.FC<ImageManagerProps> = ({
 };
 
 export default ImageManager;
-
-// type="file"
-// accept="image/*"
-// multiple
-// onChange={handleFileChange}
-// className="hidden" // Hide the default file input
-// id="filePicker"
-// className=" flex justify-center items-start flex-1 min-h-screen overflow-hidden"
-//

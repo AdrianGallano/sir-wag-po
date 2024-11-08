@@ -23,6 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import "@/index.css";
+import CategoryManager from "@/components/hcims/categorymanager";
+import SupplierManger from "@/components/hcims/suppliermanage";
 
 interface PopupBaseProps {
   title: string;
@@ -36,6 +38,7 @@ interface PopupBaseProps {
   onClose: () => void;
   onSubmit: (data: any) => void;
   isNeededToOpen?: boolean;
+  popupType: "product" | "category" | "supplier";
   categories?: Array<{ id: number; label: string }>;
   suppliers?: Array<{ id: number; label: string }>;
   children?: React.ReactNode;
@@ -50,6 +53,7 @@ const PopupBase: React.FC<PopupBaseProps> = ({
   onClose,
   onSubmit,
   isNeededToOpen = false,
+  popupType,
   product,
   categories,
   suppliers,
@@ -57,6 +61,9 @@ const PopupBase: React.FC<PopupBaseProps> = ({
 }) => {
   const [formData, setFormData] = useState(initialData);
   const [isImageManagerOpen, setIsImageManagerOpen] = useState(false);
+  const [isCategoryManagerOpen, setIsCategoryManagerOpen] = useState(false);
+  const [isSupplierManagerOpen, setIsSupplierManagerOpen] = useState(false);
+
   const [selectedImageId, setSelectedImageId] = useState<number | undefined>(
     undefined
   );
@@ -136,6 +143,35 @@ const PopupBase: React.FC<PopupBaseProps> = ({
     onClose();
   };
 
+  const dialogConfig = {
+    product: {
+      label: "Open Image Manager",
+      openState: isImageManagerOpen,
+      setOpen: setIsImageManagerOpen,
+    },
+    category: {
+      label: "Open Category Manager",
+      openState: isCategoryManagerOpen,
+      setOpen: setIsCategoryManagerOpen,
+    },
+    supplier: {
+      label: "Open Supplier Manager",
+      openState: isSupplierManagerOpen,
+      setOpen: setIsSupplierManagerOpen,
+    },
+  };
+
+  const renderDialogTrigger = (type: "product" | "category" | "supplier") => {
+    const { label, setOpen } = dialogConfig[type];
+    return (
+      <Dialog>
+        <DialogTrigger onClick={() => setOpen(true)} className="mb-4">
+          {label}
+        </DialogTrigger>
+      </Dialog>
+    );
+  };
+
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
@@ -172,13 +208,19 @@ const PopupBase: React.FC<PopupBaseProps> = ({
                           <SelectLabel>{field.label}</SelectLabel>
                           {field.key === "category" &&
                             categories?.map((option) => (
-                              <SelectItem key={option.id} value={String(option.id)}>
+                              <SelectItem
+                                key={option.id}
+                                value={String(option.id)}
+                              >
                                 {option.label}
                               </SelectItem>
                             ))}
                           {field.key === "supplier" &&
                             suppliers?.map((option) => (
-                              <SelectItem key={option.id} value={String(option.id)}>
+                              <SelectItem
+                                key={option.id}
+                                value={String(option.id)}
+                              >
                                 {option.label}
                               </SelectItem>
                             ))}
@@ -203,16 +245,8 @@ const PopupBase: React.FC<PopupBaseProps> = ({
                 </div>
               ))}
             </div>
-            {isNeededToOpen && (
-              <Dialog>
-                <DialogTrigger
-                  onClick={() => setIsImageManagerOpen(true)}
-                  className="mb-4"
-                >
-                  Open Image Manager
-                </DialogTrigger>
-              </Dialog>
-            )}
+
+            {isNeededToOpen && popupType && renderDialogTrigger(popupType)}
           </>
         )}
 
@@ -237,6 +271,18 @@ const PopupBase: React.FC<PopupBaseProps> = ({
           isOpen={isImageManagerOpen}
           onClose={() => setIsImageManagerOpen(false)}
           onSelectImage={handleImageSelect}
+        />
+
+        <CategoryManager
+          isOpen={isCategoryManagerOpen}
+          onClose={() => setIsCategoryManagerOpen(false)}
+          onSelectCategory={null}
+        />
+
+        <SupplierManger
+          isOpen={isSupplierManagerOpen}
+          onClose={() => setIsSupplierManagerOpen(false)}
+          onSelectSupplier={null}
         />
       </DialogContent>
     </Dialog>

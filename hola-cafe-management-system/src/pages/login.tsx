@@ -5,34 +5,35 @@ import hola_bg from "./../assets/images/hola_bg.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/authContext";
 import { Label } from "@/components/ui/label";
-import MessagePopup from "@/components/messagepopup";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
+import { CheckCheckIcon, CircleCheck } from "lucide-react";
 
 const Login = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { login, success } = useAuth();
+  const { login, success, id } = useAuth();
 
   const navigate = useNavigate();
-
-  const [isPopupOpen, setPopupOpen] = useState(false);
-  const [message, setMessage] = useState("");
-
-  const handleClosePopup = () => {
-    setPopupOpen(false);
-  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     await login(username, password);
     if (success) {
-      setMessage("Login successful!");
+      toast.success("Login successful!", {
+        duration: 1000,
+      });
+
+      console.log(id);
+
       setTimeout(() => {
         navigate("/analytics");
-      }, 2000);
+      }, 1000);
     } else {
-      setMessage("Login failed! Please try again.");
+      toast.error("Invalid credentials!", {
+        duration: 1000,
+      });
     }
-    setPopupOpen(true);
   };
 
   return (
@@ -106,10 +107,12 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <MessagePopup
-        message={message}
-        onClose={handleClosePopup}
-        onOpen={isPopupOpen}
+
+      <Toaster
+        position="top-right"
+        icons={{
+          success: <CircleCheck className="fill-green-500 text-white" />,
+        }}
       />
     </>
   );

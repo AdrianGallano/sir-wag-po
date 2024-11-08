@@ -21,13 +21,14 @@ import StockStatus from "./stockstatus";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
 import { useAuth } from "@/context/authContext";
 import PopupBase from "../inventory/popup/Popup-Base";
-import MessagePopup from "../messagepopup";
+import { Toaster } from "../ui/sonner";
+import { toast } from "sonner";
 
 interface ProductPreviewProps {
   product: Product | null;
   categories: Category[];
   suppliers: Supplier[];
-  onClose: () => void; 
+  onClose: () => void;
   onproductDeleted: () => void;
   onproductUpdated: () => void;
 }
@@ -47,14 +48,12 @@ const ProductPreview = ({
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const threshold = product?.quantity || 100;
-  const [message, setMessage] = useState<string>("");
-  const [isMessagePopupOpen, setIsMessagePopupOpen] = useState<boolean>(false);
   const { token } = useAuth();
 
   // monitor product changes
-    useEffect(() => {
+  useEffect(() => {
     if (!product) {
-      onClose(); 
+      onClose();
     }
   }, [product]);
 
@@ -67,8 +66,7 @@ const ProductPreview = ({
       const response = await dataFetch(endpoint, "PUT", data, token);
       console.log("Product updated:", response);
       setProduct(response as Product);
-      setMessage("Product updated successfully");
-      setIsMessagePopupOpen(true);// Open the message popup
+      toast.success("Product updated successfully");
       onproductUpdated();
       onClose();
     } catch (error) {
@@ -88,14 +86,13 @@ const ProductPreview = ({
       const endpoint = `/api/products/${product.id}/`;
       try {
         if (!token) throw new Error("Token not found in response");
-        setMessage("Product deleted successfully");
-        setIsMessagePopupOpen(true);// Open the message popup
+        toast.success("Product deleted successfully");
         await dataFetch(endpoint, "DELETE", {}, token);
         console.log("Product deleted:", product.name);
         // reset the product state
         setProduct(null);
         onproductDeleted();
-        onClose()
+        onClose();
       } catch (error) {
         console.error("Error deleting product:", error);
       } finally {
@@ -104,7 +101,7 @@ const ProductPreview = ({
     }
   };
 
-  if (!product) return null; 
+  if (!product) return null;
 
   return (
     <div className="w-full">
@@ -228,15 +225,7 @@ const ProductPreview = ({
         />
       )}
 
-      {isMessagePopupOpen && (
-        <MessagePopup
-          message={message}
-          onClose={() => setIsMessagePopupOpen(false)}
-          onOpen={isMessagePopupOpen}
-        />
-      )}
-
-
+      <Toaster position="top-right" />
     </div>
   );
 };
