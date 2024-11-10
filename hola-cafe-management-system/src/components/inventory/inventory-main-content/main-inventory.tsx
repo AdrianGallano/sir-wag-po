@@ -115,21 +115,25 @@ const MainInventory = () => {
   const totalPages = Math.ceil(totalProducts / itemsPerPage);
 
   return (
-    <div className="flex-1 flex flex-col bg-white p-2">
-      <HeaderWrapper onLayoutChange={handleLayoutChange} onProductCreated={fetchProducts} onCategoryCreated={fetchCategories} onSupplierCreated={fetchSuppliers} />
+    <div className="flex-1 flex flex-col w-full p-2">
+      <HeaderWrapper
+        onLayoutChange={handleLayoutChange}
+        onProductCreated={fetchProducts}
+        onCategoryCreated={fetchCategories}
+        onSupplierCreated={fetchSuppliers}
+      />
       <div className="flex-grow">
         {layout === "horizontal" ? (
           <ProductTable
             products={paginatedProducts}
-            categories={categories} 
-            suppliers={suppliers} 
+            categories={categories}
+            suppliers={suppliers}
             onproductUpdated={fetchProducts} // Pass the callback
             onproductDeleted={fetchProducts} // Pass the callback
             onCategoryUpdated={fetchCategories} // Pass the callback
             onCategoryDeleted={fetchCategories} // Pass the callback
             onSupplierUpdated={fetchSuppliers} // Pass the callback
             onSupplierDeleted={fetchSuppliers} // Pass the callback
-
           />
         ) : (
           <InventoryProductVerticalCards

@@ -23,7 +23,7 @@ interface Image {
 interface ImageManagerProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectImage: (imageId: string) => void;
+  onSelectImage: (imageId: string, imageURL: string) => void;
 }
 
 const ImageManager: React.FC<ImageManagerProps> = ({
@@ -110,9 +110,7 @@ const ImageManager: React.FC<ImageManagerProps> = ({
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="min-w-[60%] h-[80vh] overflow-y-auto flex flex-col">
           <DialogHeader>
-            <DialogTitle>
-              <h2 className="text-xl font-semibold">Image Manager</h2>
-            </DialogTitle>
+            <DialogTitle>Image Manager</DialogTitle>
           </DialogHeader>
 
           <Tabs defaultValue="upload" className="sticky top-0 z-10 bg-white">
@@ -159,7 +157,7 @@ const ImageManager: React.FC<ImageManagerProps> = ({
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
-                          onSelectImage(image.id);
+                          onSelectImage(image.id, image.image_url);
                           onClose();
                         }}
                         className="bg-green-600 text-white mx-1 hover:bg-green-700"

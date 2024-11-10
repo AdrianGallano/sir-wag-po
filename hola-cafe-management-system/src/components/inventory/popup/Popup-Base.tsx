@@ -69,6 +69,10 @@ const PopupBase: React.FC<PopupBaseProps> = ({
   const [selectedImageId, setSelectedImageId] = useState<number | undefined>(
     undefined
   );
+  const [selectedImageURL, setSelectedImageURL] = useState<string | undefined>(
+    undefined
+  );
+
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
@@ -106,10 +110,11 @@ const PopupBase: React.FC<PopupBaseProps> = ({
       }
     };
 
-  const handleImageSelect = (imageId: string) => {
+  const handleImageSelect = (imageId: string, imageURL: string) => {
     const parsedId = parseInt(imageId);
     setSelectedImageId(parsedId);
-    setFormData({ ...formData, image: parsedId });
+    setSelectedImageURL(imageURL);
+    setFormData({ ...formData, image: parsedId, image_url: imageURL });
   };
 
   const handleSubmit = () => {
@@ -123,7 +128,10 @@ const PopupBase: React.FC<PopupBaseProps> = ({
     const newErrors: { [key: string]: string } = {};
     fields.forEach((field) => {
       const value = formData[field.key];
-      if (!value || (typeof value === "string" && !value.trim())) {
+      if (
+        field.key !== "expiration_date" &&
+        (!value || (typeof value === "string" && !value.trim()))
+      ) {
         newErrors[field.key] = `${field.label} is required`;
       }
     });
@@ -139,6 +147,7 @@ const PopupBase: React.FC<PopupBaseProps> = ({
       category: formData.category || undefined,
       supplier: formData.supplier || undefined,
       image: selectedImageId || undefined,
+      expiration_date: formData.expiration_date || null,
     };
 
     onSubmit(finalData);
@@ -150,6 +159,7 @@ const PopupBase: React.FC<PopupBaseProps> = ({
       label: "Open Image Manager",
       openState: isImageManagerOpen,
       setOpen: setIsImageManagerOpen,
+      className: "bg-red-500",
     },
     category: {
       label: "Open Category Manager",
@@ -167,7 +177,10 @@ const PopupBase: React.FC<PopupBaseProps> = ({
     const { label, setOpen } = dialogConfig[type];
     return (
       <Dialog>
-        <DialogTrigger onClick={() => setOpen(true)} className="mb-4">
+        <DialogTrigger
+          onClick={() => setOpen(true)}
+          className="mb-4 bg-custom-charcoalOlive py-1 px-2 rounded-md text-white "
+        >
           {label}
         </DialogTrigger>
       </Dialog>
@@ -237,16 +250,31 @@ const PopupBase: React.FC<PopupBaseProps> = ({
                       type={field.type || "text"}
                       placeholder={`Enter ${field.label}`}
                       className={`border ${
-                        errors[field.key] ? "border-red-500" : ""
+                        errors[field.key] ? "border-rose-500" : ""
                       }`}
                     />
                   )}
                   {errors[field.key] && (
-                    <span className="text-red-500">{errors[field.key]}</span>
+                    <span className="text-xs tracking-wide font-medium text-red-500">
+                      {errors[field.key]}
+                    </span>
                   )}
                 </div>
               ))}
             </div>
+
+            {selectedImageURL && (
+              <div className="mb-4">
+                <Label>Selected Image</Label>
+                <div className="w-full h-40 flex items-center justify-center border border-gray-300 p-2">
+                  <img
+                    src={selectedImageURL}
+                    alt="Selected"
+                    className="max-h-full object-contain"
+                  />
+                </div>
+              </div>
+            )}
 
             {isNeededToOpen && popupType && renderDialogTrigger(popupType)}
           </>
@@ -263,7 +291,10 @@ const PopupBase: React.FC<PopupBaseProps> = ({
               </Button>
             </>
           ) : (
-            <Button onClick={handleSubmit} className="mb-2">
+            <Button
+              onClick={handleSubmit}
+              className="mb-2 bg-custom-sunnyGold text-custom-charcoalOlive hover:bg-custom-sunnyGold"
+            >
               Save changes
             </Button>
           )}

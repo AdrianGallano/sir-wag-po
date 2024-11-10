@@ -22,6 +22,7 @@ const CreateProducts: React.FC<CreateProductsProps> = ({
   const [imageId, setImageId] = useState<number | undefined>(
     initialImageId ? parseInt(initialImageId) : undefined
   );
+
   const [categories, setCategories] = useState<{ id: number; label: string }[]>(
     []
   );
@@ -29,16 +30,19 @@ const CreateProducts: React.FC<CreateProductsProps> = ({
     []
   );
 
-  const { token } = useAuth(); // Get the token from the auth context
+  const { token, id } = useAuth();
+
+  console.log("id", id);
 
   const fields = [
     { label: "Name", key: "name" },
     { label: "Description", key: "description" },
     { label: "Price", key: "price", type: "number" },
+    { label: "Quantity", key: "quantity", type: "number" },
     { label: "Cost Price", key: "cost_price", type: "number" },
+    { label: "Expiration Date", key: "expiration_date", type: "date" },
     { label: "Category", key: "category", type: "select" },
     { label: "Supplier", key: "supplier", type: "select" },
-    { label: "User", key: "user" },
   ];
 
   // Function to handle form submission
@@ -107,16 +111,18 @@ const CreateProducts: React.FC<CreateProductsProps> = ({
 
   return (
     <PopupBase
-      title={`Add ${product ? product.name : "New Product"}`}
+      title={`Add ${product ? product.name : "New Ingredients"}`}
       initialData={
         product || {
           name: "",
           description: "",
           price: "",
+          quantity: "",
           cost_price: "",
+          expiration_date: null,
           category: "",
           supplier: "",
-          user: "",
+          user: id,
           image: "",
         }
       }
