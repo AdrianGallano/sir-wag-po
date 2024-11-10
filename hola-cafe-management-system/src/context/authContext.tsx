@@ -23,8 +23,12 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState(sessionStorage.getItem("token") || null);
-  const [id, setId] = useState<number>(0);
+  const initialToken = sessionStorage.getItem("token");
+  const initialId = initialToken ? decodeToken(initialToken)?.user_id : 0;
+
+  const [token, setToken] = useState(initialToken);
+  const [id, setId] = useState<number>(initialId!);
+
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -47,9 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const decodedToken = decodeToken(token);
-      console.log("Decoded token:", decodedToken);
       const userId = decodedToken?.user_id;
-      console.log("User ID:", userId);
 
       if (!userId) {
         throw new Error("User ID not found in token");

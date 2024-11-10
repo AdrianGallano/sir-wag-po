@@ -98,7 +98,7 @@ const HeaderWrapper: React.FC<HeaderWrapperProps> = ({
   };
 
   return (
-    <div className="flex items-center space-x-4 w-full mb-4 pl-2 pr-2">
+    <div className="flex  items-center space-x-4 w-full mb-4 pl-2">
       <div className="relative flex-grow">
         <SearchInput />
       </div>
@@ -118,7 +118,7 @@ const HeaderWrapper: React.FC<HeaderWrapperProps> = ({
         </TabsList>
       </Tabs>
 
-      <div className="ml-4">
+      <div>
         <HeaderCrud
           onOpenSupplierPopup={() => {
             handlePopup("supplier", "open");

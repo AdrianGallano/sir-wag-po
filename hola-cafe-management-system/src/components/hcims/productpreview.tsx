@@ -23,6 +23,7 @@ import { useAuth } from "@/context/authContext";
 import PopupBase from "../inventory/popup/Popup-Base";
 import { Toaster } from "../ui/sonner";
 import { toast } from "sonner";
+import placeholder from "./../../assets/images/placeholder.png";
 
 interface ProductPreviewProps {
   product: Product | null;
@@ -133,9 +134,9 @@ const ProductPreview = ({
 
         <SheetDescription className="w-full">
           <img
-            src={selectedImageUrl}
+            src={selectedImageUrl || placeholder}
             alt={product.name}
-            className="w-full h-52 rounded-md border border-gray-300 object-cover"
+            className="w-full h-52 rounded-md border border-gray-300 object-contain"
           />
         </SheetDescription>
 
@@ -221,8 +222,9 @@ const ProductPreview = ({
           actionType="delete"
           product={product}
           onSubmit={deleteProducts}
-          onClose={() => setIsDeletePopupOpen(false)} 
-          popupType={"product"}        />
+          onClose={() => setIsDeletePopupOpen(false)}
+          popupType={"product"}
+        />
       )}
 
       <Toaster position="top-right" />

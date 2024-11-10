@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-import InventorySidebarComponent from "../components/inventory/inventory-sidebar/sidebar";
-import ProductTable from "@/components/hcims/producttable";
 import { useAuth } from "@/context/authContext";
 import { Product } from "@/models/product";
 import dataFetch from "@/services/data-service";
 import MainInventory from "@/components/inventory/inventory-main-content/main-inventory";
+import SearchInput from "@/components/search";
+import HeaderCrud from "@/components/inventory/inventory-header/header-crud";
 
 const InventoryPage = () => {
-  const [filters, setFilters] = useState({ category: "", stockStatus: "" });
-
   const { token } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
 
@@ -31,20 +29,8 @@ const InventoryPage = () => {
     fetchProducts();
   }, []);
 
-  const handleFilterChange = (filter: {
-    category?: string;
-    stockStatus?: string;
-  }) => {
-    setFilters((prevFilters) => ({ ...prevFilters, ...filter }));
-  };
-
   return (
-    <div className="flex min-h-screen bg-white">
-      {/* This is the sidebar */}
-      {/* <InventorySidebarComponent onFilterChange={handleFilterChange} /> */}
-
-      {/* <ProductTable products={products} /> */}
-      {/* Main inventory area */}
+    <div className="min-h-screen w-full">
       <MainInventory />
     </div>
   );
