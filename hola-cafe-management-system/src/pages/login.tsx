@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import hola_bg from "./../assets/images/hola_bg.jpg";
+import hola_bg from "./../assets/images/hola_bg2.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/authContext";
 import { Label } from "@/components/ui/label";
@@ -38,50 +38,73 @@ const Login = () => {
 
   return (
     <>
-      <div className="flex flex-wrap min-h-screen w-full content-center justify-center bg-custom-paleButter py-10 ]">
-        <div className="flex shadow-md ">
-          <div className="flex flex-wrap content-center justify-center rounded-l-lg bg-white w-[30rem] h-[32rem] ">
-            <div className="w-80">
+      <main className="flex flex-wrap min-h-screen w-full content-center justify-center  py-10 ]">
+        <div className="grid md:grid-cols-2 grid-cols-1 max-w-md md:max-w-5xl p-3">
+          <div className="hidden md:flex flex-wrap content-center justify-center rounded-lg  h-[35rem] ">
+            <img
+              className="w-full h-full bg-center bg-no-repeat bg-cover rounded-lg"
+              src={hola_bg}
+            />
+          </div>
+          <div className="col-span-1 flex flex-wrap content-center justify-center rounded-l-lg bg-white h-[35rem] ">
+            <div>
               {/* Heading */}
-              <h1 className="text-3xl font-semibold text-center text-custom-goldenMustard">
-                Login
+              <h1 className="text-5xl font-bold text-left text-custom-charcoalOlive">
+                Hola, Login!
               </h1>
-              <p className="text-muted-foreground text-sm text-center text-nowrap">
-                Welcome to Hola Cafe Inventory System!
+              <p className="w-full text-muted-foreground text-sm text-center text-nowrap">
+                Welcome to Hola Cafe Inventory Management System!
               </p>
               <form className="mt-2" onSubmit={handleLogin}>
-                <div className="grid gap-4 mt-2">
-                  <div className="grid gap-2">
-                    <Label>Username</Label>
+                <div className="grid gap-2 mt-5">
+                  <div className="relative z-0 w-full mb-5 group">
                     <Input
-                      id="username"
                       type="text"
+                      name="float_username"
+                      id="float_username"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
+                      className="block py-2.5 px-0 w-full text-sm text-custom-char bg-transparent border-0 border-b border-gray-300 appearance-none peer focus:outline-none focus:border-b-custom-charcoalOlive rounded-none focus:ring-0 focus-visible:ring-0  focus-visible:ring-ring focus-visible:ring-offset-0 "
+                      placeholder=" "
                       required
                     />
+                    <label
+                      htmlFor="float_username"
+                      className="peer-focus:font-medium absolute text-sm text-custom-char  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                    >
+                      Username
+                    </label>
                   </div>
-                  <div className="grid gap-2">
-                    <Label>Password</Label>
+                  <div className="relative z-0 w-full mb-5 group">
                     <Input
-                      id="password"
                       type="password"
+                      name="floating_password"
+                      id="floating_password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                      className="block py-2.5 px-0 w-full text-sm text-custom-char bg-transparent border-0 border-b border-gray-300 appearance-none peer focus:outline-none focus:border-b-custom-charcoalOlive rounded-none focus:ring-0 focus-visible:ring-0  focus-visible:ring-ring focus-visible:ring-offset-0 "
+                      placeholder=" "
                       required
                     />
-                    <div className="flex items-center">
+                    <label
+                      htmlFor="floating_password"
+                      className="peer-focus:font-medium absolute text-sm text-custom-char  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                    >
+                      Password
+                    </label>{" "}
+                    <div className="flex justify-start items-center mt-3">
                       <a
                         href="/forgot-password"
-                        className="ml-auto inline-block text-sm "
+                        className="mr-auto inline-block text-sm "
                       >
                         Forgot your password?
                       </a>
                     </div>
                   </div>
+
                   <Button
                     type="submit"
-                    className="w-full hover:bg-custom-goldenMustard bg-custom-sunnyGold"
+                    className="w-full rounded-full hover:bg-custom-charcoalOlive bg-custom-char"
                   >
                     Login
                   </Button>
@@ -92,21 +115,15 @@ const Login = () => {
                 Don&apos;t have an account?{" "}
                 <Link
                   to="/register"
-                  className="underline hover:text-custom-goldenMustard text-custom-sunnyGold"
+                  className="underline hover:text-[#783727] text-[#FD4719] transition ease-in-out"
                 >
                   Sign up
                 </Link>
               </div>
             </div>
           </div>
-          <div className="flex flex-wrap content-center justify-center rounded-r-lg w-[29rem] h-[32rem]">
-            <img
-              className="w-full h-full bg-center bg-no-repeat bg-cover rounded-r-lg"
-              src={hola_bg}
-            />
-          </div>
         </div>
-      </div>
+      </main>
 
       <Toaster
         position="top-right"

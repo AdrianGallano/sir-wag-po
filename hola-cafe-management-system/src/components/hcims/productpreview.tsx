@@ -17,7 +17,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "../ui/dropdown-menu";
-import StockStatus from "./stockstatus";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
 import { useAuth } from "@/context/authContext";
 import PopupBase from "../inventory/popup/Popup-Base";
@@ -194,13 +193,6 @@ const ProductPreview = ({
                 </p>
               </PopoverContent>
             </Popover>
-          </div>
-
-          <div className="w-full flex justify-center">
-            <StockStatus
-              quantity={parseFloat(product.quantity)}
-              threshold={parseFloat(threshold as string)}
-            />
           </div>
         </SheetDescription>
       </SheetHeader>

@@ -4,7 +4,9 @@ import hola_bg from "./../assets/images/hola_bg2.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import dataFetch from "@/services/data-service";
-import { Label } from "@/components/ui/label";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
+import { CheckCheckIcon, CircleCheck } from "lucide-react";
 
 const Register = () => {
   const [username, setUsername] = useState<string>("");
@@ -21,7 +23,13 @@ const Register = () => {
     try {
       const response = await dataFetch("/api/auth/users/", "POST", payload);
       if (response) {
-        navigate("/login");
+        toast.success("Successfully Registered", {
+          duration: 1000,
+        });
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
       }
     } catch (err) {
       console.error("Error during registration:", err);
@@ -31,58 +39,83 @@ const Register = () => {
 
   return (
     <>
-      <div className="flex flex-wrap min-h-screen w-full content-center justify-center bg-custom-paleButter py-10 ]">
-        <div className="flex shadow-md ">
-          <div className="flex flex-wrap content-center justify-center rounded-l-lg w-[29rem] h-[32rem]">
+      <main className="flex flex-wrap min-h-screen w-full content-center justify-center py-10">
+        <div className="grid md:grid-cols-2 grid-cols-1 max-w-md md:max-w-5xl  bg-white p-3">
+          <div className="hidden md:flex flex-wrap content-center justify-center rounded-lg  h-[35rem] ">
             <img
-              className="w-full h-full bg-center bg-no-repeat bg-cover rounded-l-lg"
+              className="w-full h-full bg-center bg-no-repeat bg-cover rounded-lg"
               src={hola_bg}
             />
           </div>
-          <div className="flex flex-wrap content-center justify-center rounded-r-lg bg-white w-[30rem] h-[32rem] ">
-            <div className="w-80">
+          <div className="col-span-1 flex flex-wrap content-center justify-center rounded-l-lg bg-white h-[35rem] ">
+            <div>
               {/* Heading */}
-              <h1 className="text-3xl font-semibold text-center text-custom-goldenMustard">
-                Register
+              <h1 className="text-5xl font-bold text-left text-custom-charcoalOlive">
+                Hola, Register!
               </h1>
-              <p className="text-muted-foreground text-sm text-center text-nowrap">
-                Welcome to Hola Cafe Inventory System!
+              <p className="w-full text-muted-foreground text-sm text-center text-nowrap">
+                Welcome to Hola Cafe Inventory Management System!
               </p>
-              <form className="mt-2" onSubmit={handleRegister}>
-                <div className="grid gap-4 mt-2">
-                  <div className="grid gap-2">
-                    <Label>Username</Label>
+              <form className="mt-2 " onSubmit={handleRegister}>
+                <div className="grid gap-2 mt-5">
+                  <div className="relative z-0 w-full mb-5 group">
                     <Input
-                      id="username"
-                      type="text"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label>Email</Label>
-                    <Input
-                      type="text"
-                      id="email"
+                      type="email"
+                      name="floating_email"
+                      id="floating_email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      className="block py-2.5 px-0 w-full text-sm text-custom-char bg-transparent border-0 border-b border-gray-300 appearance-none peer focus:outline-none focus:border-b-custom-charcoalOlive rounded-none focus:ring-0 focus-visible:ring-0  focus-visible:ring-ring focus-visible:ring-offset-0 "
+                      placeholder=" "
                       required
                     />
+                    <label
+                      htmlFor="floating_email"
+                      className="peer-focus:font-medium absolute text-sm text-custom-char  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                    >
+                      Email
+                    </label>
                   </div>
-                  <div className="grid gap-2">
-                    <Label>Password</Label>
+                  <div className="relative z-0 w-full mb-5 group">
                     <Input
-                      id="password"
+                      type="text"
+                      name="float_username"
+                      id="float_username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="block py-2.5 px-0 w-full text-sm text-custom-char bg-transparent border-0 border-b border-gray-300 appearance-none peer focus:outline-none focus:border-b-custom-charcoalOlive rounded-none focus:ring-0 focus-visible:ring-0  focus-visible:ring-ring focus-visible:ring-offset-0 "
+                      placeholder=" "
+                      required
+                    />
+                    <label
+                      htmlFor="float_username"
+                      className="peer-focus:font-medium absolute text-sm text-custom-char  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                    >
+                      Username
+                    </label>
+                  </div>
+                  <div className="relative z-0 w-full mb-5 group">
+                    <Input
                       type="password"
+                      name="floating_password"
+                      id="floating_password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                      className="block py-2.5 px-0 w-full text-sm text-custom-char bg-transparent border-0 border-b border-gray-300 appearance-none peer focus:outline-none focus:border-b-custom-charcoalOlive rounded-none focus:ring-0 focus-visible:ring-0  focus-visible:ring-ring focus-visible:ring-offset-0 "
+                      placeholder=" "
                       required
                     />
+                    <label
+                      htmlFor="floating_password"
+                      className="peer-focus:font-medium absolute text-sm text-custom-char  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                    >
+                      Password
+                    </label>{" "}
                   </div>
+
                   <Button
                     type="submit"
-                    className="w-full hover:bg-custom-goldenMustard bg-custom-sunnyGold"
+                    className="w-full rounded-full hover:bg-custom-charcoalOlive bg-custom-char"
                   >
                     Register
                   </Button>
@@ -93,15 +126,22 @@ const Register = () => {
                 Already have an account?{" "}
                 <Link
                   to="/login"
-                  className="underline hover:text-custom-goldenMustard text-custom-sunnyGold"
+                  className="underline hover:text-[#783727] text-[#FD4719] transition ease-in-out"
                 >
-                  Sign in
+                  Sign up
                 </Link>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </main>
+
+      <Toaster
+        position="top-right"
+        icons={{
+          success: <CircleCheck className="fill-green-500 text-white" />,
+        }}
+      />
     </>
   );
 };

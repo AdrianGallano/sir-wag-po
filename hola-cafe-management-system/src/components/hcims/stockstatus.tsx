@@ -1,66 +1,61 @@
-import { stat } from "fs";
-import React from "react";
-
 interface StockStatusProps {
-  quantity: number;
-  threshold: number;
+  totalStock: number;
+  recentStock: string;
+  expirationDate: string;
+  stockLevel: number;
 }
 
-const StockStatus: React.FC<StockStatusProps> = ({ quantity, threshold }) => {
-  const percentage = Math.min((quantity / threshold) * 100);
-
-  //   need a better way to determine the status of the stock
-  const getStatus = () => {
-    if (quantity === 0)
-      return {
-        label: "Out of Stock",
-        color: "text-rose-500",
-        ringColor: "#e11d48",
-      };
-    if (quantity > 0 && quantity <= threshold * 0.1)
-      return {
-        label: "Low Stock",
-        color: "text-yellow-500",
-        ringColor: "#eab308",
-      };
-    return {
-      label: "In Stock",
-      color: "text-green-500",
-      ringColor: "#22c55e",
-    };
-  };
-
-  const status = getStatus();
-  const radius = 20; // Radius of the circular progress
-  const circumference = 2 * Math.PI * radius;
-
+const StockStatus = ({
+  totalStock,
+  recentStock,
+  expirationDate,
+  stockLevel,
+}: StockStatusProps) => {
   return (
-    <div className="flex items-center justify-center space-x-3 border border-gray-300 px-4 py-6 w-full rounded-md  ">
-      {/* Circular Progress Indicator */}
-      <div className="flex justify-center items-center">
-        <div className="relative w-32 h-32">
-          <div
-            className="absolute z-50 inset-0 rounded-full border-8"
-            style={{
-              borderColor: status.ringColor,
-            }}
-          ></div>
-          <span className="absolute inset-0 flex items-center justify-center text-3xl font-semibold text-gray-700">
-            {percentage.toFixed(0)}%
-          </span>
+    <>
+      <div className="w-full flex flex-col justify-start px-2.5">
+        <p className="text-sm text-nowrap tracking-wide font-normal">
+          Total Stock:
+          <span className="font-semibold"> {totalStock}</span>
+        </p>
+        <p className="text-sm text-nowrap tracking-wide font-normal">
+          Most Recent Stock:
+          <span className="font-semibold"> Granula Bar</span>
+        </p>
+        <p className="text-sm text-nowrap tracking-wide font-normal">
+          Soonest Expiration Date:
+          <span className="font-semibold"> December 2, 2024</span>
+        </p>
+
+        <div className="relative mt-1.5">
+          <div className="mb-2 flex h-2 overflow-hidden rounded-full w-1/2 text-xs gap-1">
+            <div className="bg-green-500 transition-all duration-500 ease-out w-[50%] rounded-full"></div>
+            <div className="bg-yellow-500 transition-all duration-500 ease-out w-[30%]  rounded-full"></div>
+            <div className="bg-red-500 transition-all duration-500 ease-out w-[20%]  rounded-full"></div>
+          </div>
+          <div className="mb-2 flex items-center gap-3 text-xs">
+            <div className="text-gray-600 flex items-center">
+              <span className="flex w-3 h-3 me-1.5 bg-green-500 rounded-full"></span>
+              <p className="text-[12px] text-nowrap tracking-wide font-normal">
+                In Stock: <span className="">16</span>
+              </p>
+            </div>
+            <div className="text-gray-600 flex items-center">
+              <span className="flex w-3 h-3 me-1.5 bg-yellow-500 rounded-full"></span>{" "}
+              <p className="text-[12px] text-nowrap tracking-wide font-normal">
+                Low Stock: <span className="">16</span>
+              </p>
+            </div>
+            <div className="text-gray-600 flex items-center">
+              <span className="flex w-3 h-3 me-1.5 bg-red-500 rounded-full"></span>{" "}
+              <p className="text-[12px] text-nowrap tracking-wide font-normal">
+                Out of Stock: <span className="">16</span>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* Stock Status Label */}
-      <div>
-        <p className={`text-lg font-semibold ${status.color}`}>
-          {status.label}
-        </p>
-        <p className="text-gray-500 text-sm">
-          ({quantity} / {threshold})
-        </p>
-      </div>
-    </div>
+    </>
   );
 };
 

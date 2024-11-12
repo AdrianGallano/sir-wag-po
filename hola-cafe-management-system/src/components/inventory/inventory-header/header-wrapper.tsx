@@ -99,10 +99,6 @@ const HeaderWrapper: React.FC<HeaderWrapperProps> = ({
 
   return (
     <div className="flex  items-center space-x-4 w-full mb-4 pl-2">
-      <div className="relative flex-grow">
-        <SearchInput />
-      </div>
-
       <Tabs
         defaultValue="horizontal"
         className="w-auto"
