@@ -56,6 +56,7 @@ module.exports = {
           goldenMustard: "#D4A017",
           sunnyGold: "#FFDE4D",
           paleButter: "#FEED9F",
+          char: "#3C3D37",
         },
       },
       borderRadius: {
