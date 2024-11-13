@@ -33,6 +33,9 @@ import { EyeIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import ProductPreview from "./productpreview";
 import SupplierPreview from "./supplierpreview";
+import SearchInput from "../search";
+import DemoPage from "./product_table/page";
+import { Checkbox } from "../ui/checkbox";
 
 interface ProductTableProps {
   products: Product[];
@@ -55,47 +58,63 @@ const ProductTable = ({
   onSupplierDeleted,
   onSupplierUpdated,
 }: ProductTableProps) => {
-  const [selectedItem, setSelectedItem] = useState<
-    Product | Category | Supplier | null
-  >(null);
-  const [selectedTable, setSelectedTable] = useState<
-    "products" | "categories" | "suppliers"
-  >("products");
-
-  const closeSheet = () => {
-    setSelectedItem(null);
-    console.log("Closing preview");
-  };
-
-  useEffect(() => {
-    console.log("Selected table: ", selectedItem);
-  }, [selectedItem]);
-
   return (
     <main className="w-full">
       {/* Dropdown to switch tables */}
-      <div className="float-end">
-        <Select
-          value={selectedTable}
-          onValueChange={(value) =>
-            setSelectedTable(value as "products" | "categories" | "suppliers")
-          }
-        >
-          <SelectTrigger className="mb-4 p-2 border border-gray-300 rounded w-[180px]">
-            <SelectValue placeholder="Select a table" />
+      <div className="float-end flex items-center my-3.5 gap-2">
+        <SearchInput />
+        <Select>
+          <SelectTrigger className="px-4 border border-gray-300 rounded-full w-[180px] ">
+            <SelectValue placeholder="Filtered by" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Tables</SelectLabel>
-              <SelectItem value="products">Products</SelectItem>
-              <SelectItem value="suppliers">Suppliers</SelectItem>
+              <SelectItem value="products">Filter 1</SelectItem>
+              <SelectItem value="suppliers">Filter 2</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
       </div>
 
+      <div className="w-full">
+        <Table>
+          <TableHeader>
+            <TableRow className="w-full border-none hover:bg-none">
+              <TableHead></TableHead>
+              <TableHead>Stock Image</TableHead>
+              <TableHead>Stock Id</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Quantity</TableHead>
+              <TableHead>Unit Price</TableHead>
+              <TableHead>Date Shelved</TableHead>
+              <TableHead>Expiration Date</TableHead>
+              <TableHead>is Stocked By</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow className="border-none hover:bg-none data-[state=selected]:bg-none">
+              <TableCell>
+                <Checkbox />
+              </TableCell>
+              <TableCell>Image</TableCell>
+              <TableCell>#3123</TableCell>
+              <TableCell>Name Here</TableCell>
+              <TableCell>20</TableCell>
+              <TableCell>10</TableCell>
+              <TableCell>September 10, 2024</TableCell>
+              <TableCell>January 28, 2026</TableCell>
+              <TableCell>Dominic Molino</TableCell>
+              <TableCell>status here</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </div>
+
       {/* Table content */}
-      {selectedTable === "products" && (
+      {/* {selectedTable === "products" && (
         <Table className="overflow-hidden rounded-md w-full shadow-md">
           <TableHeader className="bg-custom-sunnyGold hover:bg-custom-sunnyGold">
             <TableRow>
@@ -246,7 +265,7 @@ const ProductTable = ({
             ))}
           </TableBody>
         </Table>
-      )}
+      )} */}
     </main>
   );
 };

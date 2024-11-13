@@ -16,13 +16,13 @@ function App(): ReactNode {
     <Routes>
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
-      <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<Layout />}>
-          <Route index path="" element={<Navigate to="analytics" />} />
-          <Route path="inventory" element={<InventoryPage />} />
-          <Route path="analytics" element={<AnalyticsPage />} />
-        </Route>
+      {/* <Route element={<ProtectedRoute />}> */}
+      <Route path="/" element={<Layout />}>
+        <Route index path="" element={<Navigate to="analytics" />} />
+        <Route path="inventory" element={<InventoryPage />} />
+        <Route path="analytics" element={<AnalyticsPage />} />
       </Route>
+      {/* </Route> */}
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
