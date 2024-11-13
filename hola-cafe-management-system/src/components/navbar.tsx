@@ -1,4 +1,4 @@
-import { Coffee, LineChart, LogOut, Warehouse } from "lucide-react";
+import { Coffee, Computer, LineChart, LogOut, Warehouse } from "lucide-react";
 import {
   Tooltip,
   TooltipTrigger,
@@ -59,6 +59,24 @@ const Navbar = () => {
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right">Inventory</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                to="/pos"
+                className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
+                  location.pathname === "/pos"
+                    ? "bg-custom-sunnyGold text-custom-charcoalOlive "
+                    : "bg-transparent text-muted-foreground hover:text-white"
+                }`}
+              >
+                <Computer className="h-4 w-4 transition-all group-hover:scale-110 " />
+                <span className="sr-only">Point of sale</span>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right">Point of sale</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </nav>

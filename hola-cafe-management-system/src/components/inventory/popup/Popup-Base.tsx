@@ -38,7 +38,7 @@ interface PopupBaseProps {
   onClose: () => void;
   onSubmit: (data: any) => void;
   isNeededToOpen?: boolean;
-  popupType: "product" | "category" | "supplier";
+  popupType?: "product" | "category";
   categories?: Array<{ id: number; label: string }>;
   suppliers?: Array<{ id: number; label: string }>;
   children?: React.ReactNode;
@@ -166,14 +166,9 @@ const PopupBase: React.FC<PopupBaseProps> = ({
       openState: isCategoryManagerOpen,
       setOpen: setIsCategoryManagerOpen,
     },
-    supplier: {
-      label: "Open Supplier Manager",
-      openState: isSupplierManagerOpen,
-      setOpen: setIsSupplierManagerOpen,
-    },
   };
 
-  const renderDialogTrigger = (type: "product" | "category" | "supplier") => {
+  const renderDialogTrigger = (type: "product" | "category") => {
     const { label, setOpen } = dialogConfig[type];
     return (
       <Dialog>
