@@ -163,7 +163,6 @@ const SupplierPreview = ({
             supplier={supplier}
             onSubmit={deleteSupplier}
             onClose={() => setIsDeletePopupOpen(false)}
-            popupType={"supplier"}
           />
         )}
 

@@ -41,7 +41,6 @@ const Sidebar = () => {
               <LineChart className="h-5 w-5" />
               <span className="sr-only">Analytics</span>
             </Link>
-
             <Link
               to="/inventory"
               className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
@@ -49,7 +48,15 @@ const Sidebar = () => {
               <Warehouse className="h-5 w-5" />
               <span className="sr-only">Inventory</span>
             </Link>
+            <Link
+              to="/pos"
+              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <Warehouse className="h-5 w-5" />
+              <span className="sr-only">Point of sale</span>
+            </Link>
           </nav>
+
         </SheetContent>
       </Sheet>
       <div className="hidden sm:block"></div>

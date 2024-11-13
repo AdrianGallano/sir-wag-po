@@ -10,6 +10,7 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import ProtectedRoute from "./utils/protectedRoutes";
 import PageNotFound from "./pages/404page";
+import PosPage from "./pages/pos-page";
 
 function App(): ReactNode {
   return (
@@ -21,6 +22,7 @@ function App(): ReactNode {
           <Route index path="" element={<Navigate to="analytics" />} />
           <Route path="inventory" element={<InventoryPage />} />
           <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="pos" element={<PosPage />} />
         </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />

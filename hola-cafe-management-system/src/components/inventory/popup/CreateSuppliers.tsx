@@ -37,7 +37,6 @@ const CreateSuppliers: React.FC<CreateSuppliersProps> = ({
       }
       fields={fields}
       isNeededToOpen={true}
-      popupType="supplier"
       onClose={onClose}
       onSubmit={onSubmit}
     />
