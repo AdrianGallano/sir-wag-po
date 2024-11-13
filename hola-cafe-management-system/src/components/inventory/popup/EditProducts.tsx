@@ -80,6 +80,12 @@ const EditProducts: React.FC<EditProductsProps> = ({
   console.log("Initial Data:", initialData);
   // Define the fields for the form
   const fields = [
+    { label: "Product Name", key: "name", type: "text" },
+    { label: "Description", key: "description", type: "textarea" },
+    { label: "Price", key: "price", type: "number" },
+    { label: "Quantity", key: "quantity", type: "number" },
+    { label: "Cost Price", key: "cost_price", type: "number" },
+    { label: "Expiration Date", key: "expiration_date", type: "date" },
     {
       label: "Category",
       key: "category",
@@ -92,9 +98,6 @@ const EditProducts: React.FC<EditProductsProps> = ({
       type: "select",
       options: suppliers,
     },
-    { label: "Product Name", key: "name", type: "text" },
-    { label: "Description", key: "description", type: "textarea" },
-    { label: "Product Price", key: "price", type: "number" },
   ];
   // Handle form submission
   const handleSubmit = (data: any) => {

@@ -19,12 +19,14 @@ const EditSupplier: React.FC<EditSupplierProps> = ({
 
   // Define the fields for the form
   const fields = [
-    { label: "Supplier Name", key: "name", type: "text" },
-    { label: "Description", key: "description", type: "textarea" },
-    { label: "Contact Person", key: "contact_person", type: "text" },
-    { label: "Phone Number", key: "phone_number", type: "text" },
-    { label: "Address", key: "address", type: "textarea" },
-    { label: "Email", key: "email", type: "text" },
+    { label: "Name", key: "name" },
+    { label: "Description", key: "description" },
+    { label: "Price", key: "price", type: "number" },
+    { label: "Quantity", key: "quantity", type: "number" },
+    { label: "Cost Price", key: "cost_price", type: "number" },
+    { label: "Expiration Date", key: "expiration_date", type: "date" },
+    { label: "Category", key: "category", type: "select" },
+    { label: "Supplier", key: "supplier", type: "select" },
   ];
 
   // Handle form submission
@@ -43,7 +45,6 @@ const EditSupplier: React.FC<EditSupplierProps> = ({
       title="Edit Supplier"
       initialData={initialData || supplier}
       fields={fields}
-      popupType="supplier"
       onClose={onClose}
       onSubmit={handleSubmit}
       isNeededToOpen={true}
