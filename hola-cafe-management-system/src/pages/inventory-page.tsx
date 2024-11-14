@@ -13,6 +13,8 @@ import CreateCategory from "@/components/inventory/popup/CreateCategories";
 import ProductTable from "@/components/hcims/producttable";
 import { Category } from "@/models/category";
 import { Supplier } from "@/models/supplier";
+import DataTable from "@/components/hcims/table/data-table";
+import { columns } from "@/components/hcims/table/columns";
 
 const InventoryPage = () => {
   const { token } = useAuth();
@@ -163,17 +165,7 @@ const InventoryPage = () => {
         </div>
       </div>
       <div className="w-full">
-        <ProductTable
-          products={products}
-          categories={categories}
-          suppliers={suppliers}
-          onproductUpdated={fetchProducts} // Pass the callback
-          onproductDeleted={fetchProducts} // Pass the callback
-          onCategoryUpdated={fetchCategories} // Pass the callback
-          onCategoryDeleted={fetchCategories} // Pass the callback
-          onSupplierUpdated={fetchSuppliers} // Pass the callback
-          onSupplierDeleted={fetchSuppliers} // Pass the callback
-        />
+        <DataTable columns={columns} data={products} />
       </div>
 
       {isProductPopupOpen && (

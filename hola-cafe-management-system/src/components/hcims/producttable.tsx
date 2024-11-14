@@ -29,10 +29,13 @@ import {
 import placeholder from "./../../assets/images/placeholder.png";
 import { dateFormatter, toTitleCase } from "@/utils/formatter";
 import { Button } from "../ui/button";
-import { EyeIcon } from "lucide-react";
+import { Dice1, EyeIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import ProductPreview from "./productpreview";
 import SupplierPreview from "./supplierpreview";
+import SearchInput from "../search";
+import DemoPage from "./product_table/page";
+import { Checkbox } from "../ui/checkbox";
 
 interface ProductTableProps {
   products: Product[];
@@ -55,47 +58,103 @@ const ProductTable = ({
   onSupplierDeleted,
   onSupplierUpdated,
 }: ProductTableProps) => {
-  const [selectedItem, setSelectedItem] = useState<
-    Product | Category | Supplier | null
-  >(null);
-  const [selectedTable, setSelectedTable] = useState<
-    "products" | "categories" | "suppliers"
-  >("products");
-
-  const closeSheet = () => {
-    setSelectedItem(null);
-    console.log("Closing preview");
-  };
-
-  useEffect(() => {
-    console.log("Selected table: ", selectedItem);
-  }, [selectedItem]);
-
   return (
     <main className="w-full">
       {/* Dropdown to switch tables */}
-      <div className="float-end">
-        <Select
-          value={selectedTable}
-          onValueChange={(value) =>
-            setSelectedTable(value as "products" | "categories" | "suppliers")
-          }
-        >
-          <SelectTrigger className="mb-4 p-2 border border-gray-300 rounded w-[180px]">
-            <SelectValue placeholder="Select a table" />
+      <div className="float-end flex items-center my-3.5 gap-2">
+        <SearchInput />
+        <Select>
+          <SelectTrigger className="px-4 border border-gray-300 rounded-full w-[180px] ">
+            <SelectValue placeholder="Filtered by" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Tables</SelectLabel>
-              <SelectItem value="products">Products</SelectItem>
-              <SelectItem value="suppliers">Suppliers</SelectItem>
+              <SelectItem value="products">Filter 1</SelectItem>
+              <SelectItem value="suppliers">Filter 2</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
       </div>
 
+      <div className="w-full">
+        <Table>
+          <TableHeader>
+            <TableRow className="w-full border-none hover:bg-none">
+              <TableHead>
+                <Checkbox />
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Stock Image
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Stock Id
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Name
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Quantity
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Unit Price
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Date Shelved
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Expiration Date
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                is Stocked By
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Status
+              </TableHead>
+              <TableHead></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="bg-white mt-4 w-full">
+            {products.map((product) => (
+              <TableRow className="border  border-black p-3.5  hover:bg-none data-[state=selected]:bg-none">
+                <TableCell className="my-10">
+                  <Checkbox />
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  Image
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  #3123
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  Name Here
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  20
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  10
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  September 10, 2024
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  January 28, 2026
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  Dominic Molino
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  status here
+                </TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
       {/* Table content */}
-      {selectedTable === "products" && (
+      {/* {selectedTable === "products" && (
         <Table className="overflow-hidden rounded-md w-full shadow-md">
           <TableHeader className="bg-custom-sunnyGold hover:bg-custom-sunnyGold">
             <TableRow>
@@ -246,7 +305,7 @@ const ProductTable = ({
             ))}
           </TableBody>
         </Table>
-      )}
+      )} */}
     </main>
   );
 };
