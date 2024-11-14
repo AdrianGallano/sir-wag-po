@@ -29,7 +29,7 @@ import {
 import placeholder from "./../../assets/images/placeholder.png";
 import { dateFormatter, toTitleCase } from "@/utils/formatter";
 import { Button } from "../ui/button";
-import { EyeIcon } from "lucide-react";
+import { Dice1, EyeIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import ProductPreview from "./productpreview";
 import SupplierPreview from "./supplierpreview";
@@ -80,35 +80,75 @@ const ProductTable = ({
         <Table>
           <TableHeader>
             <TableRow className="w-full border-none hover:bg-none">
-              <TableHead></TableHead>
-              <TableHead>Stock Image</TableHead>
-              <TableHead>Stock Id</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Quantity</TableHead>
-              <TableHead>Unit Price</TableHead>
-              <TableHead>Date Shelved</TableHead>
-              <TableHead>Expiration Date</TableHead>
-              <TableHead>is Stocked By</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>
+                <Checkbox />
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Stock Image
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Stock Id
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Name
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Quantity
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Unit Price
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Date Shelved
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Expiration Date
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                is Stocked By
+              </TableHead>
+              <TableHead className="text-center font-semibold text-custom-char">
+                Status
+              </TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
-            <TableRow className="border-none hover:bg-none data-[state=selected]:bg-none">
-              <TableCell>
-                <Checkbox />
-              </TableCell>
-              <TableCell>Image</TableCell>
-              <TableCell>#3123</TableCell>
-              <TableCell>Name Here</TableCell>
-              <TableCell>20</TableCell>
-              <TableCell>10</TableCell>
-              <TableCell>September 10, 2024</TableCell>
-              <TableCell>January 28, 2026</TableCell>
-              <TableCell>Dominic Molino</TableCell>
-              <TableCell>status here</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
+          <TableBody className="bg-white mt-4 w-full">
+            {products.map((product) => (
+              <TableRow className="border  border-black p-3.5  hover:bg-none data-[state=selected]:bg-none">
+                <TableCell className="my-10">
+                  <Checkbox />
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  Image
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  #3123
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  Name Here
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  20
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  10
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  September 10, 2024
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  January 28, 2026
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  Dominic Molino
+                </TableCell>
+                <TableCell className="text-center font-normal text-custom-char">
+                  status here
+                </TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
