@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
 import { Product } from "@/models/product";
 import dataFetch from "@/services/data-service";
-import MainInventory from "@/components/inventory/inventory-main-content/main-inventory";
 import StockStatus from "@/components/hcims/stockstatus";
 import AddEntityDropdown from "@/components/hcims/addentitydropdown ";
 import CreateProducts from "@/components/inventory/popup/CreateProducts";
@@ -13,8 +12,7 @@ import CreateCategory from "@/components/inventory/popup/CreateCategories";
 import ProductTable from "@/components/hcims/producttable";
 import { Category } from "@/models/category";
 import { Supplier } from "@/models/supplier";
-import DataTable from "@/components/hcims/table/data-table";
-import { columns } from "@/components/hcims/table/columns";
+import { productColumns } from "@/components/columns";
 
 const InventoryPage = () => {
   const { token } = useAuth();
@@ -144,7 +142,7 @@ const InventoryPage = () => {
   };
 
   return (
-    <main className="min-h-screen w-full p-3.5">
+    <main className="h-screen w-full p-3.5">
       <div className="flex justify-between w-full items-center">
         <StockStatus
           totalStock={52}
@@ -165,7 +163,7 @@ const InventoryPage = () => {
         </div>
       </div>
       <div className="w-full">
-        <DataTable columns={columns} data={products} />
+        <ProductTable columns={productColumns} data={products} />
       </div>
 
       {isProductPopupOpen && (
