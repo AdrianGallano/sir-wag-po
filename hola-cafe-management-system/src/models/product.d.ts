@@ -16,4 +16,6 @@ export interface Product {
   category: Category;
   supplier: Supplier;
   image?: Image;
+  onEdit: (product: Product) => void;
+  onDelete: (product: Product) => void;
 }

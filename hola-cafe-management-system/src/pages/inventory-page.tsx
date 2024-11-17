@@ -25,6 +25,8 @@ const InventoryPage = () => {
     useState<boolean>(false);
   const [isSupplierPopupOpen, setIsSupplierPopupOpen] =
     useState<boolean>(false);
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
 
   const handlePopup = (
     popupType: "product" | "category" | "supplier",
@@ -141,6 +143,20 @@ const InventoryPage = () => {
     }
   };
 
+  const handleEdit = (product: Product) => {
+    console.log("Editing product:", product);
+    // Open a modal or navigate to an edit page
+  };
+
+  const handleDelete = (product: Product) => {
+    if (confirm(`Are you sure you want to delete ${product.name}?`)) {
+      console.log("Deleting product:", product);
+      // Perform delete operation (e.g., API call)
+    }
+  };
+
+  const columns = productColumns(handleEdit, handleDelete);
+
   return (
     <main className="h-screen w-full p-3.5">
       <div className="flex justify-between w-full items-center">
@@ -163,7 +179,12 @@ const InventoryPage = () => {
         </div>
       </div>
       <div className="w-full">
-        <ProductTable columns={productColumns} data={products} />
+        <ProductTable
+          columns={columns}
+          data={products}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       </div>
 
       {isProductPopupOpen && (
