@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import InventoryProductVerticalCards from "./Product-list/inventory-product-verticalcards";
 import HeaderWrapper from "../inventory-header/header-wrapper";
 import { Product } from "@/models/product";
-import ProductTable from "@/components/hcims/producttable";
+import ProductTable from "@/components/hcims/producttablee";
 import { useAuth } from "@/context/authContext";
 import dataFetch from "@/services/data-service";
 import {
