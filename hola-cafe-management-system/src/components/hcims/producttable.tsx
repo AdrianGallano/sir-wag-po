@@ -39,10 +39,13 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
+import { Product } from "@/models/product";
 
 interface ProductTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onEdit: (product: Product) => void;
+  onDelete: (product: Product) => void;
 }
 
 const ProductTable = <TData, TValue>({
@@ -52,6 +55,8 @@ const ProductTable = <TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  console.log(columns[10].cell);
 
   const table = useReactTable({
     data,

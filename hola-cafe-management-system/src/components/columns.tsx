@@ -5,10 +5,28 @@ import { Supplier } from "@/models/supplier";
 import { dateFormatter, toTitleCase } from "@/utils/formatter";
 import { Image } from "@/models/image";
 import placeholder from "./../assets/images/placeholder.png";
-import { ArrowDownIcon, ArrowUpDown, ArrowUpIcon, SortAsc } from "lucide-react";
+import {
+  ArrowDownIcon,
+  ArrowUpDown,
+  ArrowUpIcon,
+  MoreHorizontal,
+  SortAsc,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-export const productColumns: ColumnDef<Product>[] = [
+export const productColumns = (
+  onEdit: (product: Product) => void,
+  onDelete: (product: Product) => void
+): ColumnDef<Product>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -210,16 +228,28 @@ export const productColumns: ColumnDef<Product>[] = [
   {
     accessorKey: "actions",
     header: "",
+    enableHiding: false,
     cell: ({ row }) => {
+      const product = row.original;
+
       return (
-        <div className="flex justify-center space-x-2">
-          <Button variant="ghost" className="text-blue-500">
-            Edit
-          </Button>
-          <Button variant="ghost" className="text-red-500">
-            Delete
-          </Button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => onEdit(product)}>
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDelete(product)}>
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },
