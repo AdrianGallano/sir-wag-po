@@ -11,6 +11,7 @@ import Register from "./pages/register";
 import ProtectedRoute from "./utils/protectedRoutes";
 import PageNotFound from "./pages/404page";
 import PosPage from "./pages/pos-page";
+import SupplierPage from "./pages/supplier-page";
 
 function App(): ReactNode {
   return (
@@ -21,6 +22,7 @@ function App(): ReactNode {
         <Route path="/" element={<Layout />}>
           <Route index path="" element={<Navigate to="analytics" />} />
           <Route path="inventory" element={<InventoryPage />} />
+          <Route path="supplier" element={<SupplierPage />} />
           <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="pos" element={<PosPage />} />
         </Route>

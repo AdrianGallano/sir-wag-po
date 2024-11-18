@@ -255,7 +255,7 @@ export const productColumns = (
   },
 ];
 
-export const supplierColumns: ColumnDef<Supplier>[] = [
+export const supplierColumns = (onEdit: (supplier: Supplier) => void, onDelete: (supplier: Supplier) => void): ColumnDef<Supplier>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -280,26 +280,8 @@ export const supplierColumns: ColumnDef<Supplier>[] = [
   },
 
   {
-    accessorKey: "image",
-    header: "Stock Image",
-    cell: ({ row }) => {
-      const image_obj = row.getValue("image");
-      const image = image_obj as Image;
-
-      return (
-        <div className="flex justify-center">
-          <img
-            src={image?.image_url || placeholder}
-            className="w-11 object-center rounded-sm"
-          />
-        </div>
-      );
-    },
-  },
-
-  {
     accessorKey: "id",
-    header: () => <div className="text-center">Stock ID</div>,
+    header: () => <div className="text-center">Supplier ID</div>,
     cell: ({ row }) => {
       return <div className="text-center">{row.getValue("id")}</div>;
     },
@@ -307,7 +289,7 @@ export const supplierColumns: ColumnDef<Supplier>[] = [
 
   {
     accessorKey: "name",
-    header: () => <div className="text-center">Product Name</div>,
+    header: () => <div className="text-center">Name</div>,
     cell: ({ row }) => {
       const name: string = row.getValue("name");
 
@@ -316,143 +298,37 @@ export const supplierColumns: ColumnDef<Supplier>[] = [
   },
 
   {
-    accessorKey: "quantity",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant={"ghost"}
-          className="inline-flex"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Quantity
-          {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon className="ml-2 h-4 w-4" />
-          ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon className="ml-2 h-4 w-4" />
-          ) : (
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          )}
-        </Button>
-      );
-    },
+    accessorKey: "phone_number",
+    header: () => <div className="text-center">Contact Number</div>,
     cell: ({ row }) => {
-      return <div className="text-center"> {row.getValue("quantity")}</div>;
+      const number: string = row.getValue("phone_number");
+
+      return <div className="text-center">{number}</div>;
     },
   },
 
   {
-    accessorKey: "price",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant={"ghost"}
-          className="inline-flex"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Price
-          {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon className="ml-2 h-4 w-4" />
-          ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon className="ml-2 h-4 w-4" />
-          ) : (
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          )}
-        </Button>
-      );
-    },
+    accessorKey: "email",
+    header: () => <div className="text-center">Email</div>,
     cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "PHP",
-      }).format(price);
+      const name: string = row.getValue("email");
 
-      return <div className="text-center font-medium">{formatted}</div>;
+      return <div className="text-center">{name}</div>;
     },
   },
 
   {
-    accessorKey: "created_at",
-    header: ({ column }) => (
-      <Button
-        variant={"ghost"}
-        className="inline-flex"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Date Shelved
-        {column.getIsSorted() === "desc" ? (
-          <ArrowDownIcon className="ml-2 h-4 w-4" />
-        ) : column.getIsSorted() === "asc" ? (
-          <ArrowUpIcon className="ml-2 h-4 w-4" />
-        ) : (
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        )}
-      </Button>
-    ),
+    accessorKey: "address",
+    header: () => <div className="text-center">Address</div>,
     cell: ({ row }) => {
-      const date: string = row.getValue("created_at");
-      return (
-        <div className="flex items-center">
-          <span className="capitalize">{dateFormatter(date)}</span>
-        </div>
-      );
-    },
-    filterFn: (row, id, value) => {
-      const rowDate = new Date(row.getValue(id));
-      const [startDate, endDate] = value;
-      return rowDate >= startDate && rowDate <= endDate;
+      const name: string = row.getValue("address");
+
+      return <div className="text-center">{name}</div>;
     },
   },
 
-  {
-    accessorKey: "expiration_date",
-    header: ({ column }) => (
-      <Button
-        variant={"ghost"}
-        className="inline-flex"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Expiration Date
-        {column.getIsSorted() === "desc" ? (
-          <ArrowDownIcon className="ml-2 h-4 w-4" />
-        ) : column.getIsSorted() === "asc" ? (
-          <ArrowUpIcon className="ml-2 h-4 w-4" />
-        ) : (
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        )}
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const date: string = row.getValue("expiration_date");
-      return (
-        <div className="flex items-center">
-          <span className="capitalize">{dateFormatter(date)}</span>
-        </div>
-      );
-    },
-    filterFn: (row, id, value) => {
-      const rowDate = new Date(row.getValue(id));
-      const [startDate, endDate] = value;
-      return rowDate >= startDate && rowDate <= endDate;
-    },
-  },
 
-  {
-    accessorKey: "supplier",
-    header: () => <div className="text-center">is Stocked By</div>,
-    cell: ({ row }) => {
-      const supplier: Supplier = row.getValue("supplier");
-      return <div className="text-center">{toTitleCase(supplier.name)}</div>;
-    },
-  },
 
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      return <div className=" rounded-full w-[50px] h-2 bg-green-500"></div>;
-    },
-  },
 
   {
     accessorKey: "actions",

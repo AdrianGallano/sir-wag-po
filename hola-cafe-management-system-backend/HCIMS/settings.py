@@ -181,7 +181,7 @@ REST_FRAMEWORK = {
         "user": "500/day",
         "upload_image": "200/day",
         "general_image": "500/day",
-        "general_request": "500/day",
+        "general_request": "1000/day",
 
 
     },
