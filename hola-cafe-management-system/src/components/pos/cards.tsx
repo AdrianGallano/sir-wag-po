@@ -1,5 +1,5 @@
 import React from 'react'
-import PlaceHolder from '../../assets/images/placeholder.png'
+import PlaceHolder from '../../assets/images/hola_logo.jpg'
 
 const PosCards = () => {
   return (
