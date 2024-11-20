@@ -3,13 +3,18 @@ from django.views.decorators.http import require_http_methods
 from rest_framework.decorators import api_view
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import Category, Stock, Supplier, Image
+from .models import Category, Stock, Supplier, Image, Cart, Product, Transaction, ProductOrder
 from .serializers import (
     CategorySerializer,
     StockSerializer,
     SupplierSerializer,
     StockSupplierCategoryImageSerializer,
-    ImageSerializer
+    ImageSerializer,
+    CartSerializer,
+    ProductSerializer,
+    TransactionSerializer,
+    ProductOrderSerializer
+
 )
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -77,15 +82,18 @@ class StockViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Stock.objects.all()
     serializer_class = StockSerializer
+
+    
     filterset_fields = [
         "name",
         "description",
-        "price",
-        "quantity",
         "cost_price",
+        "quantity",
         "supplier",
-        "category",
-        "user",
+        "date_shelved",
+        "is_stocked_by",
+        "expiration_date",
+        "status",
         "created_at",
         "updated_at",
     ]
@@ -93,12 +101,13 @@ class StockViewSet(viewsets.ModelViewSet):
     search_fields = [
         "name",
         "description",
-        "price",
-        "quantity",
         "cost_price",
+        "quantity",
         "supplier",
-        "category",
-        "user",
+        "date_shelved",
+        "is_stocked_by",
+        "expiration_date",
+        "status",
         "created_at",
         "updated_at",
         
@@ -107,7 +116,7 @@ class StockViewSet(viewsets.ModelViewSet):
     ordering_fields = "__all__"
 
     def list(self, request):
-        queryset = Stock.objects.all().select_related("category", "supplier", "image")
+        queryset = Stock.objects.all().select_related("supplier", "image")
         serializer = StockSupplierCategoryImageSerializer(queryset, many=True)
 
         return Response(serializer.data)
@@ -196,3 +205,107 @@ class ImageViewSet(viewsets.ModelViewSet):
         os.remove(relative_image_url)
 
         return super().destroy(request, *args, **kwargs)
+    
+
+class CartViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    filterset_fields = [
+        "service_crew",
+        "product",
+        "quantity",
+        "created_at",
+        "updated_at",
+    ]
+
+    search_fields = [
+        "service_crew",
+        "product",
+        "quantity",
+        "created_at",
+        "updated_at",
+    ]
+
+    ordering_fields = "__all__"
+
+class ProductViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filterset_fields = [
+        "name",
+        "description",
+        "price",
+        "category",
+        "created_at",
+        "updated_at",
+    ]
+
+    search_fields = [
+        "name",
+        "description",
+        "price",
+        "category",
+        "created_at",
+        "updated_at",
+    ]
+
+    ordering_fields = "__all__"
+
+class TransactionViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Transaction.objects.all()
+    serializer_class = TransactionSerializer
+    filterset_fields = [
+        "service_crew",
+        "total_price",
+        "payment_method",
+        "created_at",
+        "updated_at",
+    ]
+
+    search_fields = [
+        "service_crew",
+        "total_price",
+        "payment_method",
+        "created_at",
+        "updated_at",
+    ]
+
+    ordering_fields = "__all__"
+
+
+class ProductOrderViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = ProductOrder.objects.all()
+    serializer_class = ProductOrderSerializer
+    filterset_fields = [
+        "transaction",
+        "product",
+        "quantity",
+        "created_at",
+        "updated_at",
+    ]
+
+    search_fields = [
+        "transaction",
+        "product",
+        "quantity",
+        "created_at",
+        "updated_at",
+    ]
+
+    ordering_fields = "__all__"
+
+
+
+""" 
+TODO:
+ - Streamline on checkout 
+  - bale yung OrderProduct, Transaction, Cart
+  - Get info sa Cart 
+  - add a transaction
+  - Add sa OrderProduct 
+    - Then delete sa Cart
+ """
