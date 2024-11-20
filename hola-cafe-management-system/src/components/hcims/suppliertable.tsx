@@ -41,6 +41,7 @@ import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
 import { Product } from "@/models/product";
 import { Supplier } from "@/models/supplier";
+import placeholder from "@/assets/images/man.png";
 
 interface SupplierTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -56,10 +57,6 @@ const SupplierTable = <TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
-  console.log(data)
-  console.log(columns)
-  
 
   const table = useReactTable({
     data,
@@ -82,7 +79,7 @@ const SupplierTable = <TData, TValue>({
     <div className="relative">
       <div className="flex w-full justify-end item-center my-2.5 gap-2">
         <Input
-          placeholder="Filter products..."
+          placeholder="Filter supplier..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -117,7 +114,7 @@ const SupplierTable = <TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Table>
+      <Table className="pb-10">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -136,7 +133,7 @@ const SupplierTable = <TData, TValue>({
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody>
+        <TableBody className="pb-20">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
@@ -153,14 +150,15 @@ const SupplierTable = <TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No Product Found.
+                <img className="w-10 mx-auto" src={placeholder} alt="" />
+                <span>No Supplier Found.</span>
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
 
-      <div className="bg-white fixed bottom-0  flex items-center  justify-between min-w-full py-4">
+      <div className="bg-white sticky bottom-0  flex items-center  justify-between min-w-full py-4  ">
         <div className="flex gap-2">
           <Button
             variant="outline"
@@ -180,7 +178,7 @@ const SupplierTable = <TData, TValue>({
             Next
           </Button>
         </div>
-        <div className="mr-24">
+        <div className="mr-4">
           <span className="font-medium text-sm">
             {" "}
             Page {table.getState().pagination.pageIndex + 1} of{" "}

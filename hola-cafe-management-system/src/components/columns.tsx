@@ -52,7 +52,9 @@ export const productColumns = (
 
   {
     accessorKey: "image",
-    header: "Stock Image",
+    header: () => {
+      return <div className="text-center min-w-28">Stock Image</div>;
+    },
     cell: ({ row }) => {
       const image_obj = row.getValue("image");
       const image = image_obj as Image;
@@ -61,7 +63,7 @@ export const productColumns = (
         <div className="flex justify-center">
           <img
             src={image?.image_url || placeholder}
-            className="w-11 object-center rounded-sm"
+            className="w-10 object-center rounded-sm"
           />
         </div>
       );
@@ -70,7 +72,9 @@ export const productColumns = (
 
   {
     accessorKey: "id",
-    header: () => <div className="text-center">Stock ID</div>,
+    header: () => {
+      return <div className="text-center min-w-28">Stock ID</div>;
+    },
     cell: ({ row }) => {
       return <div className="text-center">{row.getValue("id")}</div>;
     },
@@ -78,7 +82,9 @@ export const productColumns = (
 
   {
     accessorKey: "name",
-    header: () => <div className="text-center">Product Name</div>,
+    header: () => {
+      return <div className="text-center min-w-28">Stock Name</div>;
+    },
     cell: ({ row }) => {
       const name: string = row.getValue("name");
 
@@ -92,7 +98,7 @@ export const productColumns = (
       return (
         <Button
           variant={"ghost"}
-          className="inline-flex"
+          className="inline-flex items-center justify-center"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Quantity
@@ -117,7 +123,7 @@ export const productColumns = (
       return (
         <Button
           variant={"ghost"}
-          className="inline-flex"
+          className="inline-flex items-center justify-center"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Price
@@ -147,7 +153,7 @@ export const productColumns = (
     header: ({ column }) => (
       <Button
         variant={"ghost"}
-        className="inline-flex"
+        className="inline-flex justify-center text-center"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Date Shelved
@@ -163,9 +169,7 @@ export const productColumns = (
     cell: ({ row }) => {
       const date: string = row.getValue("created_at");
       return (
-        <div className="flex items-center">
-          <span className="capitalize">{dateFormatter(date)}</span>
-        </div>
+        <div className="capitalize text-center">{dateFormatter(date)}</div>
       );
     },
     filterFn: (row, id, value) => {
@@ -196,9 +200,7 @@ export const productColumns = (
     cell: ({ row }) => {
       const date: string = row.getValue("expiration_date");
       return (
-        <div className="flex items-center">
-          <span className="capitalize">{dateFormatter(date)}</span>
-        </div>
+        <div className="capitalize text-center">{dateFormatter(date)}</div>
       );
     },
     filterFn: (row, id, value) => {
@@ -210,7 +212,9 @@ export const productColumns = (
 
   {
     accessorKey: "supplier",
-    header: () => <div className="text-center">is Stocked By</div>,
+    header: () => {
+      return <div className="text-center min-w-28">Stock Image</div>;
+    },
     cell: ({ row }) => {
       const supplier: Supplier = row.getValue("supplier");
       return <div className="text-center">{toTitleCase(supplier.name)}</div>;
@@ -227,7 +231,7 @@ export const productColumns = (
 
   {
     accessorKey: "actions",
-    header: "",
+    header: () => <div className="text-center">Actions</div>,
     enableHiding: false,
     cell: ({ row }) => {
       const product = row.original;
@@ -255,7 +259,10 @@ export const productColumns = (
   },
 ];
 
-export const supplierColumns = (onEdit: (supplier: Supplier) => void, onDelete: (supplier: Supplier) => void): ColumnDef<Supplier>[] => [
+export const supplierColumns = (
+  onEdit: (supplier: Supplier) => void,
+  onDelete: (supplier: Supplier) => void
+): ColumnDef<Supplier>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -327,22 +334,30 @@ export const supplierColumns = (onEdit: (supplier: Supplier) => void, onDelete: 
     },
   },
 
-
-
-
   {
     accessorKey: "actions",
     header: "",
     cell: ({ row }) => {
+      const product = row.original;
+
       return (
-        <div className="flex justify-center space-x-2">
-          <Button variant="ghost" className="text-blue-500">
-            Edit
-          </Button>
-          <Button variant="ghost" className="text-red-500">
-            Delete
-          </Button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => onEdit(product)}>
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDelete(product)}>
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },

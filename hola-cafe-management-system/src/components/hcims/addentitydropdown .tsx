@@ -11,25 +11,11 @@ import { SquarePlus } from "lucide-react";
 
 interface AddEntityDropdownProps {
   onOpenPopup: (popup: "open" | "close", product: Product) => void;
-  onOpenCategoryPopup: (popup: "open" | "close") => void;
-  onOpenSupplierPopup: (popup: "open" | "close") => void;
 }
 
-const AddEntityDropdown = ({
-  onOpenPopup,
-  onOpenCategoryPopup,
-  onOpenSupplierPopup,
-}: AddEntityDropdownProps) => {
+const AddEntityDropdown = ({ onOpenPopup }: AddEntityDropdownProps) => {
   const handleAddProduct = () => {
     onOpenPopup("open", {} as Product);
-  };
-
-  const handleAddCategory = () => {
-    onOpenCategoryPopup("open");
-  };
-
-  const handleAddSupplier = () => {
-    onOpenSupplierPopup("open");
   };
 
   return (
@@ -44,12 +30,6 @@ const AddEntityDropdown = ({
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleAddProduct}>
               Add Product
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleAddCategory}>
-              Add Category
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleAddSupplier}>
-              Add Supplier
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

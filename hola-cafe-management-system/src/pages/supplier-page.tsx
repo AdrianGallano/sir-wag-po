@@ -13,33 +13,32 @@ import ProductTable from "@/components/hcims/producttable";
 import { Category } from "@/models/category";
 import { Supplier } from "@/models/supplier";
 import { productColumns, supplierColumns } from "@/components/columns";
-import SupplierTable from "@/components/supplier/supplier-table";
+import SupplierTable from "@/components/hcims/suppliertable";
+import { UserPlus2Icon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import AddSupplierForm from "@/components/hcims/addsupplier";
 
 const SupplierPage = () => {
   const { token } = useAuth();
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
-  const [isProductPopupOpen, setIsProductPopupOpen] = useState<boolean>(false);
-  const [isCategoryPopupOpen, setIsCategoryPopupOpen] =
-    useState<boolean>(false);
   const [isSupplierPopupOpen, setIsSupplierPopupOpen] =
     useState<boolean>(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
 
-  const handlePopup = (
-    popupType: "product" | "category" | "supplier",
-    action: "open" | "close"
-  ) => {
-    if (popupType === "product") {
-      setIsProductPopupOpen(action === "open");
-    } else if (popupType === "category") {
-      setIsCategoryPopupOpen(action === "open");
-    } else if (popupType === "supplier") {
-      setIsSupplierPopupOpen(action === "open");
-    }
-  };
-
+  // const handlePopup = (
+  //   popupType: "product" | "category" | "supplier",
+  //   action: "open" | "close"
+  // ) => {
+  //   if (popupType === "product") {
+  //     setIsProductPopupOpen(action === "open");
+  //   } else if (popupType === "category") {
+  //     setIsCategoryPopupOpen(action === "open");
+  //   } else if (popupType === "supplier") {
+  //     setIsSupplierPopupOpen(action === "open");
+  //   }
+  // };
 
   const fetchSuppliers = async () => {
     try {
@@ -89,6 +88,10 @@ const SupplierPage = () => {
     }
   };
 
+  const onUpdate = () => {
+    fetchSuppliers();
+  };
+
   const columns = supplierColumns(handleEdit, handleDelete);
 
   return (
@@ -101,18 +104,15 @@ const SupplierPage = () => {
           stockLevel={75}
         />
         <div className="self-start">
-          <AddEntityDropdown
-            onOpenSupplierPopup={() => {
-              handlePopup("supplier", "open");
-            }}
-            onOpenCategoryPopup={() => {
-              handlePopup("category", "open");
-            }}
-            onOpenPopup={() => handlePopup("product", "open")}
-          />
+          <Button
+            className="bg-white hover:bg-gray-100 border border-gray-300"
+            onClick={() => setIsSupplierPopupOpen(true)}
+          >
+            <UserPlus2Icon className="text-black" />
+          </Button>
         </div>
       </div>
-      <div className="w-full">
+      <div className="w-full min-h-screen">
         <SupplierTable
           columns={columns}
           data={suppliers}
@@ -122,9 +122,10 @@ const SupplierPage = () => {
       </div>
 
       {isSupplierPopupOpen && (
-        <CreateSuppliers
-          onClose={() => handlePopup("supplier", "close")}
-          onSubmit={handleSupplierSubmit}
+        <AddSupplierForm
+          isOpen={isSupplierPopupOpen}
+          onClose={() => setIsSupplierPopupOpen(false)}
+          onChanges={onUpdate}
         />
       )}
 
