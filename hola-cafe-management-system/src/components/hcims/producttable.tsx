@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -21,15 +21,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -40,6 +31,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
 import { Product } from "@/models/product";
+import placeholder from "@/assets/images/no-order.png";
 
 interface ProductTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -55,8 +47,6 @@ const ProductTable = <TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
-  console.log(columns[10].cell);
 
   const table = useReactTable({
     data,
@@ -150,7 +140,8 @@ const ProductTable = <TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No Product Found.
+                <img className="w-10 mx-auto" src={placeholder} alt="" />
+                <span>No Product Found.</span>
               </TableCell>
             </TableRow>
           )}

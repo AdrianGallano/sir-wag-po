@@ -13,6 +13,9 @@ import ProductTable from "@/components/hcims/producttable";
 import { Category } from "@/models/category";
 import { Supplier } from "@/models/supplier";
 import { productColumns } from "@/components/columns";
+import AddProductForm from "@/components/hcims/addproduct";
+import { Button } from "@/components/ui/button";
+import { PackagePlus } from "lucide-react";
 
 const InventoryPage = () => {
   const { token } = useAuth();
@@ -27,19 +30,6 @@ const InventoryPage = () => {
     useState<boolean>(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
-
-  const handlePopup = (
-    popupType: "product" | "category" | "supplier",
-    action: "open" | "close"
-  ) => {
-    if (popupType === "product") {
-      setIsProductPopupOpen(action === "open");
-    } else if (popupType === "category") {
-      setIsCategoryPopupOpen(action === "open");
-    } else if (popupType === "supplier") {
-      setIsSupplierPopupOpen(action === "open");
-    }
-  };
 
   const fetchProducts = async () => {
     try {
@@ -86,30 +76,16 @@ const InventoryPage = () => {
     }
   };
 
+  const onUpdate = () => {
+    fetchProducts();
+  };
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
     fetchSuppliers();
   }, []);
 
-  // Function to handle product submit
-  const handleProductSubmit = async (productData: Product) => {
-    try {
-      const endpoint = "/api/products/";
-      if (!token) throw new Error("Token not found");
-
-      const response = await dataFetch(endpoint, "POST", productData, token);
-      console.log("Product saved:", response);
-
-      // Call the onProductCreated to refetch products
-      // onProductCreated(); // Refetch products after creating a new one
-
-      setIsProductPopupOpen(false);
-      toast.success("Product saved successfully");
-    } catch (error) {
-      console.error("Error saving product:", error);
-    }
-  };
   // Function to handle category submit
   const handleCategorySubmit = async (categoryData: any) => {
     try {
@@ -167,15 +143,12 @@ const InventoryPage = () => {
           stockLevel={75}
         />
         <div className="self-start">
-          <AddEntityDropdown
-            onOpenSupplierPopup={() => {
-              handlePopup("supplier", "open");
-            }}
-            onOpenCategoryPopup={() => {
-              handlePopup("category", "open");
-            }}
-            onOpenPopup={() => handlePopup("product", "open")}
-          />
+          <Button
+            className="bg-white hover:bg-gray-100 border border-gray-300"
+            onClick={() => setIsProductPopupOpen(true)}
+          >
+            <PackagePlus className="text-black" />
+          </Button>
         </div>
       </div>
       <div className="w-full">
@@ -188,23 +161,12 @@ const InventoryPage = () => {
       </div>
 
       {isProductPopupOpen && (
-        <CreateProducts
-          onClose={() => handlePopup("product", "close")}
-          onSubmit={handleProductSubmit}
-        />
-      )}
-
-      {isCategoryPopupOpen && (
-        <CreateCategory
-          onClose={() => handlePopup("category", "close")}
-          onSubmit={handleCategorySubmit}
-        />
-      )}
-
-      {isSupplierPopupOpen && (
-        <CreateSuppliers
-          onClose={() => handlePopup("supplier", "close")}
-          onSubmit={handleSupplierSubmit}
+        <AddProductForm
+          isOpen={isProductPopupOpen}
+          onClose={() => setIsProductPopupOpen(false)}
+          supplier={suppliers}
+          categories={categories}
+          onChanges={onUpdate}
         />
       )}
 
