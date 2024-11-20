@@ -11,10 +11,10 @@ urlpatterns = [
             {"get": "retrieve", "put": "update", "delete": "destroy"}
         ),
     ),
-    path("products/", views.ProductViewSet.as_view({"get": "list", "post": "create"})),
+    path("stocks/", views.StockViewSet.as_view({"get": "list", "post": "create"})),
     path(
-        "products/<int:pk>/",
-        views.ProductViewSet.as_view(
+        "stocks/<int:pk>/",
+        views.StockViewSet.as_view(
             {"get": "retrieve", "put": "update", "delete": "destroy"}
         ),
     ),

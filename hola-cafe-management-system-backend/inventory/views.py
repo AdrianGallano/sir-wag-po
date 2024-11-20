@@ -3,12 +3,12 @@ from django.views.decorators.http import require_http_methods
 from rest_framework.decorators import api_view
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import Category, Product, Supplier, Image
+from .models import Category, Stock, Supplier, Image
 from .serializers import (
     CategorySerializer,
-    ProductSerializer,
+    StockSerializer,
     SupplierSerializer,
-    ProductSupplierCategoryImageSerializer,
+    StockSupplierCategoryImageSerializer,
     ImageSerializer
 )
 from rest_framework.response import Response
@@ -72,11 +72,11 @@ class SupplierViewSet(viewsets.ModelViewSet):
     serializer_class = SupplierSerializer
 
 
-class ProductViewSet(viewsets.ModelViewSet):
+class StockViewSet(viewsets.ModelViewSet):
     throttle_classes = [GeneralRequestThrottle]
     permission_classes = [IsAuthenticated]
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+    queryset = Stock.objects.all()
+    serializer_class = StockSerializer
     filterset_fields = [
         "name",
         "description",
@@ -107,8 +107,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     ordering_fields = "__all__"
 
     def list(self, request):
-        queryset = Product.objects.all().select_related("category", "supplier", "image")
-        serializer = ProductSupplierCategoryImageSerializer(queryset, many=True)
+        queryset = Stock.objects.all().select_related("category", "supplier", "image")
+        serializer = StockSupplierCategoryImageSerializer(queryset, many=True)
 
         return Response(serializer.data)
 

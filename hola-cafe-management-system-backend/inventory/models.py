@@ -41,7 +41,7 @@ class Image(models.Model):
     class Meta:
         indexes = [models.Index(fields=["image_url"])]
 
-class Product(models.Model):
+class Stock(models.Model):
     name = models.CharField(max_length=255, null=True)
     description = models.TextField()
     price = models.DecimalField(default=0, max_digits=10, decimal_places=2, null=True)
