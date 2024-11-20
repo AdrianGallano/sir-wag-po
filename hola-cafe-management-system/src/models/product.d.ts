@@ -3,6 +3,7 @@ import { Image } from "./image";
 import { Supplier } from "./supplier";
 
 export interface Product {
+  image_id: any;
   id: number;
   name: string;
   description: string;

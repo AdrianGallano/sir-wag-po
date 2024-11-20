@@ -3,8 +3,8 @@ import { useAuth } from "@/context/authContext";
 import { Product } from "@/models/product";
 import dataFetch from "@/services/data-service";
 import StockStatus from "@/components/hcims/stockstatus";
-import AddEntityDropdown from "@/components/hcims/addentitydropdown ";
 import CreateProducts from "@/components/inventory/popup/CreateProducts";
+import AddEntityDropdown from "@/components/hcims/addentitydropdown ";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import CreateSuppliers from "@/components/inventory/popup/CreateSuppliers";
@@ -13,9 +13,8 @@ import ProductTable from "@/components/hcims/producttable";
 import { Category } from "@/models/category";
 import { Supplier } from "@/models/supplier";
 import { productColumns } from "@/components/columns";
-import AddProductForm from "@/components/hcims/addproduct";
-import { Button } from "@/components/ui/button";
-import { PackagePlus } from "lucide-react";
+import DeletePopup from "@/components/popups/delete-product";
+import EditProducts from "@/components/popups/edit-products";
 
 const InventoryPage = () => {
   const { token } = useAuth();
@@ -24,12 +23,11 @@ const InventoryPage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
 
   const [isProductPopupOpen, setIsProductPopupOpen] = useState<boolean>(false);
-  const [isCategoryPopupOpen, setIsCategoryPopupOpen] =
-    useState<boolean>(false);
-  const [isSupplierPopupOpen, setIsSupplierPopupOpen] =
-    useState<boolean>(false);
+  const [isCategoryPopupOpen, setIsCategoryPopupOpen] = useState<boolean>(false);
+  const [isSupplierPopupOpen, setIsSupplierPopupOpen] = useState<boolean>(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const fetchProducts = async () => {
     try {
@@ -46,89 +44,79 @@ const InventoryPage = () => {
     }
   };
 
-  const fetchSuppliers = async () => {
-    try {
-      const suppliers = (await dataFetch(
-        "api/suppliers/",
-        "GET",
-        {},
-        token!
-      )) as Supplier[];
-      setSuppliers(suppliers);
-      console.log("Suppliers fetched", suppliers);
-    } catch (error) {
-      console.error("Failed to fetch suppliers", error);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const categories = (await dataFetch(
-        "api/categories/",
-        "GET",
-        {},
-        token!
-      )) as Category[];
-      setCategories(categories);
-      console.log("Categories fetched", categories);
-    } catch (error) {
-      console.error("Failed to fetch categories", error);
-    }
-  };
-
-  const onUpdate = () => {
-    fetchProducts();
-  };
-
   useEffect(() => {
     fetchProducts();
-    fetchCategories();
-    fetchSuppliers();
   }, []);
 
-  // Function to handle category submit
-  const handleCategorySubmit = async (categoryData: any) => {
+  // Function to handle product submit
+  const handleProductSubmit = async (productData: Product) => {
     try {
-      const endpoint = "/api/categories/";
+      const endpoint = "/api/products/";
       if (!token) throw new Error("Token not found");
 
-      const response = await dataFetch(endpoint, "POST", categoryData, token);
-      console.log("Category saved:", response);
+      const response = await dataFetch(endpoint, "POST", productData, token);
+      console.log("Product saved:", response);
 
-      // onCategoryCreated(); // Refetch categories after creating a new one
-      setIsCategoryPopupOpen(false);
-      toast.success("Category saved successfully");
+      setIsProductPopupOpen(false);
+      toast.success("Product saved successfully");
     } catch (error) {
-      console.error("Error saving category:", error);
-    }
-  };
-  // Function to handle supplier submit
-  const handleSupplierSubmit = async (supplierData: any) => {
-    try {
-      const endpoint = "/api/suppliers/";
-      if (!token) throw new Error("Token not found");
-
-      const response = await dataFetch(endpoint, "POST", supplierData, token);
-      console.log("Supplier saved:", response);
-
-      // onSupplierCreated(); // Refetch suppliers after creating
-      setIsSupplierPopupOpen(false);
-      toast.success("Supplier saved successfully");
-    } catch (error) {
-      console.error("Error saving supplier:", error);
+      console.error("Error saving product:", error);
     }
   };
 
   const handleEdit = (product: Product) => {
     console.log("Editing product:", product);
-    // Open a modal or navigate to an edit page
+    setSelectedProduct(product); 
+    setIsEditPopupOpen(true);  
   };
+  
+
+  const handleEditConfirmation = async (updatedProduct: Product) => {
+    if (selectedProduct) {
+      try {
+        if (!token) throw new Error("Token not found");
+        const apiUrl = `/api/products/${selectedProduct.id}/`;
+        const response = await dataFetch(apiUrl, "PUT", updatedProduct, token);
+        toast.success("Product updated successfully");
+        console.log("Product updated:", response);
+        setIsEditPopupOpen(false);  // Close popup after update
+        setSelectedProduct(null);  // Clear selected product
+        fetchProducts();  // Refetch products to update the UI
+      } catch (error) {
+        console.error("Error updating product:", error);
+        toast.error("Failed to update product");
+      }
+    }
+  };
+  
 
   const handleDelete = (product: Product) => {
-    if (confirm(`Are you sure you want to delete ${product.name}?`)) {
-      console.log("Deleting product:", product);
-      // Perform delete operation (e.g., API call)
+    setSelectedProduct(product);
+    setIsDeletePopupOpen(true); 
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (selectedProduct) {
+      try {
+        const apiUrl = `/api/products/${selectedProduct.id}/`;
+        if (!token) throw new Error("Token not found");
+        const response = await dataFetch(apiUrl, "DELETE", {}, token);
+        console.log("Product deleted:", response);
+        toast.success("Product deleted successfully");
+        // Close the popup and reset the selected product
+        setIsDeletePopupOpen(false);
+        setSelectedProduct(null);
+        fetchProducts();  // Refetch products to update the UI
+      } catch (error) {
+        console.error("Error deleting product:", error);
+        toast.error("Failed to delete product");
+      }
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeletePopupOpen(false); 
+    setSelectedProduct(null); 
   };
 
   const columns = productColumns(handleEdit, handleDelete);
@@ -143,12 +131,11 @@ const InventoryPage = () => {
           stockLevel={75}
         />
         <div className="self-start">
-          <Button
-            className="bg-white hover:bg-gray-100 border border-gray-300"
-            onClick={() => setIsProductPopupOpen(true)}
-          >
-            <PackagePlus className="text-black" />
-          </Button>
+          {/* <AddEntityDropdown
+            onOpenSupplierPopup={() => handlePopup("supplier", "open")}
+            onOpenCategoryPopup={() => handlePopup("category", "open")}
+            onOpenPopup={() => handlePopup("product", "open")}
+          /> */}
         </div>
       </div>
       <div className="w-full">
@@ -160,13 +147,27 @@ const InventoryPage = () => {
         />
       </div>
 
-      {isProductPopupOpen && (
-        <AddProductForm
-          isOpen={isProductPopupOpen}
-          onClose={() => setIsProductPopupOpen(false)}
-          supplier={suppliers}
-          categories={categories}
-          onChanges={onUpdate}
+      {/* {isProductPopupOpen && (
+        <CreateProducts
+          onClose={() => handlePopup("product", "close")}
+          onSubmit={handleProductSubmit}
+        />
+      )} */}
+
+      {isEditPopupOpen && selectedProduct && (
+        <EditProducts
+          product={selectedProduct}
+          onClose={() => setIsEditPopupOpen(false)} 
+          onSubmit={handleEditConfirmation} 
+        />
+      )}
+
+
+      {isDeletePopupOpen && selectedProduct && (
+        <DeletePopup
+          message={`Are you sure you want to delete ${selectedProduct.name}?`}
+          onConfirm={handleDeleteConfirmation}
+          onCancel={handleDeleteCancel}
         />
       )}
 
