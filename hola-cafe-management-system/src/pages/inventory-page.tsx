@@ -29,19 +29,6 @@ const InventoryPage = () => {
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const handlePopup = (
-    popupType: "product" | "category" | "supplier",
-    action: "open" | "close"
-  ) => {
-    if (popupType === "product") {
-      setIsProductPopupOpen(action === "open");
-    } else if (popupType === "category") {
-      setIsCategoryPopupOpen(action === "open");
-    } else if (popupType === "supplier") {
-      setIsSupplierPopupOpen(action === "open");
-    }
-  };
-
   const fetchProducts = async () => {
     try {
       const products = (await dataFetch(
@@ -144,11 +131,11 @@ const InventoryPage = () => {
           stockLevel={75}
         />
         <div className="self-start">
-          <AddEntityDropdown
+          {/* <AddEntityDropdown
             onOpenSupplierPopup={() => handlePopup("supplier", "open")}
             onOpenCategoryPopup={() => handlePopup("category", "open")}
             onOpenPopup={() => handlePopup("product", "open")}
-          />
+          /> */}
         </div>
       </div>
       <div className="w-full">
@@ -160,12 +147,12 @@ const InventoryPage = () => {
         />
       </div>
 
-      {isProductPopupOpen && (
+      {/* {isProductPopupOpen && (
         <CreateProducts
           onClose={() => handlePopup("product", "close")}
           onSubmit={handleProductSubmit}
         />
-      )}
+      )} */}
 
       {isEditPopupOpen && selectedProduct && (
         <EditProducts
