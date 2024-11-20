@@ -47,13 +47,13 @@ class Stock(models.Model):
      """
 
     image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True)
-    name = models.CharField(max_length=255, null=True)
-    description = models.TextField()
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=True)
     quantity = models.DecimalField(
-        default=0, max_digits=10, decimal_places=2, null=True
+        default=0, max_digits=10, decimal_places=2
     )
     cost_price = models.DecimalField(
-        default=0, max_digits=10, decimal_places=2, null=True
+        default=0, max_digits=10, decimal_places=2
     )
     supplier = models.ForeignKey(Supplier, on_delete=models.PROTECT)
     date_shelved = models.DateTimeField(null=True)
@@ -99,7 +99,7 @@ class Cart(models.Model):
     """
     service_crew = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
