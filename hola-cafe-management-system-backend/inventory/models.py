@@ -56,11 +56,11 @@ class Stock(models.Model):
         default=0, max_digits=10, decimal_places=2, null=True
     )
     supplier = models.ForeignKey(Supplier, on_delete=models.PROTECT)
-    date_shelved = models.DateTimeField(auto_now_add=True, null=True)
+    date_shelved = models.DateTimeField(null=True)
+    expiration_date = models.DateTimeField(null=True)
     is_stocked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
-    expiration_date = models.DateTimeField(auto_now_add=True, null=True)
     status = models.CharField(max_length=255, null=True)
    
     def __str__(self):
