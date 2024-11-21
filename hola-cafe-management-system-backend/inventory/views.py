@@ -118,7 +118,7 @@ class StockViewSet(viewsets.ModelViewSet):
     def list(self, request):
         queryset = Stock.objects.all().select_related("supplier", "image")
         serializer = StockSupplierCategoryImageSerializer(queryset, many=True)
-
+    
         return Response(serializer.data)
 
 
@@ -275,6 +275,28 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
     ordering_fields = "__all__"
 
+    def create(self, request, *args, **kwargs):
+
+        transaction = super().create(request, *args, **kwargs)
+        transaction_instance = Transaction.objects.get(pk=transaction.data["id"])
+        cart_items = Cart.objects.filter(service_crew=request.user)
+
+        for cart_item in cart_items:
+            ProductOrder.objects.create(
+                transaction=transaction_instance,
+                product=cart_item.product,
+                quantity=cart_item.quantity
+            )
+
+            cart_item.delete()
+        
+        product_orders = ProductOrder.objects.filter(transaction=transaction_instance)
+        serialized_product_order = ProductOrderSerializer(product_orders, many=True)
+
+        return  Response(serialized_product_order.data, status=201)
+
+    
+    
 
 class ProductOrderViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -308,4 +330,14 @@ TODO:
   - add a transaction
   - Add sa OrderProduct 
     - Then delete sa Cart
+ """
+
+
+""" 
+- Dashboard 
+    - Immediate analytics
+    - Inventory tables
+    - Logs
+    - User
+
  """
