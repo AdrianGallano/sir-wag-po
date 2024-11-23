@@ -36,6 +36,7 @@ export default async function dataFetch(
     return response.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
+      console.log(token)
       throw new Error(error.message);
     } else {
       throw new Error("An unknown error occurred");

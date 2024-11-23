@@ -15,6 +15,7 @@ import { Supplier } from "@/models/supplier";
 import { productColumns } from "@/components/columns";
 import DeletePopup from "@/components/popups/delete-product";
 import EditProducts from "@/components/popups/edit-products";
+import { SquarePlus } from "lucide-react";
 
 const InventoryPage = () => {
   const { token } = useAuth();
@@ -32,7 +33,7 @@ const InventoryPage = () => {
   const fetchProducts = async () => {
     try {
       const products = (await dataFetch(
-        "api/products/",
+        "api/stocks/",
         "GET",
         {},
         token!
@@ -131,11 +132,13 @@ const InventoryPage = () => {
           stockLevel={75}
         />
         <div className="self-start">
-          {/* <AddEntityDropdown
-            onOpenSupplierPopup={() => handlePopup("supplier", "open")}
-            onOpenCategoryPopup={() => handlePopup("category", "open")}
-            onOpenPopup={() => handlePopup("product", "open")}
-          /> */}
+          {/* Add Products Button */}
+          <button
+            className="bg-white hover:bg-gray-100"
+            onClick={() => setIsProductPopupOpen(true)}
+          >
+            <SquarePlus size={40} className="text-black" />
+          </button>
         </div>
       </div>
       <div className="w-full">
@@ -147,19 +150,19 @@ const InventoryPage = () => {
         />
       </div>
 
-      {/* {isProductPopupOpen && (
+      {isProductPopupOpen && (
         <CreateProducts
-          onClose={() => handlePopup("product", "close")}
+          onClose={() => setIsProductPopupOpen(false)}
           onSubmit={handleProductSubmit}
         />
-      )} */}
+      )}
 
       {isEditPopupOpen && selectedProduct && (
         <EditProducts
           product={selectedProduct}
-          onClose={() => setIsEditPopupOpen(false)} 
-          onSubmit={handleEditConfirmation} 
-        />
+          onClose={() => setIsEditPopupOpen(false)}
+          onChanges={handleEditConfirmation} 
+          isOpen={false}/>
       )}
 
 

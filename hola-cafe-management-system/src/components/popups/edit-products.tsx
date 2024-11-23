@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Product } from "@/models/product";
-import dataFetch from "@/services/data-service";
-import { Supplier } from "@/models/supplier";
-import { Category } from "@/models/category";
-import { useAuth } from "@/context/authContext";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -16,222 +16,241 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import ImageManager from "../inventory/popup/ImageManager";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/context/authContext";
+import ImageManager from "@/components/hcims/imagemanager";
+import placeholder from "@/assets/images/fileupload.png";
+import dataFetch from "@/services/data-service";
+import { Supplier } from "@/models/supplier";
+import { Category } from "@/models/category";
+import { Product } from "@/models/product";
 
 interface EditProductsProps {
-  product: Product;
+  isOpen: boolean;
   onClose: () => void;
-  onSubmit: (updatedProduct: Product) => void;
+  product: any; // Replace `any` with the actual Product type
+  onChanges: (updatedProduct: Product) => Promise<void>;
 }
 
-const EditProducts = ({ product, onClose, onSubmit }: EditProductsProps) => {
-  const [updatedProduct, setUpdatedProduct] = useState<Product>(product);
-  const [categories, setCategories] = useState<{ id: number; label: string }[]>([]);
-  const [suppliers, setSuppliers] = useState<{ id: number; label: string }[]>([]);
-  const [isImageManagerOpen, setImageManagerOpen] = useState(false);
+const EditProducts = ({
+  isOpen,
+  onClose,
+  product,
+  onChanges,
+}: EditProductsProps) => {
   const { token, id } = useAuth();
 
+  const initialData = {
+    name: product.name || "",
+    description: product.description || "",
+    price: product.price || "",
+    quantity: product.quantity || "",
+    cost_price: product.cost_price || "",
+    expiration_date: product.expiration_date || null,
+    category: product.category?.id || "",
+    supplier: product.supplier?.id || "",
+    user: id,
+    image: product.image || "",
+  };
+
+  const fields = [
+    { label: "Name", key: "name" },
+    { label: "Description", key: "description" },
+    { label: "Price", key: "price", type: "number" },
+    { label: "Quantity", key: "quantity", type: "number" },
+    { label: "Cost Price", key: "cost_price", type: "number" },
+    { label: "Expiration Date", key: "expiration_date", type: "date" },
+    { label: "Category", key: "category", type: "select" },
+    { label: "Supplier", key: "supplier", type: "select" },
+  ];
+
+  const [formData, setFormData] = useState<{ [key: string]: any }>(initialData);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [selectedImageId, setSelectedImageId] = useState<number | undefined>(product.image || undefined);
+  const [selectedImageURL, setSelectedImageURL] = useState<string | undefined>(product.image_url || undefined);
+  const [isImageManagerOpen, setIsImageManagerOpen] = useState(false);
+  const [supplier, setSupplier] = useState<Supplier[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
   useEffect(() => {
-    setUpdatedProduct(product);
-    fetchCategories();
-    fetchSuppliers();
-  }, [product]);
+    if (isOpen) {
+      fetchSuppliers();
+      fetchCategories();
+      setFormData(initialData);
+    }
+  }, [isOpen, product]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setUpdatedProduct({ ...updatedProduct, [name]: value });
+  const handleImageSelect = (imageId: string, imageURL: string) => {
+    const parsedId = parseInt(imageId);
+    setSelectedImageId(parsedId);
+    setSelectedImageURL(imageURL);
+    setFormData({ ...formData, image: parsedId });
   };
 
-  const handleSelectChange = (name: string, value: string) => {
-    const selectedId = parseInt(value);
-    const selectedLabel =
-      name === "supplier"
-        ? suppliers.find((sup) => sup.id === selectedId)?.label
-        : categories.find((cat) => cat.id === selectedId)?.label;
-    setUpdatedProduct((prev) => ({
-      ...prev,
-      [name]: { id: selectedId, name: selectedLabel },
-    }));
-  };
-
-  const handleSubmit = () => {
-    const productToSubmit = {
-      ...updatedProduct,
-      user: id,
-      supplier: updatedProduct.supplier?.id,
-      category: updatedProduct.category?.id,
-      image: updatedProduct.image_id,
+  const handleChange =
+    (key: string) =>
+    (e: string | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const value = typeof e === "string" ? e : e.target.value;
+      setFormData({ ...formData, [key]: value });
     };
-    onSubmit(productToSubmit);
+
+  const handleSubmit = async () => {
+    const newErrors: { [key: string]: string } = {};
+    fields.forEach((field) => {
+      const value = formData[field.key];
+      if (
+        field.key !== "expiration_date" &&
+        (!value || (typeof value === "string" && !value.trim()))
+      ) {
+        newErrors[field.key] = `${field.label} is required`;
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    const finalData = {
+      ...formData,
+      category: formData.category || undefined,
+      supplier: formData.supplier || undefined,
+      image: selectedImageId || undefined,
+      expiration_date: formData.expiration_date || null,
+    };
+
+    try {
+      if (!token) throw new Error("Token not found");
+
+      const endpoint = `/api/products/${product.id}/`; // Replace with correct endpoint
+      const response = await dataFetch(endpoint, "PUT", finalData, token);
+      if (response) {
+        onChanges(response);
+        console.log("Product updated:", response);
+      } else {
+        console.log("Product not updated:", response);
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
+
     onClose();
   };
 
-  const fetchCategories = async () => {
-    try {
-      if (!token) {
-        throw new Error("Token not found");
-      }
-      const categories = (await dataFetch("api/categories/", "GET", {}, token)) as Category[];
-      setCategories(categories.map((category) => ({ id: category.id, label: category.name })));
-    } catch (error) {
-      console.error("Failed to fetch categories", error);
-    }
-  };
-
   const fetchSuppliers = async () => {
-    if (!token) {
-      throw new Error("Token not found");
-    }
     try {
-      const suppliers = (await dataFetch("api/suppliers/", "GET", {}, token)) as Supplier[];
-      setSuppliers(suppliers.map((supplier) => ({ id: supplier.id, label: supplier.name })));
+      const suppliers = (await dataFetch("api/suppliers/", "GET", {}, token!)) as Supplier[];
+      setSupplier(suppliers);
+      console.log("Fetched suppliers:", suppliers);
     } catch (error) {
       console.error("Failed to fetch suppliers", error);
     }
   };
 
-  const handleImageSelect = (imageId: string) => {
-    setUpdatedProduct((prev) => ({
-      ...prev,
-      image_id: imageId,
-    }));
-    setImageManagerOpen(false);
+  const fetchCategories = async () => {
+    try {
+      const categories = (await dataFetch("api/categories/", "GET", {}, token!)) as Category[];
+      setCategories(categories);
+      console.log("Fetched categories:", categories);
+    } catch (error) {
+      console.error("Failed to fetch categories", error);
+    }
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-        <h3 className="text-2xl font-semibold mb-6">Edit Product</h3>
-        <div className="grid gap-6">
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="name">Product Name</Label>
-            <Input
-              id="name"
-              name="name"
-              value={updatedProduct.name || ""}
-              onChange={handleInputChange}
-              className="col-span-2"
-            />
-          </div>
-
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="description">Description</Label>
-            <Input
-              id="description"
-              name="description"
-              value={updatedProduct.description || ""}
-              onChange={handleInputChange}
-              className="col-span-2"
-            />
-          </div>
-
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="price">Price</Label>
-            <Input
-              id="price"
-              name="price"
-              value={updatedProduct.price || ""}
-              onChange={handleInputChange}
-              className="col-span-2"
-            />
-          </div>
-
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="quantity">Quantity</Label>
-            <Input
-              id="quantity"
-              name="quantity"
-              value={updatedProduct.quantity || ""}
-              onChange={handleInputChange}
-              className="col-span-2"
-            />
-          </div>
-
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="cost_price">Cost Price</Label>
-            <Input
-              id="cost_price"
-              name="cost_price"
-              value={updatedProduct.cost_price || ""}
-              onChange={handleInputChange}
-              className="col-span-2"
-            />
-          </div>
-
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="supplier">Supplier</Label>
-            <Select
-              value={updatedProduct.supplier?.id?.toString() || ""}
-              onValueChange={(value) => handleSelectChange("supplier", value)}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue>
-                  {updatedProduct.supplier?.name || "Select Supplier"}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Suppliers</SelectLabel>
-                  {suppliers.map((supplier) => (
-                    <SelectItem key={supplier.id} value={supplier.id.toString()}>
-                      {supplier.label}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="category">Category</Label>
-            <Select
-              value={updatedProduct.category?.id?.toString() || ""}
-              onValueChange={(value) => handleSelectChange("category", value)}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue>
-                  {updatedProduct.category?.name || "Select Category"}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Categories</SelectLabel>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id.toString()}>
-                      {category.label}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Edit Product</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          {fields.map((field) => (
+            <div key={field.key} className="grid grid-cols-1 gap-2">
+              <Label htmlFor={field.key}>{field.label}</Label>
+              {field.type === "select" ? (
+                <Select
+                  onValueChange={handleChange(field.key)}
+                  value={formData[field.key]?.toString() || ""}
+                >
+                  <SelectTrigger
+                    className={`flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                      errors[field.key] ? "border-red-500" : ""
+                    }`}
+                  >
+                    <SelectValue placeholder={`Select ${field.label}`} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>{field.label}</SelectLabel>
+                      {field.key === "category" &&
+                        categories?.map((option) => (
+                          <SelectItem key={option.id} value={String(option.id)}>
+                            {option.name}
+                          </SelectItem>
+                        ))}
+                      {field.key === "supplier" &&
+                        supplier?.map((option) => (
+                          <SelectItem key={option.id} value={String(option.id)}>
+                            {option.name}
+                          </SelectItem>
+                        ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input
+                  id={field.key}
+                  value={formData[field.key] || ""}
+                  onChange={handleChange(field.key)}
+                  type={field.type || "text"}
+                  placeholder={`Enter ${field.label}`}
+                  className={`border ${errors[field.key] ? "border-rose-500" : ""}`}
+                />
+              )}
+              {errors[field.key] && (
+                <span className="text-xs tracking-wide font-medium text-red-500">
+                  {errors[field.key]}
+                </span>
+              )}
+            </div>
+          ))}
         </div>
-
-        <div className="grid grid-cols-3 items-center gap-4">
-          <Label htmlFor="image_url">Product Image</Label>
-          <Button
-            onClick={() => setImageManagerOpen(true)}
-            className="col-span-2"
+        <div className="mb-4">
+          <Label>Select Image</Label>
+          <div
+            className="w-full h-40 flex items-center justify-center border border-gray-300 p-2 rounded-md"
+            onClick={() => setIsImageManagerOpen(true)} // Open ImageManager
           >
-            Manage Images
-          </Button>
+            {selectedImageURL ? (
+              <img
+                src={selectedImageURL}
+                alt="Selected"
+                className="max-h-full object-contain"
+              />
+            ) : (
+              <img src={placeholder} className="max-h-full object-contain" />
+            )}
+          </div>
         </div>
-
-        <div className="flex justify-end gap-4 mt-6">
-          <Button variant="outline" onClick={onClose} className="px-6 py-2 rounded-md">
-            Cancel
-          </Button>
-          <Button variant="default" onClick={handleSubmit} className="px-6 py-2 rounded-md">
+        <DialogFooter>
+          <Button
+            onClick={handleSubmit}
+            className="bg-green-600 text-white"
+            disabled={!formData.name || !formData.price}
+          >
             Save Changes
           </Button>
-        </div>
-      </div>
+        </DialogFooter>
+      </DialogContent>
+
+      {/* Image Manager Dialog */}
       <ImageManager
-        isOpen={isImageManagerOpen}
-        onClose={() => setImageManagerOpen(false)}
-        onSelectImage={handleImageSelect}
-      />
-    </div>
+          isOpen={isImageManagerOpen}
+          onClose={() => setIsImageManagerOpen(false)}
+          onSelectImage={handleImageSelect}
+        />
+    </Dialog>
   );
 };
 

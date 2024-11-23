@@ -108,7 +108,7 @@ const SupplierPage = () => {
             className="bg-white hover:bg-gray-100 border border-gray-300"
             onClick={() => setIsSupplierPopupOpen(true)}
           >
-            <UserPlus2Icon className="text-black" />
+            <UserPlus2Icon size={40} className="text-black" />
           </Button>
         </div>
       </div>
