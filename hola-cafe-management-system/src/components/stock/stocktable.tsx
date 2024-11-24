@@ -30,23 +30,22 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
-import { Product } from "@/models/product";
+import { Stock } from "@/models/stock";
 import placeholder from "@/assets/images/no-order.png";
+import ProductPreview from "./stockpreview";
 
 interface ProductTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  onEdit: (product: Product) => void;
-  onDelete: (product: Product) => void;
+  onEdit: (product: Stock) => void;
+  onDelete: (product: Stock) => void;
 }
 
-const ProductTable = <TData, TValue>({
-  columns,
-  data,
-}: ProductTableProps<TData, TValue>) => {
+const ProductTable = ({ columns, data }: ProductTableProps<Stock, any>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [selectedProduct, setSelectedProduct] = useState<Stock | null>(null);
 
   const table = useReactTable({
     data,
@@ -127,6 +126,7 @@ const ProductTable = <TData, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
+                onClick={() => setSelectedProduct(row.original as Stock)}
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
@@ -176,6 +176,15 @@ const ProductTable = <TData, TValue>({
           </span>
         </div>
       </div>
+
+      {selectedProduct && (
+        <ProductPreview
+          isOpen={!selectedProduct}
+          selectedProduct={selectedProduct}
+          product={data as Stock[]}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
     </div>
   );
 };

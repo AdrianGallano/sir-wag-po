@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Category } from "@/models/category";
 import PopupBase from "./Popup-Base";
-import { Product } from "@/models/product";
+import { Product } from "@/models/stock";
 import { Supplier } from "@/models/supplier";
 import dataFetch from "@/services/data-service";
 import { useAuth } from "@/context/authContext";

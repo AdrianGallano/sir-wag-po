@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Product } from "@/models/product";
+import { Product } from "@/models/stock";
 import PopupBase from "./Popup-Base";
 import dataFetch from "@/services/data-service";
 import { useAuth } from "@/context/authContext";

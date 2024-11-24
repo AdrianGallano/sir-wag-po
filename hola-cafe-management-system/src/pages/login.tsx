@@ -4,10 +4,9 @@ import { Input } from "@/components/ui/input";
 import hola_bg from "./../assets/images/hola_bg2.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/authContext";
-import { Label } from "@/components/ui/label";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
-import { CheckCheckIcon, CircleCheck } from "lucide-react";
+import { CircleCheck } from "lucide-react";
 
 const Login = () => {
   const [username, setUsername] = useState<string>("");
@@ -18,21 +17,13 @@ const Login = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(username, password);
-    if (success) {
-      toast.success("Login successful!", {
-        duration: 1000,
-      });
+    const isSuccess = await login(username, password);
 
-      console.log(id);
-
-      setTimeout(() => {
-        navigate("/analytics");
-      }, 1000);
+    if (isSuccess) {
+      toast.success("Login successful!", { duration: 1000 });
+      setTimeout(() => navigate("/analytics"), 1000);
     } else {
-      toast.error("Invalid credentials!", {
-        duration: 1000,
-      });
+      toast.error("Invalid credentials!", { duration: 1000 });
     }
   };
 

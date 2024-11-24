@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Product } from "@/models/product";
+import { Stock } from "@/models/stock";
 import { ColumnDef } from "@tanstack/react-table";
 import { Supplier } from "@/models/supplier";
 import { dateFormatter, toTitleCase } from "@/utils/formatter";
@@ -10,23 +10,20 @@ import {
   ArrowUpDown,
   ArrowUpIcon,
   MoreHorizontal,
-  SortAsc,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 export const productColumns = (
-  onEdit: (product: Product) => void,
-  onDelete: (product: Product) => void
-): ColumnDef<Product>[] => [
+  onEdit: (stock: Stock) => void,
+  onDelete: (stock: Stock) => void
+): ColumnDef<Stock>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -213,7 +210,7 @@ export const productColumns = (
   {
     accessorKey: "supplier",
     header: () => {
-      return <div className="text-center min-w-28">Stock Image</div>;
+      return <div className="text-center min-w-28">Is Stocked By</div>;
     },
     cell: ({ row }) => {
       const supplier: Supplier = row.getValue("supplier");

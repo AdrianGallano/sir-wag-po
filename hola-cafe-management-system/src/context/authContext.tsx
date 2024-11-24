@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 
 interface AuthContextType {
   token: string | null;
-  login: (username: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   success: boolean;
   id: number;
@@ -33,9 +33,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [success, setSuccess] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const login = async (username: string, password: string) => {
+  const login = async (
+    username: string,
+    password: string
+  ): Promise<boolean> => {
     const payload = { username, password };
-    setError(null); // Reset error state on each login attempt
+    setError(null);
 
     try {
       console.log("Sending login payload:", payload);
@@ -61,18 +64,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setToken(token);
       sessionStorage.setItem("token", token);
       setSuccess(true);
+      return true;
     } catch (err) {
       console.error("Error during login:", err);
       setSuccess(false);
       setError("Login failed. Please check your username and password.");
+      return false;
     }
   };
 
   const logout = () => {
     setToken(null);
     sessionStorage.removeItem("token");
-    setSuccess(false); // Reset success state on logout
-    setId(0); // Reset id on logout
+    setSuccess(false);
+    setId(0);
     navigate("/login");
   };
 

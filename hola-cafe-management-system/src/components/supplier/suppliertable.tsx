@@ -39,7 +39,7 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
-import { Product } from "@/models/product";
+import { Product } from "@/models/stock";
 import { Supplier } from "@/models/supplier";
 import placeholder from "@/assets/images/man.png";
 

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Product } from '@/models/product';
+import React from "react";
+import { Product } from "@/models/stock";
 
 interface DeleteProductsProps {
   product: Product;
@@ -7,15 +7,23 @@ interface DeleteProductsProps {
   onSubmit: () => void;
 }
 
-const DeleteProducts: React.FC<DeleteProductsProps> = ({ product, onClose, onSubmit }) => {
+const DeleteProducts: React.FC<DeleteProductsProps> = ({
+  product,
+  onClose,
+  onSubmit,
+}) => {
   return (
     <div className="p-4">
       <h2 className="text-xl mb-4">
         Are you sure you want to delete "{product.name}"?
       </h2>
       <div className="flex justify-end gap-4">
-        <button onClick={onClose} className="btn-cancel">No</button>
-        <button onClick={onSubmit} className="btn-delete">Yes</button>
+        <button onClick={onClose} className="btn-cancel">
+          No
+        </button>
+        <button onClick={onSubmit} className="btn-delete">
+          Yes
+        </button>
       </div>
     </div>
   );

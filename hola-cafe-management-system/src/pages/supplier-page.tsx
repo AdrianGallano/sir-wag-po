@@ -1,22 +1,15 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
-import { Product } from "@/models/product";
 import dataFetch from "@/services/data-service";
-import StockStatus from "@/components/hcims/stockstatus";
-import AddEntityDropdown from "@/components/hcims/addentitydropdown ";
-import CreateProducts from "@/components/inventory/popup/CreateProducts";
+import StockStatus from "@/components/stock/stockstatus";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import CreateSuppliers from "@/components/inventory/popup/CreateSuppliers";
-import CreateCategory from "@/components/inventory/popup/CreateCategories";
-import ProductTable from "@/components/hcims/producttable";
-import { Category } from "@/models/category";
 import { Supplier } from "@/models/supplier";
-import { productColumns, supplierColumns } from "@/components/columns";
-import SupplierTable from "@/components/hcims/suppliertable";
+import { supplierColumns } from "@/components/columns";
+import SupplierTable from "@/components/supplier/suppliertable";
 import { UserPlus2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AddSupplierForm from "@/components/hcims/addsupplier";
+import AddSupplierForm from "@/components/supplier/addsupplier";
 
 const SupplierPage = () => {
   const { token } = useAuth();
