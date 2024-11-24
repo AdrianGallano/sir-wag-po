@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Product } from "@/models/product";
+import { Stock } from "@/models/stock";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -23,8 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import "@/index.css";
-import CategoryManager from "@/components/hcims/categorymanager";
-import SupplierManger from "@/components/hcims/suppliermanage";
+import CategoryManager from "@/components/stock/categorymanager";
+import SupplierManger from "@/components/supplier/suppliermanage";
 
 interface PopupBaseProps {
   title: string;
@@ -42,7 +42,7 @@ interface PopupBaseProps {
   categories?: Array<{ id: number; label: string }>;
   suppliers?: Array<{ id: number; label: string }>;
   children?: React.ReactNode;
-  product?: Product;
+  product?: Stock;
   actionType?: "delete" | "other";
   category?: any;
   supplier?: any;

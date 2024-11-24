@@ -25,7 +25,7 @@ import { useState } from "react";
 import { useAuth } from "@/context/authContext";
 import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
-import ImageManager from "@/components/hcims/imagemanager";
+import ImageManager from "@/components/stock/imagemanager";
 
 interface AddSupplierFormProps {
   isOpen: boolean;

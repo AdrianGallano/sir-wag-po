@@ -25,9 +25,9 @@ import { useState } from "react";
 import { useAuth } from "@/context/authContext";
 import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
-import ImageManager from "@/components/hcims/imagemanager";
+import ImageManager from "@/components/stock/imagemanager";
 
-interface AddProductFormProps {
+interface AddStockFormProps {
   isOpen: boolean;
   onClose: () => void;
   supplier: Supplier[];
@@ -35,13 +35,13 @@ interface AddProductFormProps {
   onChanges: () => void;
 }
 
-const AddProductForm = ({
+const AddStockForm = ({
   isOpen,
   onClose,
   supplier,
   categories,
   onChanges,
-}: AddProductFormProps) => {
+}: AddStockFormProps) => {
   const { token, id } = useAuth();
 
   let initialData: { [key: string]: string | number | null } = {
@@ -250,4 +250,4 @@ const AddProductForm = ({
   );
 };
 
-export default AddProductForm;
+export default AddStockForm;

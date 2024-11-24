@@ -19,18 +19,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/authContext";
-import ImageManager from "@/components/hcims/imagemanager";
+import ImageManager from "@/components/stock/imagemanager";
 import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
 import { Supplier } from "@/models/supplier";
 import { Category } from "@/models/category";
-import { Product } from "@/models/product";
+import { Stock } from "@/models/stock";
 
 interface EditProductsProps {
   isOpen: boolean;
   onClose: () => void;
   product: any; // Replace `any` with the actual Product type
-  onChanges: (updatedProduct: Product) => Promise<void>;
+  onChanges: (updatedProduct: Stock) => Promise<void>;
 }
 
 const EditProducts = ({
@@ -67,8 +67,12 @@ const EditProducts = ({
 
   const [formData, setFormData] = useState<{ [key: string]: any }>(initialData);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [selectedImageId, setSelectedImageId] = useState<number | undefined>(product.image || undefined);
-  const [selectedImageURL, setSelectedImageURL] = useState<string | undefined>(product.image_url || undefined);
+  const [selectedImageId, setSelectedImageId] = useState<number | undefined>(
+    product.image || undefined
+  );
+  const [selectedImageURL, setSelectedImageURL] = useState<string | undefined>(
+    product.image_url || undefined
+  );
   const [isImageManagerOpen, setIsImageManagerOpen] = useState(false);
   const [supplier, setSupplier] = useState<Supplier[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -140,7 +144,12 @@ const EditProducts = ({
 
   const fetchSuppliers = async () => {
     try {
-      const suppliers = (await dataFetch("api/suppliers/", "GET", {}, token!)) as Supplier[];
+      const suppliers = (await dataFetch(
+        "api/suppliers/",
+        "GET",
+        {},
+        token!
+      )) as Supplier[];
       setSupplier(suppliers);
       console.log("Fetched suppliers:", suppliers);
     } catch (error) {
@@ -150,7 +159,12 @@ const EditProducts = ({
 
   const fetchCategories = async () => {
     try {
-      const categories = (await dataFetch("api/categories/", "GET", {}, token!)) as Category[];
+      const categories = (await dataFetch(
+        "api/categories/",
+        "GET",
+        {},
+        token!
+      )) as Category[];
       setCategories(categories);
       console.log("Fetched categories:", categories);
     } catch (error) {
@@ -205,7 +219,9 @@ const EditProducts = ({
                   onChange={handleChange(field.key)}
                   type={field.type || "text"}
                   placeholder={`Enter ${field.label}`}
-                  className={`border ${errors[field.key] ? "border-rose-500" : ""}`}
+                  className={`border ${
+                    errors[field.key] ? "border-rose-500" : ""
+                  }`}
                 />
               )}
               {errors[field.key] && (
@@ -246,10 +262,10 @@ const EditProducts = ({
 
       {/* Image Manager Dialog */}
       <ImageManager
-          isOpen={isImageManagerOpen}
-          onClose={() => setIsImageManagerOpen(false)}
-          onSelectImage={handleImageSelect}
-        />
+        isOpen={isImageManagerOpen}
+        onClose={() => setIsImageManagerOpen(false)}
+        onSelectImage={handleImageSelect}
+      />
     </Dialog>
   );
 };
