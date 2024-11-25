@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "../ui/button";
 
 interface TransactionPopupProps {
   onClose: () => void;
@@ -28,7 +29,30 @@ const TransactionPopup: React.FC<TransactionPopupProps> = ({
 }) => {
   const [paymentMethod, setPaymentMethod] = useState<string | undefined>("");
 
+  useEffect(() => {
+    calculateTotalPrice();
+  }
+);
+
+  const products = [
+    { id: 1, name: "Product 1", price: 100 },
+    { id: 2, name: "Product 2", price: 200 },
+    { id: 3, name: "Product 3", price: 300 },
+    { id: 4, name: "Product 4", price: 400 },
+    { id: 5, name: "Product 5", price: 500 },
+    { id: 6, name: "Product 6", price: 600 },
+    { id: 7, name: "Product 7", price: 700 },
+    { id: 8, name: "Product 8", price: 800 },
+    { id: 9, name: "Product 9", price: 900 },
+    { id: 10, name: "Product 10", price: 1000 },
+  ];
+
+  const calculateTotalPrice = () => {
+    return products.reduce((total, product) => total + product.price, 0);
+  }
+
   const handleSubmit = () => {
+    const totalPrice = calculateTotalPrice();
     if (!paymentMethod) {
       alert("Please select a payment method");
       return;
@@ -45,7 +69,7 @@ const TransactionPopup: React.FC<TransactionPopupProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-8 rounded-lg w-1/2 shadow-lg">
+      <div className="bg-white p-8 rounded-lg w-1/2 shadow-xl transition-all">
         {/* Header */}
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-800">Complete Transaction</h2>
@@ -59,15 +83,28 @@ const TransactionPopup: React.FC<TransactionPopupProps> = ({
           <h3 className="text-lg font-semibold text-gray-700 mb-2">
             Transaction Details
           </h3>
-          <div className="flex justify-between text-gray-600 text-sm mb-1">
-            <span>Total Price:</span>
-            <span className="font-medium text-gray-800">
-              ${totalPrice || 1000}
-            </span>
-          </div>
           <div className="flex justify-between text-gray-600 text-sm">
             <span>Service Crew:</span>
-            <span className="font-medium text-gray-800">Name of the crew</span>
+            <span className="font-medium text-gray-800">{serviceCrew}</span>
+          </div>
+          {/* List of Products */}
+          <div className="mt-4 h-48 overflow-y-auto">
+            <h4 className="text-md font-semibold text-gray-700 mb-2">Products:</h4>
+            <ul className="space-y-4">
+              {products.map((product) => (
+                <li key={product.id} className="flex justify-between text-gray-600 text-sm">
+                  <span>{product.name}</span>
+                  <span className="font-medium text-gray-800">₱{product.price}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex justify-between text-gray-600 text-sm mt-4">
+            <span>Total Price:</span>
+            {/* Highlighted total price */}
+            <span className="font-normal text-3xl text-gray-800">
+              ₱{calculateTotalPrice()}
+            </span>
           </div>
         </div>
 
@@ -83,7 +120,7 @@ const TransactionPopup: React.FC<TransactionPopupProps> = ({
             value={paymentMethod}
             onValueChange={(value) => setPaymentMethod(value)}
           >
-            <SelectTrigger className="w-full border rounded p-2">
+            <SelectTrigger className="w-full border rounded p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all">
               <SelectValue placeholder="Select a payment method" />
             </SelectTrigger>
             <SelectContent>
@@ -98,19 +135,19 @@ const TransactionPopup: React.FC<TransactionPopupProps> = ({
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-end">
-          <button
+        <div className="flex justify-between items-center mt-6">
+          <Button
             onClick={onClose}
-            className="bg-gray-100 text-gray-700 py-2 px-4 rounded-md mr-4 hover:bg-gray-300 transition"
+            className="bg-gray-200 rounded-full text-gray-700 py-2 px-6 hover:bg-gray-300 transition"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleSubmit}
-            className="bg-yellow-500 text-black py-2 px-6 rounded-md hover:bg-yellow-600 transition "
+           className=" h-10 text-white rounded-full hover:bg-custom-charcoalOlive bg-custom-char"
           >
             Submit
-          </button>
+          </Button>
         </div>
       </div>
     </div>

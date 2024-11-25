@@ -1,46 +1,48 @@
 import React, { useState } from 'react';
 import PlaceHolder from '../../assets/images/hola_logo.jpg';
+import { Button } from '../ui/button';
 
 interface PosCardsProps {
   product: {
-    id: string;
+    id: number;
     name: string;
     description: string;
     price: number;
     image: string;
     category: any;
   };
-  addToCart: (productId: string, quantity: number) => void;
+  addToCart: (productId: number, quantity: number) => void;
 }
 
 const PosCards: React.FC<PosCardsProps> = ({ product, addToCart }) => {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(1); // Start with 1 as default quantity
 
   const handleQuantityChange = (change: number) => {
-    setQuantity((prev) => Math.max(1, prev + change));
-    console.log('add') // Ensure quantity is at least 1
+    setQuantity((prev) => Math.max(1, prev + change)); // Ensure quantity is at least 1
   };
 
   const handleAddToCart = () => {
     addToCart(product.id, quantity);
-    console.log('add to cart') // Add product to cart
+    console.log('add to cart');
   };
 
   return (
-    <div className="border p-4 rounded-lg shadow-md">
+    <div className="flex flex-col border p-4 rounded-lg shadow-lg h-full bg-white hover:shadow-xl transition-all">
       <img
-        src={product.image || PlaceHolder} // Use placeholder if no image
+        src={ PlaceHolder} // Use placeholder if no image
+        // src={ product.image } // Use placeholder if no image
         alt={product.name}
-        className="mb-4 rounded-md w-full h-56"
+        className="mb-4 rounded-md w-full h-56 object-cover"
       />
-      <div className="flex justify-between">
-        <div className="text-sm mb-2 text-gray-500">#{product.id}</div>
-      </div>
-      <div className="text-2xl font-semibold mb-1 underline">{product.name}</div>
-      <div className="text-sm mb-2">{product.description}</div>
-      <div className="flex items-center justify-between pl-20 pr-20 mb-4">
+      <div className="text-sm mb-2 text-gray-500">#{product.id}</div>
+
+      {/* Smaller product name with price emphasized */}
+      <div className="text-lg font-medium mb-1">{product.name}</div>
+      <div className="text-xl font-bold text-black mb-3">{`₱ ${product.price}`}</div>
+
+      <div className="flex items-center justify-between mb-4">
         <button
-          className="px-2 py-1 text-lg font-bold bg-transparent rounded"
+          className="px-2 py-1 text-lg font-bold bg-transparent hover:border-gray-400 rounded border border-gray-300"
           onClick={() => handleQuantityChange(-1)}
         >
           -
@@ -49,18 +51,22 @@ const PosCards: React.FC<PosCardsProps> = ({ product, addToCart }) => {
           <span className="text-lg font-semibold">{quantity}</span>
         </div>
         <button
-          className="px-2 py-1 text-lg font-bold bg-transparent rounded"
+          className="px-2 py-1 text-lg font-bold bg-transparent hover:border-gray-400 rounded border border-gray-300"
           onClick={() => handleQuantityChange(1)}
         >
           +
         </button>
       </div>
-      <button
-        className="w-full px-4 py-2 bg-yellow-400 text-black rounded-md hover:bg-yellow-500 transition"
+
+      {/* Spacer to push the button to the bottom */}
+      <div className="flex-grow"></div>
+
+      <Button
+        className="w-full rounded-full text-white h-10 hover:bg-custom-charcoalOlive bg-custom-char"
         onClick={handleAddToCart}
       >
         Add to Cart
-      </button>
+      </Button>
     </div>
   );
 };

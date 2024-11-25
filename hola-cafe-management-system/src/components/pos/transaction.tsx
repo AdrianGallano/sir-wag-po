@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShoppingCart } from 'lucide-react';
+import { Button } from '../ui/button';
 
 interface CartProduct {
   id: string;
@@ -24,14 +25,14 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
   );
 
   return (
-    <div className="w-1/4 border-l pt-12 pb-24 pl-4 pr-4">
+    <div className="w-1/4 border-l pt-12 pb-24 pl-4 pr-4 fixed top-0 right-0 h-full bg-white shadow-lg z-10">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold underline">Transaction</h2>
       </div>
 
-      <div className="border rounded-lg p-4 h-full relative bg-white">
+      <div className="border rounded-lg p-4 h-full flex flex-col">
         {/* Cart Products */}
-        <div className="mb-4 overflow-y-auto max-h-[60vh]">
+        <div className="mb-4 overflow-y-auto max-h-[60vh] flex-grow">
           {cartProducts.length === 0 ? (
             <p className="text-gray-500 text-center">No items in the cart</p>
           ) : (
@@ -44,12 +45,12 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
                   <div className="flex-1">
                     <p className="font-medium text-gray-800">{product.name || 'Product Name'}</p>
                     <p className="text-sm text-gray-500">
-                      {product.quantity} x ${product.price || 1000}
+                      {product.quantity} x ₱{product.price || 1000}
                     </p>
                   </div>
                   <div>
                     <p className="font-semibold text-gray-700">
-                      ${(product.price * product.quantity || 100000)}
+                    ₱{(product.price * product.quantity || 100000)}
                     </p>
                   </div>
                 </li>
@@ -66,21 +67,21 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
               {cartProducts.reduce((acc, product) => acc + product.quantity, 0)}
             </p>
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-4">
             <p className="text-gray-600">Total Price:</p>
             <p className="font-bold text-xl text-gray-900">
-              ${totalPrice || 1000}
+            ₱{totalPrice || 1000}
             </p>
           </div>
         </div>
-
         {/* Open Transaction Popup Button */}
-        <button
+        <Button
           onClick={openTransactionPopup}
-          className="absolute bottom-4 left-4 right-4 bg-yellow-400 text-black py-3 rounded-md hover:bg-yellow-600 transition"
+          className="w-full h-12 text-white rounded-full hover:bg-custom-charcoalOlive bg-custom-char"
         >
           Proceed to Transaction
-        </button>
+        </Button>
+
       </div>
     </div>
   );
