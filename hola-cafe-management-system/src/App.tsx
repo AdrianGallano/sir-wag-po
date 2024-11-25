@@ -12,6 +12,9 @@ import ProtectedRoute from "./utils/protectedRoutes";
 import PageNotFound from "./pages/404page";
 import PosPage from "./pages/pos-page";
 import SupplierPage from "./pages/supplier-page";
+import ProductPage from "./pages/product-page";
+import TransactionPage from "./pages/transaction-page";
+import CategoryPage from "./pages/category-page";
 
 function App(): ReactNode {
   return (
@@ -25,6 +28,9 @@ function App(): ReactNode {
           <Route path="supplier" element={<SupplierPage />} />
           <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="pos" element={<PosPage />} />
+          <Route path="product" element={<ProductPage />} />
+          <Route path="transaction" element={<TransactionPage />} />
+          <Route path="categories" element={<CategoryPage />} />
         </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />

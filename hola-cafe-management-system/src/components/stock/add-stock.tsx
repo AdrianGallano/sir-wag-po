@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -18,78 +19,63 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Supplier } from "@/models/supplier";
+import { useState } from "react";
 import { useAuth } from "@/context/authContext";
-import ImageManager from "@/components/stock/imagemanager";
 import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
-import { Supplier } from "@/models/supplier";
-import { Category } from "@/models/category";
-import { Stock } from "@/models/stock";
+import ImageManager from "@/components/image-manager";
 
-interface EditProductsProps {
+interface AddStockFormProps {
   isOpen: boolean;
   onClose: () => void;
-  product: any; // Replace `any` with the actual Product type
-  onChanges: (updatedProduct: Stock) => Promise<void>;
+  supplier: Supplier[];
+  onChanges: () => void;
 }
 
-const EditProducts = ({
+const AddStockForm = ({
   isOpen,
   onClose,
-  product,
+  supplier,
   onChanges,
-}: EditProductsProps) => {
+}: AddStockFormProps) => {
   const { token, id } = useAuth();
 
-  const initialData = {
-    name: product.name || "",
-    description: product.description || "",
-    price: product.price || "",
-    quantity: product.quantity || "",
-    cost_price: product.cost_price || "",
-    expiration_date: product.expiration_date || null,
-    category: product.category?.id || "",
-    supplier: product.supplier?.id || "",
+  let initialData: { [key: string]: string | number | null } = {
+    name: "",
+    description: "",
+    quantity: "",
+    cost_price: "",
+    expiration_date: null,
+    supplier: "",
     user: id,
-    image: product.image || "",
+    image: "",
   };
 
   const fields = [
     { label: "Name", key: "name" },
     { label: "Description", key: "description" },
-    { label: "Price", key: "price", type: "number" },
-    { label: "Quantity", key: "quantity", type: "number" },
     { label: "Cost Price", key: "cost_price", type: "number" },
+    { label: "Quantity", key: "quantity", type: "number" },
     { label: "Expiration Date", key: "expiration_date", type: "date" },
-    { label: "Category", key: "category", type: "select" },
     { label: "Supplier", key: "supplier", type: "select" },
   ];
 
-  const [formData, setFormData] = useState<{ [key: string]: any }>(initialData);
+  const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [selectedImageId, setSelectedImageId] = useState<number | undefined>(
-    product.image || undefined
+    undefined
   );
   const [selectedImageURL, setSelectedImageURL] = useState<string | undefined>(
-    product.image_url || undefined
+    undefined
   );
   const [isImageManagerOpen, setIsImageManagerOpen] = useState(false);
-  const [supplier, setSupplier] = useState<Supplier[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    if (isOpen) {
-      fetchSuppliers();
-      fetchCategories();
-      setFormData(initialData);
-    }
-  }, [isOpen, product]);
 
   const handleImageSelect = (imageId: string, imageURL: string) => {
     const parsedId = parseInt(imageId);
     setSelectedImageId(parsedId);
     setSelectedImageURL(imageURL);
-    setFormData({ ...formData, image: parsedId });
+    setFormData({ ...formData, image: parsedId, image_url: imageURL });
   };
 
   const handleChange =
@@ -97,6 +83,17 @@ const EditProducts = ({
     (e: string | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const value = typeof e === "string" ? e : e.target.value;
       setFormData({ ...formData, [key]: value });
+
+      if (key === "supplier") {
+        const selectedSupplier = (supplier ?? []).find(
+          (supplier: { id: number }) => supplier.id === Number(value)
+        );
+        if (selectedSupplier) {
+          console.log(
+            `Supplier Selected: ID = ${selectedSupplier.id}, Label = ${selectedSupplier.name}`
+          );
+        }
+      }
     };
 
   const handleSubmit = async () => {
@@ -127,56 +124,26 @@ const EditProducts = ({
     try {
       if (!token) throw new Error("Token not found");
 
-      const endpoint = `/api/products/${product.id}/`; // Replace with correct endpoint
-      const response = await dataFetch(endpoint, "PUT", finalData, token);
+      const endpoint = "/api/stocks/";
+      const response = await dataFetch(endpoint, "POST", finalData, token);
       if (response) {
-        onChanges(response);
-        console.log("Product updated:", response);
+        onChanges();
+        console.log("Stock saved:", response);
       } else {
-        console.log("Product not updated:", response);
+        console.log("Stock not saved:", response);
       }
     } catch (error) {
-      console.error("Error updating product:", error);
+      console.error("Error saving stock:", error);
     }
 
     onClose();
   };
 
-  const fetchSuppliers = async () => {
-    try {
-      const suppliers = (await dataFetch(
-        "api/suppliers/",
-        "GET",
-        {},
-        token!
-      )) as Supplier[];
-      setSupplier(suppliers);
-      console.log("Fetched suppliers:", suppliers);
-    } catch (error) {
-      console.error("Failed to fetch suppliers", error);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const categories = (await dataFetch(
-        "api/categories/",
-        "GET",
-        {},
-        token!
-      )) as Category[];
-      setCategories(categories);
-      console.log("Fetched categories:", categories);
-    } catch (error) {
-      console.error("Failed to fetch categories", error);
-    }
-  };
-
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit Product</DialogTitle>
+          <DialogTitle>Add Stock</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {fields.map((field) => (
@@ -185,7 +152,7 @@ const EditProducts = ({
               {field.type === "select" ? (
                 <Select
                   onValueChange={handleChange(field.key)}
-                  value={formData[field.key]?.toString() || ""}
+                  value={formData[field.key]?.toString() || ""} // Set initial selected value
                 >
                   <SelectTrigger
                     className={`flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
@@ -197,12 +164,6 @@ const EditProducts = ({
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>{field.label}</SelectLabel>
-                      {field.key === "category" &&
-                        categories?.map((option) => (
-                          <SelectItem key={option.id} value={String(option.id)}>
-                            {option.name}
-                          </SelectItem>
-                        ))}
                       {field.key === "supplier" &&
                         supplier?.map((option) => (
                           <SelectItem key={option.id} value={String(option.id)}>
@@ -236,7 +197,7 @@ const EditProducts = ({
           <Label>Select Image</Label>
           <div
             className="w-full h-40 flex items-center justify-center border border-gray-300 p-2 rounded-md"
-            onClick={() => setIsImageManagerOpen(true)} // Open ImageManager
+            onClick={() => setIsImageManagerOpen(true)}
           >
             {selectedImageURL ? (
               <img
@@ -252,22 +213,19 @@ const EditProducts = ({
         <DialogFooter>
           <Button
             onClick={handleSubmit}
-            className="bg-green-600 text-white"
-            disabled={!formData.name || !formData.price}
+            className="bg-custom-char hover:bg-custom-charcoalOlive text-white"
           >
-            Save Changes
+            Add Stock
           </Button>
         </DialogFooter>
+        <ImageManager
+          isOpen={isImageManagerOpen}
+          onClose={() => setIsImageManagerOpen(false)}
+          onSelectImage={handleImageSelect}
+        />
       </DialogContent>
-
-      {/* Image Manager Dialog */}
-      <ImageManager
-        isOpen={isImageManagerOpen}
-        onClose={() => setIsImageManagerOpen(false)}
-        onSelectImage={handleImageSelect}
-      />
     </Dialog>
   );
 };
 
-export default EditProducts;
+export default AddStockForm;

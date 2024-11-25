@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
 import dataFetch from "@/services/data-service";
-import StockStatus from "@/components/stock/stockstatus";
+import StockStatus from "@/components/stock/stock-status";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { Supplier } from "@/models/supplier";
 import { supplierColumns } from "@/components/columns";
-import SupplierTable from "@/components/supplier/suppliertable";
+import SupplierTable from "@/components/supplier/supplier-table";
 import { UserPlus2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AddSupplierForm from "@/components/supplier/addsupplier";
+import AddSupplierForm from "@/components/supplier/add-supplier";
+import EditSupplier from "@/components/supplier/edit-supplier";
+import DeleteSupplier from "@/components/supplier/delete-supplier";
 
 const SupplierPage = () => {
   const { token } = useAuth();
@@ -19,19 +21,9 @@ const SupplierPage = () => {
     useState<boolean>(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
-
-  // const handlePopup = (
-  //   popupType: "product" | "category" | "supplier",
-  //   action: "open" | "close"
-  // ) => {
-  //   if (popupType === "product") {
-  //     setIsProductPopupOpen(action === "open");
-  //   } else if (popupType === "category") {
-  //     setIsCategoryPopupOpen(action === "open");
-  //   } else if (popupType === "supplier") {
-  //     setIsSupplierPopupOpen(action === "open");
-  //   }
-  // };
+  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(
+    null
+  );
 
   const fetchSuppliers = async () => {
     try {
@@ -52,37 +44,14 @@ const SupplierPage = () => {
     fetchSuppliers();
   }, []);
 
-  // Function to handle supplier submit
-  const handleSupplierSubmit = async (supplierData: any) => {
-    try {
-      const endpoint = "/api/suppliers/";
-      if (!token) throw new Error("Token not found");
-
-      const response = await dataFetch(endpoint, "POST", supplierData, token);
-      console.log("Supplier saved:", response);
-
-      // onSupplierCreated(); // Refetch suppliers after creating
-      setIsSupplierPopupOpen(false);
-      toast.success("Supplier saved successfully");
-    } catch (error) {
-      console.error("Error saving supplier:", error);
-    }
-  };
-
   const handleEdit = (supplier: Supplier) => {
-    console.log("Editing supplier:", supplier);
-    // Open a modal or navigate to an edit page
+    setSelectedSupplier(supplier);
+    setIsEditPopupOpen(true);
   };
 
   const handleDelete = (supplier: Supplier) => {
-    if (confirm(`Are you sure you want to delete ${supplier.name}?`)) {
-      console.log("Deleting product:", supplier);
-      // Perform delete operation (e.g., API call)
-    }
-  };
-
-  const onUpdate = () => {
-    fetchSuppliers();
+    setSelectedSupplier(supplier);
+    setIsDeletePopupOpen(true);
   };
 
   const columns = supplierColumns(handleEdit, handleDelete);
@@ -101,7 +70,7 @@ const SupplierPage = () => {
             className="bg-white hover:bg-gray-100 border border-gray-300"
             onClick={() => setIsSupplierPopupOpen(true)}
           >
-            <UserPlus2Icon size={40} className="text-black" />
+            <UserPlus2Icon className="text-black" />
           </Button>
         </div>
       </div>
@@ -118,7 +87,25 @@ const SupplierPage = () => {
         <AddSupplierForm
           isOpen={isSupplierPopupOpen}
           onClose={() => setIsSupplierPopupOpen(false)}
-          onChanges={onUpdate}
+          onChanges={fetchSuppliers}
+        />
+      )}
+
+      {isEditPopupOpen && (
+        <EditSupplier
+          isOpen={isEditPopupOpen}
+          onClose={() => setIsEditPopupOpen(false)}
+          onChanges={fetchSuppliers}
+          supplier={selectedSupplier!}
+        />
+      )}
+
+      {isDeletePopupOpen && (
+        <DeleteSupplier
+          isOpen={isDeletePopupOpen}
+          onClose={() => setIsDeletePopupOpen(false)}
+          supplier={selectedSupplier!}
+          onUpdate={fetchSuppliers}
         />
       )}
 
