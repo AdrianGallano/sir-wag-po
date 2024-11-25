@@ -30,22 +30,24 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
-import { Stock } from "@/models/stock";
 import placeholder from "@/assets/images/no-order.png";
-import ProductPreview from "./stockpreview";
+import Transaction from "@/models/transaction";
 
-interface ProductTableProps<TData, TValue> {
+interface TransactionTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  onEdit: (product: Stock) => void;
-  onDelete: (product: Stock) => void;
+  onDelete: (transaction: Transaction) => void;
 }
 
-const ProductTable = ({ columns, data }: ProductTableProps<Stock, any>) => {
+const TransactionTable = ({
+  columns,
+  data,
+}: TransactionTableProps<Transaction, any>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [selectedProduct, setSelectedProduct] = useState<Stock | null>(null);
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
 
   const table = useReactTable({
     data,
@@ -68,10 +70,12 @@ const ProductTable = ({ columns, data }: ProductTableProps<Stock, any>) => {
     <div className="relative">
       <div className="flex w-full justify-end item-center my-2.5 gap-2">
         <Input
-          placeholder="Filter products..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          placeholder="Search by service crew"
+          value={
+            (table.getColumn("service_crew")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("service_crew")?.setFilterValue(event.target.value)
           }
           className="max-w-sm rounded-full"
         />
@@ -103,7 +107,7 @@ const ProductTable = ({ columns, data }: ProductTableProps<Stock, any>) => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Table>
+      <Table className="mb-14">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -126,7 +130,9 @@ const ProductTable = ({ columns, data }: ProductTableProps<Stock, any>) => {
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                onClick={() => setSelectedProduct(row.original as Stock)}
+                onClick={() =>
+                  setSelectedTransaction(row.original as Transaction)
+                }
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
@@ -148,7 +154,7 @@ const ProductTable = ({ columns, data }: ProductTableProps<Stock, any>) => {
         </TableBody>
       </Table>
 
-      <div className="bg-white fixed bottom-0  flex items-center  justify-between min-w-full py-4">
+      <div className="bg-white fixed bottom-0  flex items-center  justify-between w-full py-4 z-10">
         <div className="flex gap-2">
           <Button
             variant="outline"
@@ -176,17 +182,8 @@ const ProductTable = ({ columns, data }: ProductTableProps<Stock, any>) => {
           </span>
         </div>
       </div>
-
-      {selectedProduct && (
-        <ProductPreview
-          isOpen={!selectedProduct}
-          selectedProduct={selectedProduct}
-          product={data as Stock[]}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
     </div>
   );
 };
 
-export default ProductTable;
+export default TransactionTable;

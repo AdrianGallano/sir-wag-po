@@ -19,8 +19,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Product from "@/models/product";
+import { Category } from "@/models/category";
+import Transaction from "@/models/transaction";
+import ServiceCrew from "@/models/service_crew";
 
-export const productColumns = (
+export const stocksColumns = (
   onEdit: (stock: Stock) => void,
   onDelete: (stock: Stock) => void
 ): ColumnDef<Stock>[] => [
@@ -115,7 +119,7 @@ export const productColumns = (
   },
 
   {
-    accessorKey: "price",
+    accessorKey: "cost_price",
     header: ({ column }) => {
       return (
         <Button
@@ -135,7 +139,8 @@ export const productColumns = (
       );
     },
     cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price"));
+      const price = parseFloat(row.getValue("cost_price"));
+      console.log("price", price);
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "PHP",
@@ -214,7 +219,7 @@ export const productColumns = (
     },
     cell: ({ row }) => {
       const supplier: Supplier = row.getValue("supplier");
-      return <div className="text-center">{toTitleCase(supplier.name)}</div>;
+      return <div>{supplier.id}</div>;
     },
   },
 
@@ -231,11 +236,11 @@ export const productColumns = (
     header: () => <div className="text-center">Actions</div>,
     enableHiding: false,
     cell: ({ row }) => {
-      const product = row.original;
+      const stock = row.original;
 
       return (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal />
@@ -243,10 +248,20 @@ export const productColumns = (
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => onEdit(product)}>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(stock);
+              }}
+            >
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onDelete(product)}>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(stock);
+              }}
+            >
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -335,6 +350,182 @@ export const supplierColumns = (
     accessorKey: "actions",
     header: "",
     cell: ({ row }) => {
+      const supplier = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => onEdit(supplier)}>
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDelete(supplier)}>
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
+export const productColumns = (
+  onEdit: (prodoct: Product) => void,
+  onDelete: (product: Product) => void
+): ColumnDef<Product>[] => [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+
+  {
+    accessorKey: "image",
+    header: () => {
+      return <div className="text-center min-w-28">Product Image</div>;
+    },
+    cell: ({ row }) => {
+      const image_obj = row.getValue("image");
+      const image = image_obj as Image;
+
+      return (
+        <div className="flex justify-center">
+          <img
+            src={image?.image_url || placeholder}
+            className="w-10 object-center rounded-sm"
+          />
+        </div>
+      );
+    },
+  },
+
+  {
+    accessorKey: "id",
+    header: () => {
+      return <div className="text-center min-w-28">Product ID</div>;
+    },
+    cell: ({ row }) => {
+      return <div className="text-center">{row.getValue("id")}</div>;
+    },
+  },
+
+  {
+    accessorKey: "name",
+    header: () => {
+      return <div className="text-center min-w-28">Product Name</div>;
+    },
+    cell: ({ row }) => {
+      const name: string = row.getValue("name");
+
+      return <div className="text-center">{toTitleCase(name)}</div>;
+    },
+  },
+
+  {
+    accessorKey: "price",
+    header: ({ column }) => {
+      return (
+        <div className="flex min-w-28 justify-center">
+          <Button
+            variant={"ghost"}
+            className="inline-flex items-center justify-center "
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Price
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDownIcon className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUpIcon className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const price = parseFloat(row.getValue("price"));
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "PHP",
+      }).format(price);
+
+      return <div className="text-center font-medium">{formatted}</div>;
+    },
+  },
+
+  {
+    accessorKey: "created_at",
+    header: ({ column }) => (
+      <div className="flex min-w-28 justify-center">
+        <Button
+          variant={"ghost"}
+          className="inline-flex justify-center text-center"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date Shelved
+          {column.getIsSorted() === "desc" ? (
+            <ArrowDownIcon className="ml-2 h-4 w-4" />
+          ) : column.getIsSorted() === "asc" ? (
+            <ArrowUpIcon className="ml-2 h-4 w-4" />
+          ) : (
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          )}
+        </Button>
+      </div>
+    ),
+    cell: ({ row }) => {
+      const date: string = row.getValue("created_at");
+      return (
+        <div className="capitalize text-center">{dateFormatter(date)}</div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      const rowDate = new Date(row.getValue(id));
+      const [startDate, endDate] = value;
+      return rowDate >= startDate && rowDate <= endDate;
+    },
+  },
+
+  {
+    accessorKey: "category",
+    header: () => {
+      return <div className="text-center min-w-28">Category</div>;
+    },
+    cell: ({ row }) => {
+      const category: Category = row.getValue("category");
+      return <div>{category.id}</div>;
+    },
+  },
+
+  {
+    accessorKey: "actions",
+    header: "",
+    enableHiding: false,
+    cell: ({ row }) => {
       const product = row.original;
 
       return (
@@ -351,6 +542,291 @@ export const supplierColumns = (
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onDelete(product)}>
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
+export const transactionColumns = (
+  onDelete: (transaction: Transaction) => void
+): ColumnDef<Transaction>[] => [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+
+  {
+    accessorKey: "id",
+    header: () => {
+      return <div className="text-center min-w-28">Transaction ID</div>;
+    },
+    cell: ({ row }) => {
+      return <div className="text-center">{row.getValue("id")}</div>;
+    },
+  },
+
+  {
+    accessorKey: "total_price",
+    header: ({ column }) => {
+      return (
+        <div className="min-w-28 flex justify-center">
+          <Button
+            variant={"ghost"}
+            className="inline-flex items-center justify-center "
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Total Price
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDownIcon className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUpIcon className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const price = parseFloat(row.getValue("total_price"));
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "PHP",
+      }).format(price);
+
+      return <div className="text-center font-medium">{formatted}</div>;
+    },
+  },
+
+  {
+    accessorKey: "created_at",
+    header: ({ column }) => (
+      <div className="min-w-28 flex justify-center">
+        <Button
+          variant={"ghost"}
+          className="inline-flex justify-center text-center"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Transaction Date
+          {column.getIsSorted() === "desc" ? (
+            <ArrowDownIcon className="ml-2 h-4 w-4" />
+          ) : column.getIsSorted() === "asc" ? (
+            <ArrowUpIcon className="ml-2 h-4 w-4" />
+          ) : (
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          )}
+        </Button>
+      </div>
+    ),
+    cell: ({ row }) => {
+      const date: string = row.getValue("created_at");
+      return (
+        <div className="capitalize text-center">{dateFormatter(date)}</div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      const rowDate = new Date(row.getValue(id));
+      const [startDate, endDate] = value;
+      return rowDate >= startDate && rowDate <= endDate;
+    },
+  },
+
+  {
+    accessorKey: "service_crew",
+    header: () => {
+      return <div className="text-center min-w-28">Service Crew</div>;
+    },
+    cell: ({ row }) => {
+      const service_crew: ServiceCrew = row.getValue("service_crew");
+      return <div>{service_crew.username!}</div>;
+    },
+  },
+
+  {
+    accessorKey: "actions",
+    header: () => <div className="text-center"></div>,
+    enableHiding: false,
+    cell: ({ row }) => {
+      const transaction = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+            <DropdownMenuItem onClick={() => onDelete(transaction)}>
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
+export const categoryColumns = (
+  onEdit: (category: Category) => void,
+  onDelete: (category: Category) => void
+): ColumnDef<Category>[] => [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+
+  {
+    accessorKey: "image",
+    header: () => {
+      return <div className="text-center min-w-28">Product Image</div>;
+    },
+    cell: ({ row }) => {
+      const image_obj = row.getValue("image");
+      const image = image_obj as Image;
+
+      return (
+        <div className="flex justify-center">
+          <img
+            src={image?.image_url || placeholder}
+            className="w-10 object-center rounded-sm"
+          />
+        </div>
+      );
+    },
+  },
+
+  {
+    accessorKey: "id",
+    header: () => {
+      return <div className="text-center min-w-28">Category ID</div>;
+    },
+    cell: ({ row }) => {
+      return <div className="text-center">{row.getValue("id")}</div>;
+    },
+  },
+
+  {
+    accessorKey: "name",
+    header: () => {
+      return <div className="text-center min-w-28">Category Name</div>;
+    },
+    cell: ({ row }) => {
+      const name: string = row.getValue("name");
+
+      return <div className="text-center">{toTitleCase(name)}</div>;
+    },
+  },
+
+  {
+    accessorKey: "description",
+    header: () => {
+      return <div className="text-center min-w-28">Description</div>;
+    },
+    cell: ({ row }) => {
+      const description: string = row.getValue("description");
+
+      return <div className="text-center">{toTitleCase(description)}</div>;
+    },
+  },
+
+  {
+    accessorKey: "created_at",
+    header: ({ column }) => (
+      <div className="min-w-28 flex justify-center">
+        <Button
+          variant={"ghost"}
+          className="inline-flex justify-center text-center "
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date Shelved
+          {column.getIsSorted() === "desc" ? (
+            <ArrowDownIcon className="ml-2 h-4 w-4" />
+          ) : column.getIsSorted() === "asc" ? (
+            <ArrowUpIcon className="ml-2 h-4 w-4" />
+          ) : (
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          )}
+        </Button>
+      </div>
+    ),
+    cell: ({ row }) => {
+      const date: string = row.getValue("created_at");
+      return (
+        <div className="capitalize text-center ">{dateFormatter(date)}</div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      const rowDate = new Date(row.getValue(id));
+      const [startDate, endDate] = value;
+      return rowDate >= startDate && rowDate <= endDate;
+    },
+  },
+
+  {
+    accessorKey: "actions",
+    header: () => <div className="text-center"></div>,
+    enableHiding: false,
+    cell: ({ row }) => {
+      const category = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => onEdit(category)}>
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDelete(category)}>
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>

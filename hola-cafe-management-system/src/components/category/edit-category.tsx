@@ -1,66 +1,53 @@
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Category } from "@/models/category";
-import { Supplier } from "@/models/supplier";
-import { useState } from "react";
 import { useAuth } from "@/context/authContext";
-import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
-import ImageManager from "@/components/stock/imagemanager";
+import { Category } from "@/models/category";
 
-interface AddSupplierFormProps {
+interface EditSupplierProps {
   isOpen: boolean;
   onClose: () => void;
+  category: Category;
   onChanges: () => void;
 }
 
-const AddSupplierForm = ({
+const EditCategory = ({
   isOpen,
   onClose,
+  category,
   onChanges,
-}: AddSupplierFormProps) => {
+}: EditSupplierProps) => {
   const { token, id } = useAuth();
 
-  let initialData: { [key: string]: string | number | null } = {
-    name: "",
-    description: "",
-    contact_person: "",
-    phone_number: "",
-    address: "",
-    email: "",
+  const initialData = {
+    name: category.name || "",
+    description: category.description || "",
     user: id,
   };
 
   const fields = [
     { label: "Name", key: "name", type: "text" },
     { label: "Description", key: "description", type: "text" },
-    { label: "Contact Person", key: "contact_person", type: "text" },
-    { label: "Phone Number", key: "phone_number", type: "number" },
-    { label: "Address", key: "address", type: "text" },
-    { label: "Email", key: "email", type: "email" },
   ];
 
-  const [formData, setFormData] = useState(initialData);
+  const [formData, setFormData] = useState<{ [key: string]: any }>(initialData);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormData(initialData);
+    }
+  }, [isOpen, category]);
 
   const handleChange =
     (key: string) =>
@@ -71,15 +58,6 @@ const AddSupplierForm = ({
 
   const handleSubmit = async () => {
     const newErrors: { [key: string]: string } = {};
-    fields.forEach((field) => {
-      const value = formData[field.key];
-      if (
-        field.key !== "expiration_date" &&
-        (!value || (typeof value === "string" && !value.trim()))
-      ) {
-        newErrors[field.key] = `${field.label} is required`;
-      }
-    });
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -93,26 +71,26 @@ const AddSupplierForm = ({
     try {
       if (!token) throw new Error("Token not found");
 
-      const endpoint = "/api/suppliers/";
-      const response = await dataFetch(endpoint, "POST", finalData, token);
+      const endpoint = `/api/categories/${category.id}/`;
+      const response = await dataFetch(endpoint, "PUT", finalData, token);
       if (response) {
         onChanges();
-        console.log("Supplier saved:", response);
+        console.log("Category updated:", response);
       } else {
-        console.log("Supplier not saved:", response);
+        console.log("Category not updated:", response);
       }
     } catch (error) {
-      console.error("Error saving Supplier:", error);
+      console.error("Error updating category:", error);
     }
 
     onClose();
   };
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add Supplier</DialogTitle>
+          <DialogTitle>Edit Category</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {fields.map((field) => (
@@ -128,21 +106,13 @@ const AddSupplierForm = ({
                   errors[field.key] ? "border-rose-500" : ""
                 }`}
               />
-              {errors[field.key] && (
-                <span className="text-xs tracking-wide font-medium text-red-500">
-                  {errors[field.key]}
-                </span>
-              )}
             </div>
           ))}
         </div>
 
         <DialogFooter>
-          <Button
-            onClick={handleSubmit}
-            className="mb-2 bg-custom-char text-white hover:bg-custom-charcoalOlive"
-          >
-            Add Supplier
+          <Button onClick={handleSubmit} className="bg-green-600 text-white">
+            Save Changes
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -150,4 +120,4 @@ const AddSupplierForm = ({
   );
 };
 
-export default AddSupplierForm;
+export default EditCategory;

@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import { Category } from "@/models/category";
 import {
   ColumnDef,
-  flexRender,
-  getCoreRowModel,
   SortingState,
-  getSortedRowModel,
-  useReactTable,
   ColumnFiltersState,
-  getFilteredRowModel,
   VisibilityState,
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
+  flexRender,
 } from "@tanstack/react-table";
-
+import { useState } from "react";
+import { Button } from "../ui/button";
 import {
   Table,
   TableBody,
@@ -21,42 +22,29 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
-import { Product } from "@/models/stock";
-import { Supplier } from "@/models/supplier";
-import placeholder from "@/assets/images/man.png";
+import { Input } from "../ui/input";
+import placeholder from "@/assets/images/no-order.png";
 
-interface SupplierTableProps<TData, TValue> {
+interface ProductTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  onEdit: (supplier: Supplier) => void;
-  onDelete: (supplier: Supplier) => void;
+  onEdit: (product: Category) => void;
+  onDelete: (product: Category) => void;
 }
 
-const SupplierTable = <TData, TValue>({
-  columns,
-  data,
-}: SupplierTableProps<TData, TValue>) => {
+const CategoryTable = ({ columns, data }: ProductTableProps<Category, any>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
 
   const table = useReactTable({
     data,
@@ -79,7 +67,7 @@ const SupplierTable = <TData, TValue>({
     <div className="relative">
       <div className="flex w-full justify-end item-center my-2.5 gap-2">
         <Input
-          placeholder="Filter supplier..."
+          placeholder="Filter categories..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -114,7 +102,8 @@ const SupplierTable = <TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Table className="pb-10">
+
+      <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -133,10 +122,11 @@ const SupplierTable = <TData, TValue>({
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="pb-20">
+        <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
+                onClick={() => setSelectedCategory(row.original as Category)}
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
@@ -151,14 +141,14 @@ const SupplierTable = <TData, TValue>({
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
                 <img className="w-10 mx-auto" src={placeholder} alt="" />
-                <span>No Supplier Found.</span>
+                <span>No Category Found.</span>
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
 
-      <div className="bg-white sticky bottom-0  flex items-center  justify-between min-w-full py-4  ">
+      <div className="bg-white fixed bottom-0  flex items-center  justify-between min-w-full py-4">
         <div className="flex gap-2">
           <Button
             variant="outline"
@@ -178,7 +168,7 @@ const SupplierTable = <TData, TValue>({
             Next
           </Button>
         </div>
-        <div className="mr-4">
+        <div className="mr-24">
           <span className="font-medium text-sm">
             {" "}
             Page {table.getState().pagination.pageIndex + 1} of{" "}
@@ -190,4 +180,4 @@ const SupplierTable = <TData, TValue>({
   );
 };
 
-export default SupplierTable;
+export default CategoryTable;
