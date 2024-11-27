@@ -81,5 +81,11 @@ urlpatterns = [
             {"get": "retrieve", "put": "update", "delete": "destroy"}
         ),
     ),
+    path("user-logs/", views.UserLogViewSet.as_view({
+        "get": "list",
+        "post": "create"})
+    ),
+    path("user-logs/<int:pk>", views.UserLogViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"})
+    ),
 
 ]
