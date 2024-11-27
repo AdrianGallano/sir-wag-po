@@ -30,23 +30,24 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
-import { Product } from "@/models/product";
 import placeholder from "@/assets/images/no-order.png";
+import Transaction from "@/models/transaction";
 
-interface ProductTableProps<TData, TValue> {
+interface TransactionTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  onEdit: (product: Product) => void;
-  onDelete: (product: Product) => void;
+  onDelete: (transaction: Transaction) => void;
 }
 
-const ProductTable = <TData, TValue>({
+const TransactionTable = ({
   columns,
   data,
-}: ProductTableProps<TData, TValue>) => {
+}: TransactionTableProps<Transaction, any>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
 
   const table = useReactTable({
     data,
@@ -69,10 +70,12 @@ const ProductTable = <TData, TValue>({
     <div className="relative">
       <div className="flex w-full justify-end item-center my-2.5 gap-2">
         <Input
-          placeholder="Filter products..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          placeholder="Search by service crew"
+          value={
+            (table.getColumn("service_crew")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("service_crew")?.setFilterValue(event.target.value)
           }
           className="max-w-sm rounded-full"
         />
@@ -104,7 +107,7 @@ const ProductTable = <TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Table>
+      <Table className="mb-14">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -127,6 +130,9 @@ const ProductTable = <TData, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
+                onClick={() =>
+                  setSelectedTransaction(row.original as Transaction)
+                }
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
@@ -148,7 +154,7 @@ const ProductTable = <TData, TValue>({
         </TableBody>
       </Table>
 
-      <div className="bg-white fixed bottom-0  flex items-center  justify-between min-w-full py-4">
+      <div className="bg-white fixed bottom-0  flex items-center  justify-between w-full py-4 z-10">
         <div className="flex gap-2">
           <Button
             variant="outline"
@@ -180,4 +186,4 @@ const ProductTable = <TData, TValue>({
   );
 };
 
-export default ProductTable;
+export default TransactionTable;

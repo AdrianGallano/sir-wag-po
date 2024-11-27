@@ -19,39 +19,34 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Category } from "@/models/category";
 import { Supplier } from "@/models/supplier";
 import { useState } from "react";
 import { useAuth } from "@/context/authContext";
 import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
-import ImageManager from "@/components/hcims/imagemanager";
+import ImageManager from "@/components/image-manager";
 
-interface AddProductFormProps {
+interface AddStockFormProps {
   isOpen: boolean;
   onClose: () => void;
   supplier: Supplier[];
-  categories: Category[];
   onChanges: () => void;
 }
 
-const AddProductForm = ({
+const AddStockForm = ({
   isOpen,
   onClose,
   supplier,
-  categories,
   onChanges,
-}: AddProductFormProps) => {
+}: AddStockFormProps) => {
   const { token, id } = useAuth();
 
   let initialData: { [key: string]: string | number | null } = {
     name: "",
     description: "",
-    price: "",
     quantity: "",
     cost_price: "",
     expiration_date: null,
-    category: "",
     supplier: "",
     user: id,
     image: "",
@@ -60,11 +55,9 @@ const AddProductForm = ({
   const fields = [
     { label: "Name", key: "name" },
     { label: "Description", key: "description" },
-    { label: "Price", key: "price", type: "number" },
-    { label: "Quantity", key: "quantity", type: "number" },
     { label: "Cost Price", key: "cost_price", type: "number" },
+    { label: "Quantity", key: "quantity", type: "number" },
     { label: "Expiration Date", key: "expiration_date", type: "date" },
-    { label: "Category", key: "category", type: "select" },
     { label: "Supplier", key: "supplier", type: "select" },
   ];
 
@@ -91,16 +84,7 @@ const AddProductForm = ({
       const value = typeof e === "string" ? e : e.target.value;
       setFormData({ ...formData, [key]: value });
 
-      if (key === "category") {
-        const selectedCategory = (categories ?? []).find(
-          (category) => category.id === Number(value)
-        );
-        if (selectedCategory) {
-          console.log(
-            `Category Selected: ID = ${selectedCategory.id}, Label = ${selectedCategory.name}`
-          );
-        }
-      } else if (key === "supplier") {
+      if (key === "supplier") {
         const selectedSupplier = (supplier ?? []).find(
           (supplier: { id: number }) => supplier.id === Number(value)
         );
@@ -140,16 +124,16 @@ const AddProductForm = ({
     try {
       if (!token) throw new Error("Token not found");
 
-      const endpoint = "/api/products/";
+      const endpoint = "/api/stocks/";
       const response = await dataFetch(endpoint, "POST", finalData, token);
       if (response) {
         onChanges();
-        console.log("Product saved:", response);
+        console.log("Stock saved:", response);
       } else {
-        console.log("Product not saved:", response);
+        console.log("Stock not saved:", response);
       }
     } catch (error) {
-      console.error("Error saving product:", error);
+      console.error("Error saving stock:", error);
     }
 
     onClose();
@@ -180,12 +164,6 @@ const AddProductForm = ({
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>{field.label}</SelectLabel>
-                      {field.key === "category" &&
-                        categories?.map((option) => (
-                          <SelectItem key={option.id} value={String(option.id)}>
-                            {option.name}
-                          </SelectItem>
-                        ))}
                       {field.key === "supplier" &&
                         supplier?.map((option) => (
                           <SelectItem key={option.id} value={String(option.id)}>
@@ -250,4 +228,4 @@ const AddProductForm = ({
   );
 };
 
-export default AddProductForm;
+export default AddStockForm;
