@@ -81,11 +81,61 @@ urlpatterns = [
             {"get": "retrieve", "put": "update", "delete": "destroy"}
         ),
     ),
-    path("user-logs/", views.UserLogViewSet.as_view({
+    path("user-log/", views.UserLogViewSet.as_view({
         "get": "list",
         "post": "create"})
     ),
-    path("user-logs/<int:pk>", views.UserLogViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"})
+    path("user-log/<int:pk>/", views.UserLogViewSet.as_view({
+        "get": "retrieve", 
+        "put": "update", 
+        "delete": "destroy"})
     ),
+    path("image/product/", views.ProductImageViewSet.as_view({
+        "get": "list"})
+    ),
+    path("image/product/<int:pk>/", views.ProductImageViewSet.as_view({
+        "get": "retrieve"})
+    ),
+    path("image/stock/", views.StockImageViewSet.as_view({
+        "get": "list"})
+    ),
+    path("image/stock/<int:pk>/", views.StockImageViewSet.as_view({
+        "get": "retrieve"})
+    ), # from here
+    path("image/is-stocked-by/supplier/stock/", views.StockSupplierIsStockedByImageViewSet.as_view({
+        "get": "list"})
+    ),
+    path("image/is-stocked-by/supplier/stock/<int:pk>/", views.StockSupplierIsStockedByImageViewSet.as_view({
+        "get": "retrieve"})
+    ),
+    path("image/category/product/", views.ProductCategoryImageViewSet.as_view({
+        "get": "list"})
+    ),
+    path("image/category/product/<int:pk>", views.ProductCategoryImageViewSet.as_view({
+        "get": "retrieve"})
+    ),# start here
+    path("product/service-crew/cart/", views.ProductServiceCrewCartViewSet.as_view({
+        "get": "list"})
+    ),
+    path("product/service-crew/cart/<int:pk>", views.ProductServiceCrewCartViewSet.as_view({
+        "get": "retrieve"})
+    ),
+    path("user/user-log/", views.UserUserLogViewSet.as_view({
+        "get": "list"})
+    ),
+    path("user/user-log/<int:pk>", views.UserUserLogViewSet.as_view({
+        "get": "retrieve"})
+    ),
+    path("product/transaction/product-order/", views.ProductTransactionProductOrderViewSet.as_view({
+        "get": "list"})
+    ),
+    path("product/transaction/product-order/<int:pk>", views.ProductTransactionProductOrderViewSet.as_view({
+        "get": "retrieve"})
+    ),
+    
+
+
 
 ]
+
+

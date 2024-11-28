@@ -13,8 +13,14 @@ from .serializers import (
     TransactionSerializer,
     ProductOrderSerializer,
     UserLogSerializer,
-    StockImageSerializer
-    
+    StockImageSerializer,
+    ProductSerializer,
+    StockSerializer,
+    StockSupplierIsStockedByImageSerializer,
+    ProductCategoryImageSerializer,
+    ProductServiceCrewCartSerializer,
+    UserUserLogSerializer,
+    ProductTransactionProductOrderSerializer
 )
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -23,7 +29,6 @@ import os
 from uuid import uuid4
 from .throttles import GeneralRequestThrottle,GeneralImageThrottle,UploadImageThrottle
 from .helpers import creationBasedUserLog, modificationBasedUserLog, deletionBasedUserLog
-
 
 class CategoryViewSet(viewsets.ModelViewSet):
     throttle_classes = [GeneralRequestThrottle]
@@ -129,8 +134,8 @@ class SupplierViewSet(viewsets.ModelViewSet):
 class StockViewSet(viewsets.ModelViewSet):
     throttle_classes = [GeneralRequestThrottle]
     permission_classes = [IsAuthenticated]
-    queryset =  Stock.objects.all().select_related("image")
-    serializer_class = StockImageSerializer
+    queryset =  Stock.objects.all()
+    serializer_class = StockSerializer
     
     filterset_fields = [
         "name",
@@ -320,8 +325,8 @@ class CartViewSet(viewsets.ModelViewSet):
 
 class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = Product.objects.all().select_related("image")
-    serializer_class = ProductImageSerializer
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
     filterset_fields = [
         "name",
         "description",
@@ -485,7 +490,52 @@ class UserLogViewSet(viewsets.ModelViewSet):
 
     ordering_fields = "__all__"
 
-    
+class StockImageViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Stock.objects.all().select_related("image")
+    serializer_class = StockImageSerializer
+
+class ProductImageViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Product.objects.all().select_related("image")
+    serializer_class = ProductImageSerializer   
+
+class StockSupplierIsStockedByImageViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Stock.objects.all().select_related("image", "supplier", "is_stocked_by")
+    serializer_class = StockSupplierIsStockedByImageSerializer
+
+
+class ProductCategoryImageViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Product.objects.all().select_related("image", "category")
+    serializer_class = ProductCategoryImageSerializer
+
+class ProductServiceCrewCartViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Cart.objects.all().select_related()
+    serializer_class = ProductServiceCrewCartSerializer
+
+class UserUserLogViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = UserLog.objects.all().select_related()
+    serializer_class = UserUserLogSerializer
+
+class ProductTransactionProductOrderViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = ProductOrder.objects.all().select_related()
+    serializer_class = ProductTransactionProductOrderSerializer
+
+
+
+
+
+# cart
+# userlogs
+# productorder
+# transaction
+
+
 # class TransactionProductsOrderCartViewSet(viewsets.ViewSet):
 #     permission_classes = [IsAuthenticated]
 
@@ -530,7 +580,7 @@ class UserLogViewSet(viewsets.ModelViewSet):
 
 
 
-""" 
+""" {}
 TODO:
  - Streamline on checkout 
   - bale yung OrderProduct, Transaction, Cart
@@ -549,3 +599,5 @@ TODO:
     - User
 
  """
+
+
