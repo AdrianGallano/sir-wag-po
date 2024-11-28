@@ -396,7 +396,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
         transaction = super().create(request, *args, **kwargs)
         transaction_instance = Transaction.objects.get(pk=transaction.data["id"])
-        cart_items = Cart.objects.filter(service_crew=transaction_instance)
+        cart_items = Cart.objects.filter(service_crew=transaction_instance.service_crew)
 
         for cart_item in cart_items:
             ProductOrder.objects.create(
