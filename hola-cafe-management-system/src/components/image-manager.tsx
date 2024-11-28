@@ -169,7 +169,7 @@ const ImageManager: React.FC<ImageManagerProps> = ({
                       onSelectImage(image.id, image.image_url);
                       onClose();
                     }}
-                    className="bg-green-600 text-white mx-1 hover:bg-green-700"
+                    className="hover:bg-custom-charcoalOlive bg-custom-char mx-1 hover:bg-green-700"
                   >
                     Select
                   </Button>

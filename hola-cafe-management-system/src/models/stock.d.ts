@@ -14,6 +14,7 @@ export interface Stock {
   expiration_date: string;
   supplier: Supplier;
   image?: Image;
+  is_stocked_by: string;
   onEdit: (product: Stock) => void;
   onDelete: (product: Stock) => void;
 }

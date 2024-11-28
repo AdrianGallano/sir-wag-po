@@ -213,13 +213,13 @@ export const stocksColumns = (
   },
 
   {
-    accessorKey: "supplier",
+    accessorKey: "is_stocked_by",
     header: () => {
       return <div className="text-center min-w-28">Is Stocked By</div>;
     },
     cell: ({ row }) => {
-      const supplier: Supplier = row.getValue("supplier");
-      return <div>{supplier.id}</div>;
+      // const supplier: Supplier = row.getValue("is_stocked_by");
+      return <div className="text-center">Statis</div>;
     },
   },
 
@@ -227,7 +227,24 @@ export const stocksColumns = (
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      return <div className=" rounded-full w-[50px] h-2 bg-green-500"></div>;
+      const quantity = parseFloat(row.getValue("quantity"));
+      let status = "In Stock";
+      let bgColor = "bg-green-500";
+
+      if (quantity === 0) {
+        status = "Out of Stock";
+        bgColor = "bg-red-500";
+      } else if (quantity > 0 && quantity <= 10) {
+        status = "Low Stock";
+        bgColor = "bg-yellow-500";
+      }
+
+      return (
+        <div className="flex items-center space-x-2">
+          <div className={`rounded-full w-[50px] h-2 ${bgColor}`} />
+          <span className="text-sm font-medium sr-only">{status}</span>
+        </div>
+      );
     },
   },
 

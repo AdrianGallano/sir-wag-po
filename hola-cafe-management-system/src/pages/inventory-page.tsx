@@ -14,10 +14,12 @@ import AddStockForm from "@/components/stock/add-stock";
 import StockTable from "@/components/stock/stock-table";
 import EditStock from "@/components/stock/edit-stock";
 import DeletePopup from "@/components/stock/delete-stock";
+import ServiceCrew from "@/models/service_crew";
 
 const InventoryPage = () => {
   const { token } = useAuth();
   const [stock, setStock] = useState<Stock[]>([]);
+  const [serviceCrew, setServiceCrew] = useState<ServiceCrew[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
   const [isStockPopupOpen, setIsStockPopupOpen] = useState<boolean>(false);
@@ -33,20 +35,23 @@ const InventoryPage = () => {
         {},
         token!
       )) as Stock[];
-      // const suppliersMap = new Map(
-      //   suppliers.map((supplier) => [supplier.id, supplier.name])
-      // );
-
-      // const stocksWithSuppliers = stocks.map((stock) => ({
-      //   ...stock,
-      //   supplierName: suppliersMap.get(stock.supplier.id) || "Unknown Supplier",
-      // }));
-
-      // setStock(stocksWithSuppliers);
       setStock(stocks);
-      console.log("Stocks", stocks);
     } catch (error) {
       console.error("Failed to fetch stocks", error);
+    }
+  };
+
+  const fetchServiceCrew = async () => {
+    try {
+      const serviceCrew = (await dataFetch(
+        "api/service-crew/",
+        "GET",
+        {},
+        token!
+      )) as ServiceCrew[];
+      setServiceCrew(serviceCrew);
+    } catch (error) {
+      console.error("Failed to fetch service crew", error);
     }
   };
 
@@ -69,6 +74,7 @@ const InventoryPage = () => {
   };
 
   useEffect(() => {
+    fetchServiceCrew();
     fetchSupplier();
     fetchStocks();
   }, []);
@@ -117,7 +123,7 @@ const InventoryPage = () => {
           isOpen={isStockPopupOpen}
           onClose={() => setIsStockPopupOpen(false)}
           supplier={suppliers}
-          onChanges={onUpdate}
+          onChanges={fetchStocks}
         />
       )}
 

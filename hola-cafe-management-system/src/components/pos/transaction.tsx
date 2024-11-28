@@ -1,6 +1,6 @@
-import React from 'react';
-import { ShoppingCart } from 'lucide-react';
-import { Button } from '../ui/button';
+import React from "react";
+import { ShoppingCart } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface CartProduct {
   id: string;
@@ -27,6 +27,8 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
     (acc, product) => acc + product?.product.price * product.quantity,
     0
   );
+
+  console.log(totalPrice);
 
   return (
     <div className="w-1/4 border-l pt-12 pb-24 pl-4 pr-4 fixed top-0 right-0 h-full bg-white shadow-lg z-10">
@@ -85,7 +87,6 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
         >
           Proceed to Transaction
         </Button>
-
       </div>
     </div>
   );

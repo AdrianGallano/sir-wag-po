@@ -13,6 +13,8 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/authContext";
 import dataFetch from "@/services/data-service";
 import { Supplier } from "@/models/supplier";
+import { CircleCheck, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface EditSupplierProps {
   isOpen: boolean;
@@ -83,12 +85,17 @@ const EditSupplier = ({
       const response = await dataFetch(endpoint, "PUT", finalData, token);
       if (response) {
         onChanges();
-        console.log("Supplier updated:", response);
-      } else {
-        console.log("Supplier not updated:", response);
+        toast("Supplier successfully updated", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
+        });
       }
     } catch (error) {
-      console.error("Error updating supplier:", error);
+      toast.error("Failed to update supplier", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
     }
 
     onClose();
@@ -119,7 +126,10 @@ const EditSupplier = ({
         </div>
 
         <DialogFooter>
-          <Button onClick={handleSubmit} className="bg-green-600 text-white">
+          <Button
+            onClick={handleSubmit}
+            className="hover:bg-custom-charcoalOlive bg-custom-char"
+          >
             Save Changes
           </Button>
         </DialogFooter>

@@ -13,6 +13,8 @@ import {
 import dataFetch from "@/services/data-service";
 import { useAuth } from "@/context/authContext";
 import Product from "@/models/product";
+import { CircleCheck, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface DeleteProductProps {
   isOpen: boolean;
@@ -41,10 +43,18 @@ const DeleteProduct: React.FC<DeleteProductProps> = ({
         const response = await dataFetch(apiUrl, "DELETE", {}, token);
         console.log("product deleted:", response);
         onUpdate();
-        onClose();
+        toast("Product successfully deleted", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
+        });
       } catch (error) {
-        console.error("Error deleting product:", error);
+        toast.error("Failed to delete product", {
+          icon: <X className="text-red-500" />,
+          className: "bg-white text-red-500 ",
+        });
       }
+      onClose();
     }
   };
 

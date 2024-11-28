@@ -13,6 +13,8 @@ import {
 import dataFetch from "@/services/data-service";
 import { useAuth } from "@/context/authContext";
 import { Category } from "@/models/category";
+import { CircleCheck, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface DeleteCategoryProps {
   isOpen: boolean;
@@ -41,12 +43,21 @@ const DeleteCategory: React.FC<DeleteCategoryProps> = ({
         }
 
         const response = await dataFetch(apiUrl, "DELETE", {}, token);
-        console.log("category deleted:", response);
-        onUpdate();
-        onClose();
+        if (response) {
+          toast("Category successfully deleted", {
+            duration: 2000,
+            icon: <CircleCheck className="fill-green-500 text-white" />,
+            className: "bg-white text-custom-charcoalOlive",
+          });
+          onUpdate();
+        }
       } catch (error) {
-        console.error("Error deleting category:", error);
+        toast.error("Failed to delete category", {
+          icon: <X className="text-red-500" />,
+          className: "bg-white text-red-500 ",
+        });
       }
+      onClose();
     }
   };
 

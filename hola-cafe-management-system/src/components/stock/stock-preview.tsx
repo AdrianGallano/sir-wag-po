@@ -13,9 +13,15 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { Card, CardContent } from "@/components/ui/card";
 import { Stock } from "@/models/stock";
 import { dateFormatter } from "@/utils/formatter";
+import { Info } from "lucide-react";
 
 interface StockPreviewProps {
   isOpen: boolean;
@@ -52,7 +58,6 @@ const StockPreview = ({
 
     carouselApi.on("select", handleSelect);
 
-    // Cleanup on unmount
     return () => {
       carouselApi.off("select", handleSelect);
     };
@@ -62,25 +67,40 @@ const StockPreview = ({
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl">
+      <DialogContent className="max-w-3xl min-h-96 h-fit">
         <DialogHeader>
-          <DialogTitle>Stock Preview</DialogTitle>
+          <DialogTitle className="flex items-center gap-1">
+            <span>Stocks Preview</span>
+            <HoverCard>
+              <HoverCardTrigger>
+                <Info className="w-4 h-4 text-green-500 " />
+              </HoverCardTrigger>
+              <HoverCardContent
+                align="center"
+                side="right"
+                alignOffset={25}
+                sideOffset={16}
+              >
+                <p className="text-xs ">Note: Stock Preview is swipeable</p>
+              </HoverCardContent>
+            </HoverCard>
+          </DialogTitle>
         </DialogHeader>
         <Carousel setApi={setCarouselApi}>
-          <CarouselContent>
+          <CarouselContent className="max-w-[750px]">
             {stocks.map((stock) => (
               <CarouselItem key={stock.id}>
-                <Card className="border-none">
+                <Card className="w-full bg-white border-none">
                   <CardContent>
-                    <div className="w-full flex items-center justify-center gap-2 ">
-                      <div className="border-2 border-gray-500 rounded-lg max-w-72 max-h-72 ">
+                    <div className="grid grid-cols-2   gap-2 ">
+                      <div className="border-2 border-gray-500 rounded-lg w-full min-h-72 h-full ">
                         <img
                           src={stock.image?.image_url}
                           alt={stock.name}
                           className="h-full w-full object-contain rounded-lg"
                         />
                       </div>
-                      <div className="w-full flex flex-col gap-5 justify-start">
+                      <div className=" w-full flex flex-col gap-5 justify-start text-wrap">
                         <div className="flex flex-col w-full">
                           <h1 className="font-semibold tracking-wide text-2xl">
                             {stock.name}
@@ -126,7 +146,15 @@ const StockPreview = ({
                         </div>
                       </div>
                     </div>
-                    <div></div>
+
+                    <div className="w-full flex items-center gap-1.5    mt-3">
+                      <span className="bg-green-500 w-1/4   block h-5 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full"></span>
+                      <div className="w-full">
+                        <p className="underline text-wrap text-xl">
+                          We have {stock.quantity} stocks left
+                        </p>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </CarouselItem>

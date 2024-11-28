@@ -25,6 +25,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import placeholder from "@/assets/images/fileupload.png";
 import ImageManager from "@/components/image-manager";
+import { CircleCheck, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface AddProductFormProps {
   isOpen: boolean;
@@ -113,13 +115,18 @@ const AddProductForm = ({
       const endpoint = "/api/products/";
       const response = await dataFetch(endpoint, "POST", finalData, token);
       if (response) {
+        toast("Product successfully added", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
+        });
         onUpdate();
-        console.log("Product saved:", response);
-      } else {
-        console.log("Product not saved:", response);
       }
     } catch (error) {
-      console.error("Error saving Product:", error);
+      toast.error("Failed to add product", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
     }
 
     onClose();

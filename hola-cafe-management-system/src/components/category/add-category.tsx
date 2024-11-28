@@ -14,6 +14,8 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useAuth } from "@/context/authContext";
 import dataFetch from "@/services/data-service";
+import { CircleCheck, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface AddSupplierFormProps {
   isOpen: boolean;
@@ -76,13 +78,18 @@ const AddCategoryForm = ({
       const endpoint = "/api/categories/";
       const response = await dataFetch(endpoint, "POST", finalData, token);
       if (response) {
+        toast("Category successfully added", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
+        });
         onChanges();
-        console.log("Category saved:", response);
-      } else {
-        console.log("Category not saved:", response);
       }
     } catch (error) {
-      console.error("Error saving Category:", error);
+      toast.error("Failed to add category", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
     }
 
     onClose();
