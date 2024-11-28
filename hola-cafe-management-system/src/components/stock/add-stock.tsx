@@ -25,6 +25,8 @@ import { useAuth } from "@/context/authContext";
 import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
 import ImageManager from "@/components/image-manager";
+import { toast } from "sonner";
+import { CheckCircle, CircleCheck, X } from "lucide-react";
 
 interface AddStockFormProps {
   isOpen: boolean;
@@ -48,7 +50,7 @@ const AddStockForm = ({
     cost_price: "",
     expiration_date: null,
     supplier: "",
-    user: id,
+    is_stocked_by: id,
     image: "",
   };
 
@@ -57,6 +59,7 @@ const AddStockForm = ({
     { label: "Description", key: "description" },
     { label: "Cost Price", key: "cost_price", type: "number" },
     { label: "Quantity", key: "quantity", type: "number" },
+    { label: "Date Shelved", key: "date_shelved", type: "date" },
     { label: "Expiration Date", key: "expiration_date", type: "date" },
     { label: "Supplier", key: "supplier", type: "select" },
   ];
@@ -88,11 +91,6 @@ const AddStockForm = ({
         const selectedSupplier = (supplier ?? []).find(
           (supplier: { id: number }) => supplier.id === Number(value)
         );
-        if (selectedSupplier) {
-          console.log(
-            `Supplier Selected: ID = ${selectedSupplier.id}, Label = ${selectedSupplier.name}`
-          );
-        }
       }
     };
 
@@ -113,30 +111,37 @@ const AddStockForm = ({
       return;
     }
 
-    const finalData = {
-      ...formData,
-      category: formData.category || undefined,
-      supplier: formData.supplier || undefined,
-      image: selectedImageId || undefined,
-      expiration_date: formData.expiration_date || null,
-    };
+    if (id !== null) {
+      const finalData = {
+        ...formData,
+        category: formData.category || undefined,
+        supplier: formData.supplier || undefined,
+        image: selectedImageId || undefined,
+        expiration_date: formData.expiration_date || null,
+      };
 
-    try {
-      if (!token) throw new Error("Token not found");
+      try {
+        if (!token) throw new Error("Token not found");
 
-      const endpoint = "/api/stocks/";
-      const response = await dataFetch(endpoint, "POST", finalData, token);
-      if (response) {
-        onChanges();
-        console.log("Stock saved:", response);
-      } else {
-        console.log("Stock not saved:", response);
+        const endpoint = "/api/stocks/";
+        const response = await dataFetch(endpoint, "POST", finalData, token);
+        if (response) {
+          onChanges();
+          toast("Stock successfully added", {
+            duration: 2000,
+            icon: <CircleCheck className="fill-green-500 text-white" />,
+            className: "bg-white text-custom-charcoalOlive",
+          });
+        }
+      } catch (error) {
+        toast.error("Failed to add stock", {
+          icon: <X className="text-red-500" />,
+          className: "bg-white text-red-500 ",
+        });
       }
-    } catch (error) {
-      console.error("Error saving stock:", error);
-    }
 
-    onClose();
+      onClose();
+    }
   };
 
   return (
@@ -152,7 +157,7 @@ const AddStockForm = ({
               {field.type === "select" ? (
                 <Select
                   onValueChange={handleChange(field.key)}
-                  value={formData[field.key]?.toString() || ""} // Set initial selected value
+                  value={formData[field.key]?.toString() || ""}
                 >
                   <SelectTrigger
                     className={`flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${

@@ -98,9 +98,10 @@ DATABASES = {
         "HOST": os.getenv("HOST"),
         "PORT": os.getenv("PORT"),
         "OPTIONS": {
-            "ssl": {
-                "ca": os.getenv("CA_PATH"),  
-            },
+            # "ssl": {
+            #     "ca": os.getenv("CA_PATH"),  
+            # },
+            'ssl': {'disabled': True},  
         },
 
     }

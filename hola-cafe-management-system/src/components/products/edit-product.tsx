@@ -24,6 +24,8 @@ import dataFetch from "@/services/data-service";
 import { Category } from "@/models/category";
 import Product from "@/models/product";
 import ImageManager from "../image-manager";
+import { CircleCheck, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface EditProductProps {
   isOpen: boolean;
@@ -109,12 +111,17 @@ const EditProduct = ({
       const response = await dataFetch(endpoint, "PUT", finalData, token);
       if (response) {
         onChanges();
-        console.log("Product updated:", response);
-      } else {
-        console.log("Product not updated:", response);
+        toast("Stock successfully updated", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
+        });
       }
     } catch (error) {
-      console.error("Error updating Product:", error);
+      toast.error("Failed to update product", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
     }
 
     onClose();
@@ -207,7 +214,10 @@ const EditProduct = ({
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleSubmit} className="bg-green-600 text-white">
+          <Button
+            onClick={handleSubmit}
+            className="hover:bg-custom-charcoalOlive bg-custom-char"
+          >
             Save Changes
           </Button>
         </DialogFooter>

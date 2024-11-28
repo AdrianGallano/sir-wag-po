@@ -25,6 +25,8 @@ import dataFetch from "@/services/data-service";
 import { Supplier } from "@/models/supplier";
 import { Category } from "@/models/category";
 import { Stock } from "@/models/stock";
+import { toast } from "sonner";
+import { CheckCircle, CircleCheck, X } from "lucide-react";
 
 interface EditStockProps {
   isOpen: boolean;
@@ -122,12 +124,17 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
       const response = await dataFetch(endpoint, "PUT", finalData, token);
       if (response) {
         onChanges();
-        console.log("Stock updated:", response);
-      } else {
-        console.log("Stock not updated:", response);
+        toast.success("Stock successfully updated", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
+        });
       }
     } catch (error) {
-      console.error("Error updating stock:", error);
+      toast.error("Failed to update stock", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
     }
 
     onClose();
@@ -142,7 +149,6 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
         token!
       )) as Supplier[];
       setSupplier(suppliers);
-      console.log("Fetched suppliers:", suppliers);
     } catch (error) {
       console.error("Failed to fetch suppliers", error);
     }
@@ -157,7 +163,6 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
         token!
       )) as Category[];
       setCategories(categories);
-      console.log("Fetched categories:", categories);
     } catch (error) {
       console.error("Failed to fetch categories", error);
     }
@@ -241,7 +246,10 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleSubmit} className="bg-green-600 text-white">
+          <Button
+            onClick={handleSubmit}
+            className="hover:bg-custom-charcoalOlive bg-custom-char"
+          >
             Save Changes
           </Button>
         </DialogFooter>

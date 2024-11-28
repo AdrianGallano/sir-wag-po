@@ -1,6 +1,6 @@
-import React from 'react';
-import { ShoppingCart } from 'lucide-react';
-import { Button } from '../ui/button';
+import React from "react";
+import { ShoppingCart } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface CartProduct {
   id: string;
@@ -24,6 +24,8 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
     0
   );
 
+  console.log(totalPrice);
+
   return (
     <div className="w-1/4 border-l pt-12 pb-24 pl-4 pr-4 fixed top-0 right-0 h-full bg-white shadow-lg z-10">
       <div className="flex justify-between items-center mb-4">
@@ -43,15 +45,15 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
                   className="flex justify-between items-center bg-white p-2 rounded shadow-sm border"
                 >
                   <div className="flex-1">
-                    <p className="font-medium text-gray-800">{product.name || 'Product Name'}</p>
+                    <p className="font-medium text-gray-800">
+                      {product.name || "Product Name"}
+                    </p>
                     <p className="text-sm text-gray-500">
                       {product.quantity} x ₱{product.price || 1000}
                     </p>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-700">
-                    ₱{(product.price * product.quantity || 100000)}
-                    </p>
+                    <p className="font-semibold text-gray-700">₱{totalPrice}</p>
                   </div>
                 </li>
               ))}
@@ -70,7 +72,7 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
           <div className="flex justify-between items-center mb-4">
             <p className="text-gray-600">Total Price:</p>
             <p className="font-bold text-xl text-gray-900">
-            ₱{totalPrice || 1000}
+              ₱{totalPrice || 1000}
             </p>
           </div>
         </div>
@@ -81,7 +83,6 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
         >
           Proceed to Transaction
         </Button>
-
       </div>
     </div>
   );
