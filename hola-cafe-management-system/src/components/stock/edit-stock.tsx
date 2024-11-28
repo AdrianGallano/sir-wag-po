@@ -25,6 +25,10 @@ import dataFetch from "@/services/data-service";
 import { Supplier } from "@/models/supplier";
 import { Category } from "@/models/category";
 import { Stock } from "@/models/stock";
+import { toast} from "sonner";
+import { Toaster } from "../ui/sonner";
+import { CheckCheck, CircleCheckBig, X } from "lucide-react";
+
 
 interface EditStockProps {
   isOpen: boolean;
@@ -123,10 +127,20 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
       if (response) {
         onChanges();
         console.log("Stock updated:", response);
-      } else {
+
+        toast("Successfully update stock!", {
+          duration: 1000, 
+          icon: <CircleCheckBig className="text-green-500"/>,
+           className:"bg-white text-black"
+         });       } else {
         console.log("Stock not updated:", response);
       }
     } catch (error) {
+      toast("Failed to update stock!", {
+         duration: 1000, 
+         icon: <X className="text-red-500"/>,
+          className:"bg-white text-black"
+        }); 
       console.error("Error updating stock:", error);
     }
 
@@ -253,6 +267,9 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
         onClose={() => setIsImageManagerOpen(false)}
         onSelectImage={handleImageSelect}
       />
+
+    <Toaster position="top-right"/>
+
     </Dialog>
   );
 };

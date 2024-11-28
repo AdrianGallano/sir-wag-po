@@ -1,4 +1,4 @@
-import { productColumns } from "@/components/columns";
+  import { productColumns } from "@/components/columns";
 import AddProductForm from "@/components/products/add-product";
 import DeleteProduct from "@/components/products/delete-product";
 import EditProduct from "@/components/products/edit-product";
@@ -25,7 +25,7 @@ const ProductPage = () => {
   const fetchProducts = async () => {
     try {
       const products = (await dataFetch(
-        "api/products/",
+        "api/image/category/product/",
         "GET",
         {},
         token!
@@ -127,17 +127,7 @@ const ProductPage = () => {
         />
       )}
 
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          classNames: {
-            error: "bg-red-400 bg-white border-none",
-            success: "text-green-400 bg-white border-none",
-            warning: "text-yellow-400 bg-white border-none",
-            info: "bg-blue-400 bg-white border-none",
-          },
-        }}
-      />
+      
     </main>
   );
 };

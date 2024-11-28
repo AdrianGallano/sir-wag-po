@@ -7,6 +7,10 @@ interface CartProduct {
   name: string;
   quantity: number;
   price: number;
+  product: {
+    name: string;
+    price: number;
+  }
 }
 
 interface PosTransactionProps {
@@ -20,7 +24,7 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
 }) => {
   // Calculate total price
   const totalPrice = cartProducts.reduce(
-    (acc, product) => acc + product.price * product.quantity,
+    (acc, product) => acc + product?.product.price * product.quantity,
     0
   );
 
@@ -43,14 +47,14 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
                   className="flex justify-between items-center bg-white p-2 rounded shadow-sm border"
                 >
                   <div className="flex-1">
-                    <p className="font-medium text-gray-800">{product.name || 'Product Name'}</p>
+                    <p className="font-medium text-gray-800">{product?.product.name}</p>
                     <p className="text-sm text-gray-500">
-                      {product.quantity} x ₱{product.price || 1000}
+                      {product.quantity} x ₱{product?.product.price }
                     </p>
                   </div>
                   <div>
                     <p className="font-semibold text-gray-700">
-                    ₱{(product.price * product.quantity || 100000)}
+                    ₱{(product?.product.price * product.quantity)}
                     </p>
                   </div>
                 </li>

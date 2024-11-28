@@ -18,54 +18,49 @@ interface TransactionPopupProps {
     service_crew: number;
   }) => void;
   totalPrice: number;
-  serviceCrew: number;
+  products: { id: number; product: { name: string; price: number }; service_crew: { username: string } }[];
+  serviceCrewId: number;
 }
 
 const TransactionPopup: React.FC<TransactionPopupProps> = ({
   onClose,
   onSubmitTransaction,
   totalPrice,
-  serviceCrew,
+  products,
+  serviceCrewId
 }) => {
   const [paymentMethod, setPaymentMethod] = useState<string | undefined>("");
 
   useEffect(() => {
-    calculateTotalPrice();
+    console.log(products)
   }
 );
 
-  const products = [
-    { id: 1, name: "Product 1", price: 100 },
-    { id: 2, name: "Product 2", price: 200 },
-    { id: 3, name: "Product 3", price: 300 },
-    { id: 4, name: "Product 4", price: 400 },
-    { id: 5, name: "Product 5", price: 500 },
-    { id: 6, name: "Product 6", price: 600 },
-    { id: 7, name: "Product 7", price: 700 },
-    { id: 8, name: "Product 8", price: 800 },
-    { id: 9, name: "Product 9", price: 900 },
-    { id: 10, name: "Product 10", price: 1000 },
-  ];
+  // const calculateTotalPrice = () => {
+  //   return products.reduce(
+  //     (acc, product) => acc + product?.price * quantity,
+  //     0
+  //   )
+  // }
 
-  const calculateTotalPrice = () => {
-    return products.reduce((total, product) => total + product.price, 0);
-  }
 
   const handleSubmit = () => {
-    const totalPrice = calculateTotalPrice();
+    totalPrice
     if (!paymentMethod) {
       alert("Please select a payment method");
       return;
     }
-
+  
     const payload = {
       total_price: totalPrice.toString(),
       payment_method: paymentMethod,
-      service_crew: serviceCrew,
+      service_crew: serviceCrewId,
     };
-
+    console.log(payload)
+  
     onSubmitTransaction(payload);
   };
+  
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -84,28 +79,34 @@ const TransactionPopup: React.FC<TransactionPopupProps> = ({
             Transaction Details
           </h3>
           <div className="flex justify-between text-gray-600 text-sm">
-            <span>Service Crew:</span>
-            <span className="font-medium text-gray-800">{serviceCrew}</span>
+          <span>Service Crew:</span>
+            {products.length > 0 && (
+              <span className="font-medium text-gray-800">
+                {products[0]?.service_crew?.username}
+              </span>
+            )}
+
+
           </div>
           {/* List of Products */}
           <div className="mt-4 h-48 overflow-y-auto">
             <h4 className="text-md font-semibold text-gray-700 mb-2">Products:</h4>
             <ul className="space-y-4">
-              {products.map((product) => (
+              {products.map((product: any) => (
                 <li key={product.id} className="flex justify-between text-gray-600 text-sm">
-                  <span>{product.name}</span>
-                  <span className="font-medium text-gray-800">₱{product.price}</span>
+                  <span>{product?.product.name}</span>
+                  <span className="font-medium text-gray-800">₱{product?.product.price}</span>
                 </li>
               ))}
             </ul>
           </div>
           <div className="flex justify-between text-gray-600 text-sm mt-4">
             <span>Total Price:</span>
-            {/* Highlighted total price */}
             <span className="font-normal text-3xl text-gray-800">
-              ₱{calculateTotalPrice()}
+              ₱{totalPrice}
             </span>
           </div>
+
         </div>
 
         {/* Payment Method Selection */}

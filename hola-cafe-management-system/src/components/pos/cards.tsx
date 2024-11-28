@@ -8,7 +8,10 @@ interface PosCardsProps {
     name: string;
     description: string;
     price: number;
-    image: string;
+    image: {
+      image_url: string;
+      id: number;
+    };
     category: any;
   };
   addToCart: (productId: number, quantity: number) => void;
@@ -23,20 +26,19 @@ const PosCards: React.FC<PosCardsProps> = ({ product, addToCart }) => {
 
   const handleAddToCart = () => {
     addToCart(product.id, quantity);
-    console.log('add to cart');
+    console.log('Product added to cart:', product.name);
   };
 
   return (
     <div className="flex flex-col border p-4 rounded-lg shadow-lg h-full bg-white hover:shadow-xl transition-all">
       <img
-        src={ PlaceHolder} // Use placeholder if no image
-        // src={ product.image } // Use placeholder if no image
+        src={product?.image?.image_url.replace(/\\/g, '/') || PlaceHolder} // Ensure correct URL format and fallback to placeholder
         alt={product.name}
         className="mb-4 rounded-md w-full h-56 object-cover"
+        onError={(e) => (e.currentTarget.src = PlaceHolder)} // Fallback to placeholder on image error
       />
       <div className="text-sm mb-2 text-gray-500">#{product.id}</div>
 
-      {/* Smaller product name with price emphasized */}
       <div className="text-lg font-medium mb-1">{product.name}</div>
       <div className="text-xl font-bold text-black mb-3">{`₱ ${product.price}`}</div>
 
@@ -58,7 +60,6 @@ const PosCards: React.FC<PosCardsProps> = ({ product, addToCart }) => {
         </button>
       </div>
 
-      {/* Spacer to push the button to the bottom */}
       <div className="flex-grow"></div>
 
       <Button
