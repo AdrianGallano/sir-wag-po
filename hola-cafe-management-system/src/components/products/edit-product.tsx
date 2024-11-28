@@ -46,8 +46,8 @@ const EditProduct = ({
     name: product.name || "",
     description: product.description || "",
     price: product.price || "",
-    image: product.image || "",
-    category: product.category,
+    image: product.image.id || "",
+    category: product.category.id,
     user: id,
   };
 
@@ -105,6 +105,7 @@ const EditProduct = ({
     };
 
     try {
+      console.log("finalData", finalData);
       if (!token) throw new Error("Token not found");
 
       const endpoint = `/api/products/${product.id}/`;

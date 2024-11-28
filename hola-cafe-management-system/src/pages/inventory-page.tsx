@@ -30,7 +30,7 @@ const InventoryPage = () => {
   const fetchStocks = async () => {
     try {
       const stocks = (await dataFetch(
-        "api/stocks/",
+        "api/image/is-stocked-by/supplier/stock/",
         "GET",
         {},
         token!

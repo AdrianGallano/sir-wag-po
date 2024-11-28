@@ -25,8 +25,10 @@ import dataFetch from "@/services/data-service";
 import { Supplier } from "@/models/supplier";
 import { Category } from "@/models/category";
 import { Stock } from "@/models/stock";
-import { toast } from "sonner";
-import { CheckCircle, CircleCheck, X } from "lucide-react";
+import { toast} from "sonner";
+import { Toaster } from "../ui/sonner";
+import { CheckCheck, CircleCheck, CircleCheckBig, X } from "lucide-react";
+
 
 interface EditStockProps {
   isOpen: boolean;
@@ -44,7 +46,7 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
     cost_price: stock.cost_price || "",
     quantity: stock.quantity || "",
     expiration_date: stock.expiration_date || null,
-    supplier: stock.supplier,
+    supplier: stock.supplier.id,
     user: id,
     image: stock.image || "",
   };
@@ -118,6 +120,7 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
     };
 
     try {
+      console.log("Final data:", finalData);
       if (!token) throw new Error("Token not found");
 
       const endpoint = `/api/stocks/${stock.id}/`;
@@ -129,12 +132,26 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
           icon: <CircleCheck className="fill-green-500 text-white" />,
           className: "bg-white text-custom-charcoalOlive",
         });
+        console.log("Stock updated:", response);
+
+        toast("Successfully update stock!", {
+          duration: 1000, 
+          icon: <CircleCheckBig className="text-green-500"/>,
+           className:"bg-white text-black"
+         });       } else {
+        console.log("Stock not updated:", response);
       }
     } catch (error) {
       toast.error("Failed to update stock", {
         icon: <X className="text-red-500" />,
         className: "bg-white text-red-500 ",
       });
+      toast("Failed to update stock!", {
+         duration: 1000, 
+         icon: <X className="text-red-500"/>,
+          className:"bg-white text-black"
+        }); 
+      console.error("Error updating stock:", error);
     }
 
     onClose();
@@ -261,6 +278,9 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
         onClose={() => setIsImageManagerOpen(false)}
         onSelectImage={handleImageSelect}
       />
+
+    <Toaster position="top-right"/>
+
     </Dialog>
   );
 };

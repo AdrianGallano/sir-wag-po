@@ -7,6 +7,10 @@ import dataFetch from '@/services/data-service';
 import React, { useEffect, useState } from 'react';
 import TransactionPopup from '@/components/pos/popup';
 import { set } from 'date-fns';
+import { Toast } from '@radix-ui/react-toast';
+import { Toaster } from 'sonner';
+import { toast } from 'sonner';
+import { CircleCheck, X } from 'lucide-react';
 
 const PosPage = () => {
   const [menus, setMenus] = useState([]);
@@ -27,11 +31,12 @@ const PosPage = () => {
         console.error('Token not found');
         return;
       }
-      const endPoint = '/api/products/';
+      const endPoint = '/api/image/product/';
       const method = 'GET';
 
       const response = await dataFetch(endPoint, method, {}, token);
       setMenus(response);
+      console.log('Fetched menus:', response);
       setFilteredMenus(response);
     } catch (error) {
       console.error(error);
@@ -44,11 +49,12 @@ const PosPage = () => {
         console.error('Token not found');
         return;
       }
-      const endPoint = `/api/carts/?service_crew=${id}`
+      const endPoint = `/api/product/service-crew/cart`
       const method = 'GET';
 
       const response = await dataFetch(endPoint, method, {}, token);
       setCart(response);
+      console.log('Fetched cart:', response);
     } catch (error) {
       console.error('Error fetching cart:', error);
     }
@@ -81,6 +87,11 @@ const PosPage = () => {
         
   
         const updatedCartItem = await dataFetch(updateEndPoint, updateMethod, updatePayload, token);
+        toast("Product successfully added to the cart", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
+        });
         console.log('Updated cart item:', updatedCartItem);
   
         //update the cart state or UI to reflect the updated item
@@ -103,11 +114,21 @@ const PosPage = () => {
         const createPayload = newCartItem;
   
         const addedCartItem = await dataFetch(createEndPoint, createMethod, createPayload, token);
+        toast("Product successfully added to the cart", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
+        });
   
         // update the cart state or UI to reflect the new item
         setCart(prevCart => [...prevCart, addedCartItem]);
       }
+      fetchCart();
     } catch (error) {
+      toast.error("Failed to add product to the cart", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
       console.error('Error adding product to cart:', error);
     }
   };
@@ -126,10 +147,18 @@ const PosPage = () => {
       const endPoint = '/api/transactions/';
       const response = await dataFetch(endPoint, 'POST', payload, token);
       console.log('Transaction created successfully', response);
-      alert('Transaction successfully created!');
+      toast("Transaction completed", {
+        duration: 2000,
+        icon: <CircleCheck className="fill-green-500 text-white" />,
+        className: "bg-white text-custom-charcoalOlive",
+      });
       setIsTransactionPopupOpen(false);
       fetchCart(); // Refresh cart after transaction
     } catch (error) {
+      toast.error("Failed to create transaction", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
       console.error('Error creating transaction:', error);
     }
   };
@@ -143,8 +172,14 @@ const PosPage = () => {
   };
 
   const calculateTotalPrice = () => {
-    return 100;
+    if (!cart || cart.length === 0) return 0; 
+    return cart.reduce((total, item) => {
+      const productPrice = parseFloat(item.product.price); 
+      const quantity = item.quantity;
+      return total + productPrice * quantity;
+    }, 0).toFixed(2); // Keep 2 decimal places for currency format
   };
+  
 
   const handleFilterChange = (categoryName: string) => {
     const categoryId = categoryName === 'all' ? 'all' : parseInt(categoryName, 10);
@@ -160,6 +195,7 @@ const PosPage = () => {
 
   return (
     <div className="flex">
+      <Toaster position="top-right" />
       {/* Main content */}
       <div className="flex-1 p-6">
         <PosHeader onFilterChange={handleFilterChange} />
@@ -178,9 +214,11 @@ const PosPage = () => {
           onClose={closeTransactionPopup}
           onSubmitTransaction={createTransaction}
           totalPrice={calculateTotalPrice()}
-          serviceCrew={service_crew}
+          products = {cart}
+          serviceCrewId={service_crew}
          />
       )}
+
     </div>
   );
 };

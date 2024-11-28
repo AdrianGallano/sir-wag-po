@@ -101,7 +101,7 @@ DATABASES = {
             # "ssl": {
             #     "ca": os.getenv("CA_PATH"),  
             # },
-            'ssl': {'disabled': True},  
+            'ssl': {'disabled': True},  # Disable SSL connection
         },
 
     }
@@ -182,7 +182,7 @@ REST_FRAMEWORK = {
         "user": "500/day",
         "upload_image": "200/day",
         "general_image": "500/day",
-        "general_request": "1000/day",
+        "general_request": "2000/day",
 
 
     },
