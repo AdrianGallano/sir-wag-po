@@ -27,7 +27,7 @@ import { Category } from "@/models/category";
 import { Stock } from "@/models/stock";
 import { toast} from "sonner";
 import { Toaster } from "../ui/sonner";
-import { CheckCheck, CircleCheckBig, X } from "lucide-react";
+import { CheckCheck, CircleCheck, CircleCheckBig, X } from "lucide-react";
 
 
 interface EditStockProps {
@@ -120,6 +120,7 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
     };
 
     try {
+      console.log("Final data:", finalData);
       if (!token) throw new Error("Token not found");
 
       const endpoint = `/api/stocks/${stock.id}/`;

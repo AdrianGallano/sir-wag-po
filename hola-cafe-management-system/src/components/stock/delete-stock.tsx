@@ -40,14 +40,13 @@ const DeleteStock: React.FC<DeletePopupProps> = ({
         }
 
         const response = await dataFetch(apiUrl, "DELETE", {}, token);
-        if (response) {
-          toast("Stock successfully deleted", {
-            duration: 2000,
-            icon: <CircleCheck className="fill-green-500 text-white" />,
-            className: "bg-white text-custom-charcoalOlive",
-          });
-          onUpdate();
-        }
+        console.log("stock deleted:", response);
+        onUpdate();
+        toast("stock successfully deleted", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
+        });
       } catch (error) {
         toast.error("Failed to delete stock", {
           icon: <X className="text-red-500" />,

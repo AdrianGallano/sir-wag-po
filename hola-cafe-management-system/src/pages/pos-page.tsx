@@ -8,7 +8,9 @@ import React, { useEffect, useState } from 'react';
 import TransactionPopup from '@/components/pos/popup';
 import { set } from 'date-fns';
 import { Toast } from '@radix-ui/react-toast';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from 'sonner';
+import { toast } from 'sonner';
+import { CircleCheck, X } from 'lucide-react';
 
 const PosPage = () => {
   const [menus, setMenus] = useState([]);
@@ -85,6 +87,11 @@ const PosPage = () => {
         
   
         const updatedCartItem = await dataFetch(updateEndPoint, updateMethod, updatePayload, token);
+        toast("Product successfully added to the cart", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
+        });
         console.log('Updated cart item:', updatedCartItem);
   
         //update the cart state or UI to reflect the updated item
@@ -107,12 +114,21 @@ const PosPage = () => {
         const createPayload = newCartItem;
   
         const addedCartItem = await dataFetch(createEndPoint, createMethod, createPayload, token);
+        toast("Product successfully added to the cart", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
+        });
   
         // update the cart state or UI to reflect the new item
         setCart(prevCart => [...prevCart, addedCartItem]);
       }
       fetchCart();
     } catch (error) {
+      toast.error("Failed to add product to the cart", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
       console.error('Error adding product to cart:', error);
     }
   };
@@ -131,9 +147,18 @@ const PosPage = () => {
       const endPoint = '/api/transactions/';
       const response = await dataFetch(endPoint, 'POST', payload, token);
       console.log('Transaction created successfully', response);
+      toast("Transaction completed", {
+        duration: 2000,
+        icon: <CircleCheck className="fill-green-500 text-white" />,
+        className: "bg-white text-custom-charcoalOlive",
+      });
       setIsTransactionPopupOpen(false);
       fetchCart(); // Refresh cart after transaction
     } catch (error) {
+      toast.error("Failed to create transaction", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
       console.error('Error creating transaction:', error);
     }
   };
@@ -170,6 +195,7 @@ const PosPage = () => {
 
   return (
     <div className="flex">
+      <Toaster position="top-right" />
       {/* Main content */}
       <div className="flex-1 p-6">
         <PosHeader onFilterChange={handleFilterChange} />
@@ -192,6 +218,7 @@ const PosPage = () => {
           serviceCrewId={service_crew}
          />
       )}
+
     </div>
   );
 };

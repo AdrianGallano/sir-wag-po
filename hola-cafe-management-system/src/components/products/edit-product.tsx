@@ -46,7 +46,7 @@ const EditProduct = ({
     name: product.name || "",
     description: product.description || "",
     price: product.price || "",
-    image: product.image || "",
+    image: product.image.id || "",
     category: product.category.id,
     user: id,
   };

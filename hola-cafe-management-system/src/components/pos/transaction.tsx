@@ -1,5 +1,4 @@
 import React from "react";
-import { ShoppingCart } from "lucide-react";
 import { Button } from "../ui/button";
 
 interface CartProduct {
@@ -10,7 +9,7 @@ interface CartProduct {
   product: {
     name: string;
     price: number;
-  }
+  };
 }
 
 interface PosTransactionProps {
@@ -27,8 +26,6 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
     (acc, product) => acc + product?.product.price * product.quantity,
     0
   );
-
-  console.log(totalPrice);
 
   return (
     <div className="w-1/4 border-l pt-12 pb-24 pl-4 pr-4 fixed top-0 right-0 h-full bg-white shadow-lg z-10">
@@ -49,14 +46,16 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
                   className="flex justify-between items-center bg-white p-2 rounded shadow-sm border"
                 >
                   <div className="flex-1">
-                    <p className="font-medium text-gray-800">{product?.product.name}</p>
+                    <p className="font-medium text-gray-800">
+                      {product?.product.name}
+                    </p>
                     <p className="text-sm text-gray-500">
-                      {product.quantity} x ₱{product?.product.price }
+                      {product.quantity} x ₱{product?.product.price}
                     </p>
                   </div>
                   <div>
                     <p className="font-semibold text-gray-700">
-                    ₱{(product?.product.price * product.quantity)}
+                      ₱{product?.product.price * product.quantity}
                     </p>
                   </div>
                 </li>
@@ -76,17 +75,20 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
           <div className="flex justify-between items-center mb-4">
             <p className="text-gray-600">Total Price:</p>
             <p className="font-bold text-xl text-gray-900">
-            ₱{totalPrice || 0}
+              ₱{totalPrice || 0}
             </p>
           </div>
         </div>
+
         {/* Open Transaction Popup Button */}
-        <Button
-          onClick={openTransactionPopup}
-          className="w-full h-12 text-white rounded-full hover:bg-custom-charcoalOlive bg-custom-char"
-        >
-          Proceed to Transaction
-        </Button>
+        {cartProducts.length > 0 && (
+          <Button
+            onClick={openTransactionPopup}
+            className="w-full h-12 text-white rounded-full hover:bg-custom-charcoalOlive bg-custom-char"
+          >
+            Proceed to Transaction
+          </Button>
+        )}
       </div>
     </div>
   );
