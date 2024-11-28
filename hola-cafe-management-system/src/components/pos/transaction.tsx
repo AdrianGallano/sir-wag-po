@@ -74,7 +74,7 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
           <div className="flex justify-between items-center mb-4">
             <p className="text-gray-600">Total Price:</p>
             <p className="font-bold text-xl text-gray-900">
-            ₱{totalPrice || 1000}
+            ₱{totalPrice || 0}
             </p>
           </div>
         </div>

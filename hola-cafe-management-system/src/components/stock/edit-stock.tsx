@@ -46,7 +46,7 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
     cost_price: stock.cost_price || "",
     quantity: stock.quantity || "",
     expiration_date: stock.expiration_date || null,
-    supplier: stock.supplier,
+    supplier: stock.supplier.id,
     user: id,
     image: stock.image || "",
   };
