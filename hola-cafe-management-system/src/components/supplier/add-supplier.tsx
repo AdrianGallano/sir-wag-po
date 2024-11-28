@@ -26,6 +26,8 @@ import { useAuth } from "@/context/authContext";
 import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
 import ImageManager from "@/components/image-manager";
+import { CircleCheck, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface AddSupplierFormProps {
   isOpen: boolean;
@@ -97,12 +99,17 @@ const AddSupplierForm = ({
       const response = await dataFetch(endpoint, "POST", finalData, token);
       if (response) {
         onChanges();
-        console.log("Supplier saved:", response);
-      } else {
-        console.log("Supplier not saved:", response);
+        toast("Supplier successfully added", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
+        });
       }
     } catch (error) {
-      console.error("Error saving Supplier:", error);
+      toast.error("Failed to add supplier", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
     }
 
     onClose();

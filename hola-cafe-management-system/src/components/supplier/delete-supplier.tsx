@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import dataFetch from "@/services/data-service";
 import { useAuth } from "@/context/authContext";
+import { CircleCheck, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface DeletePopupProps {
   isOpen: boolean;
@@ -39,12 +41,22 @@ const DeleteSupplier: React.FC<DeletePopupProps> = ({
         }
 
         const response = await dataFetch(apiUrl, "DELETE", {}, token);
-        console.log("Supplier deleted:", response);
-        onUpdate();
-        onClose();
+        if (response) {
+          toast("Supplier successfully deleted", {
+            duration: 2000,
+            icon: <CircleCheck className="fill-green-500 text-white" />,
+            className: "bg-white text-custom-charcoalOlive",
+          });
+          onUpdate();
+        }
       } catch (error) {
-        console.error("Error deleting supplier:", error);
+        toast.error("Failed to delete supplier", {
+          icon: <X className="text-red-500" />,
+          className: "bg-white text-red-500 ",
+        });
       }
+
+      onClose();
     }
   };
 

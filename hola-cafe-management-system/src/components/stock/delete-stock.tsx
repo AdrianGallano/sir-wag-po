@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import dataFetch from "@/services/data-service";
 import { useAuth } from "@/context/authContext";
+import { toast } from "sonner";
+import { CircleCheck, X } from "lucide-react";
 
 interface DeletePopupProps {
   isOpen: boolean;
@@ -34,21 +36,27 @@ const DeleteStock: React.FC<DeletePopupProps> = ({
       try {
         const apiUrl = `/api/stocks/${stock.id}/`;
         if (!token) {
-          console.error("Token not found");
           return;
         }
 
         const response = await dataFetch(apiUrl, "DELETE", {}, token);
-        console.log("Stock deleted:", response);
-        onUpdate();
-        onClose();
+        if (response) {
+          toast("Stock successfully deleted", {
+            duration: 2000,
+            icon: <CircleCheck className="fill-green-500 text-white" />,
+            className: "bg-white text-custom-charcoalOlive",
+          });
+          onUpdate();
+        }
       } catch (error) {
-        console.error("Error deleting stock:", error);
+        toast.error("Failed to delete stock", {
+          icon: <X className="text-red-500" />,
+          className: "bg-white text-red-500 ",
+        });
       }
+      onClose();
     }
   };
-
-  console.log("Stock", stock);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

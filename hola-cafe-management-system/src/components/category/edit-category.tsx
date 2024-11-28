@@ -13,6 +13,8 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/authContext";
 import dataFetch from "@/services/data-service";
 import { Category } from "@/models/category";
+import { CircleCheck, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface EditSupplierProps {
   isOpen: boolean;
@@ -74,13 +76,18 @@ const EditCategory = ({
       const endpoint = `/api/categories/${category.id}/`;
       const response = await dataFetch(endpoint, "PUT", finalData, token);
       if (response) {
+        toast("Category successfully updated", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
+        });
         onChanges();
-        console.log("Category updated:", response);
-      } else {
-        console.log("Category not updated:", response);
       }
     } catch (error) {
-      console.error("Error updating category:", error);
+      toast.error("Failed to update category", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
     }
 
     onClose();
@@ -111,7 +118,10 @@ const EditCategory = ({
         </div>
 
         <DialogFooter>
-          <Button onClick={handleSubmit} className="bg-green-600 text-white">
+          <Button
+            onClick={handleSubmit}
+            className="hover:bg-custom-charcoalOlive bg-custom-char"
+          >
             Save Changes
           </Button>
         </DialogFooter>
