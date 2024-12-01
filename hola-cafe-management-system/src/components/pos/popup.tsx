@@ -1,4 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -8,9 +16,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+
+interface Product {
+  id: number;
+  quantity: number;
+  product: { name: string; price: number };
+  service_crew: { username: string };
+}
 
 interface TransactionPopupProps {
+  open: boolean;
   onClose: () => void;
   onSubmitTransaction: (payload: {
     total_price: string;
@@ -18,87 +34,89 @@ interface TransactionPopupProps {
     service_crew: number;
   }) => void;
   totalPrice: number;
-  products: { id: number; product: { name: string; price: number }; service_crew: { username: string } }[];
+  products: Product[];
   serviceCrewId: number;
 }
 
 const TransactionPopup: React.FC<TransactionPopupProps> = ({
+  open,
   onClose,
   onSubmitTransaction,
   totalPrice,
   products,
-  serviceCrewId
+  serviceCrewId,
 }) => {
   const [paymentMethod, setPaymentMethod] = useState<string | undefined>("");
+  const [totalQuantity, setTotalQuantity] = useState<number>(0);
 
   useEffect(() => {
-    console.log(products)
-  }
-);
-
-  // const calculateTotalPrice = () => {
-  //   return products.reduce(
-  //     (acc, product) => acc + product?.price * quantity,
-  //     0
-  //   )
-  // }
-
+    const calculatedTotalQuantity = products.reduce(
+      (acc, product) => acc + product.quantity,
+      0
+    );
+    setTotalQuantity(calculatedTotalQuantity);
+  }, [products]);
 
   const handleSubmit = () => {
-    totalPrice
     if (!paymentMethod) {
       alert("Please select a payment method");
       return;
     }
-  
+
     const payload = {
       total_price: totalPrice.toString(),
       payment_method: paymentMethod,
       service_crew: serviceCrewId,
     };
-    console.log(payload)
-  
     onSubmitTransaction(payload);
   };
-  
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-8 rounded-lg w-1/2 shadow-xl transition-all">
-        {/* Header */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">Complete Transaction</h2>
-          <p className="text-sm text-gray-600">
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-3xl w-full h-auto">
+        <DialogHeader>
+          <DialogTitle>Complete Transaction</DialogTitle>
+          <DialogDescription>
             Finalize the transaction by providing payment details.
-          </p>
-        </div>
+          </DialogDescription>
+        </DialogHeader>
 
-        {/* Transaction Summary */}
         <div className="mb-6 border-b pb-4">
           <h3 className="text-lg font-semibold text-gray-700 mb-2">
             Transaction Details
           </h3>
           <div className="flex justify-between text-gray-600 text-sm">
-          <span>Service Crew:</span>
-            {products.length > 0 && (
-              <span className="font-medium text-gray-800">
-                {products[0]?.service_crew?.username}
-              </span>
-            )}
-
-
+            <span>Service Crew:</span>
+            <span className="font-medium text-gray-800">
+              {products[0]?.service_crew?.username || "N/A"}
+            </span>
           </div>
-          {/* List of Products */}
           <div className="mt-4 h-48 overflow-y-auto">
-            <h4 className="text-md font-semibold text-gray-700 mb-2">Products:</h4>
+            <h4 className="text-md font-semibold text-gray-700 mb-2">
+              Products:
+            </h4>
             <ul className="space-y-4">
-              {products.map((product: any) => (
-                <li key={product.id} className="flex justify-between text-gray-600 text-sm">
-                  <span>{product?.product.name}</span>
-                  <span className="font-medium text-gray-800">₱{product?.product.price}</span>
+              {products.map((product) => (
+                <li key={product.id} className="text-gray-600 text-sm">
+                  <div className="flex justify-between">
+                    <span>{product?.product.name}</span>
+                    <span className="font-medium pr-3 text-gray-800">
+                      ₱{product?.product.price}
+                    </span>
+                  </div>
+                  <div className="flex justify-between pr-3">
+                    <span>Quantity: x{product.quantity}</span>
+                    <span>
+                      Total: ₱{(product?.product.price * product.quantity)}
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
+          </div>
+          <div className="flex justify-between text-gray-600 text-sm mt-4">
+            <span>Total Quantity:</span>
+            <span className="font-medium text-lg text-gray-800">{totalQuantity}</span>
           </div>
           <div className="flex justify-between text-gray-600 text-sm mt-4">
             <span>Total Price:</span>
@@ -106,10 +124,8 @@ const TransactionPopup: React.FC<TransactionPopupProps> = ({
               ₱{totalPrice}
             </span>
           </div>
-
         </div>
 
-        {/* Payment Method Selection */}
         <div className="mb-6">
           <label
             htmlFor="payment-method"
@@ -117,11 +133,8 @@ const TransactionPopup: React.FC<TransactionPopupProps> = ({
           >
             Payment Method
           </label>
-          <Select
-            value={paymentMethod}
-            onValueChange={(value) => setPaymentMethod(value)}
-          >
-            <SelectTrigger className="w-full border rounded p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all">
+          <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+            <SelectTrigger className="w-full border rounded p-3 bg-gray-50">
               <SelectValue placeholder="Select a payment method" />
             </SelectTrigger>
             <SelectContent>
@@ -135,23 +148,19 @@ const TransactionPopup: React.FC<TransactionPopupProps> = ({
           </Select>
         </div>
 
-        {/* Buttons */}
-        <div className="flex justify-between items-center mt-6">
-          <Button
-            onClick={onClose}
-            className="bg-gray-200 rounded-full text-gray-700 py-2 px-6 hover:bg-gray-300 transition"
-          >
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
-           className=" h-10 text-white rounded-full hover:bg-custom-charcoalOlive bg-custom-char"
+            className="h-10 text-white bg-custom-char"
           >
             Submit
           </Button>
-        </div>
-      </div>
-    </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
