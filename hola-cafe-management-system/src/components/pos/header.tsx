@@ -1,20 +1,26 @@
-import React from 'react';
-import SearchInput from '../search';
+import React, { useState } from 'react';
 import PosFilter from './filter';
+import { Input } from '../ui/input';
 
 interface PosHeaderProps {
   onFilterChange: (categoryName: string) => void;
+  onSearchChange: (searchTerm: string) => void; // Add a prop for search term
 }
 
-const PosHeader: React.FC<PosHeaderProps> = ({ onFilterChange }) => {
-  return (
-    <>
-    <div className='mr-[26%]'>
+const PosHeader: React.FC<PosHeaderProps> = ({ onFilterChange, onSearchChange }) => {
+  const [searchTerm, setSearchTerm] = useState('');
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+    onSearchChange(value); // Trigger search filtering
+  };
+
+  return (
+    <div className="mr-[26%]">
       {/* Header */}
       <div className="text-gray-700 text-lg font-semibold mb-4 underline">
         You are currently attempting to make changes to your stocks.
-        {/* Hola Cafe Point Of Sale */}
       </div>
 
       {/* Filter Section */}
@@ -22,12 +28,16 @@ const PosHeader: React.FC<PosHeaderProps> = ({ onFilterChange }) => {
         <PosFilter onFilter={onFilterChange} />
       </div>
 
+      {/* Search Section */}
       <div className="flex justify-end mb-6">
-        {/* Search */}
-        <SearchInput />
+        <Input
+          placeholder="Filter products..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="max-w-sm rounded-full"
+        />
       </div>
     </div>
-    </>
   );
 };
 

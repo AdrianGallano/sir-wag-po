@@ -10,8 +10,7 @@ import { Category } from "@/models/category";
 import Product from "@/models/product";
 import dataFetch from "@/services/data-service";
 import { PackagePlus } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { Toaster } from "sonner";
+import { useEffect, useState } from "react";
 
 const ProductPage = () => {
   const { token } = useAuth();
