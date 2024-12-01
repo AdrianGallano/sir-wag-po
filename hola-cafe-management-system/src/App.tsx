@@ -15,6 +15,7 @@ import SupplierPage from "./pages/supplier-page";
 import ProductPage from "./pages/product-page";
 import TransactionPage from "./pages/transaction-page";
 import CategoryPage from "./pages/category-page";
+import DashboardPage from "./pages/dashboard-page";
 
 function App(): ReactNode {
   return (
@@ -24,6 +25,7 @@ function App(): ReactNode {
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Layout />}>
           <Route index path="" element={<Navigate to="analytics" />} />
+          <Route path="dashboard" element={<DashboardPage />} />
           <Route path="inventory" element={<InventoryPage />} />
           <Route path="supplier" element={<SupplierPage />} />
           <Route path="analytics" element={<AnalyticsPage />} />

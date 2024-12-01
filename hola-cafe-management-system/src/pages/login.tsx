@@ -21,7 +21,7 @@ const Login = () => {
 
     if (isSuccess) {
       toast.success("Login successful!", { duration: 1000 });
-      setTimeout(() => navigate("/analytics"), 1000);
+      setTimeout(() => navigate("/dashboard"), 1000);
     } else {
       toast.error("Invalid credentials!", { duration: 1000 });
     }

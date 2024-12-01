@@ -128,7 +128,7 @@ const Register = () => {
                   to="/login"
                   className="underline hover:text-[#783727] text-[#FD4719] transition ease-in-out"
                 >
-                  Sign up
+                  Sign in
                 </Link>
               </div>
             </div>

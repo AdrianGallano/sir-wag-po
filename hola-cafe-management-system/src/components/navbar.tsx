@@ -38,113 +38,18 @@ const Navbar = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                to="/analytics"
+                to="/dashboard"
                 className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
-                  location.pathname === "/analytics"
+                  location.pathname === "/dashboard"
                     ? "bg-custom-sunnyGold text-custom-charcoalOlive "
                     : "bg-transparent text-muted-foreground hover:text-white"
                 }`}
               >
                 <LineChart className="h-4 w-4 transition-all group-hover:scale-110 " />
-                <span className="sr-only">Analytics</span>
+                <span className="sr-only">Dashboard</span>
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right">Analytics</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                to="/inventory"
-                className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
-                  location.pathname === "/inventory"
-                    ? "bg-custom-sunnyGold text-custom-charcoalOlive "
-                    : "bg-transparent text-muted-foreground hover:text-white"
-                }`}
-              >
-                <Warehouse className="h-4 w-4 transition-all group-hover:scale-110 " />
-                <span className="sr-only">Inventory</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Inventory</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                to="/product"
-                className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
-                  location.pathname === "/product"
-                    ? "bg-custom-sunnyGold text-custom-charcoalOlive "
-                    : "bg-transparent text-muted-foreground hover:text-white"
-                }`}
-              >
-                <Package className="h-4 w-4 transition-all group-hover:scale-110 " />
-                <span className="sr-only">Product</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Product</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                to="/transaction"
-                className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
-                  location.pathname === "/transaction"
-                    ? "bg-custom-sunnyGold text-custom-charcoalOlive "
-                    : "bg-transparent text-muted-foreground hover:text-white"
-                }`}
-              >
-                <ReceiptText className="h-4 w-4 transition-all group-hover:scale-110 " />
-                <span className="sr-only">Transaction</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Transaction</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                to="/supplier"
-                className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
-                  location.pathname === "/supplier"
-                    ? "bg-custom-sunnyGold text-custom-charcoalOlive "
-                    : "bg-transparent text-muted-foreground hover:text-white"
-                }`}
-              >
-                <Truck className="h-4 w-4 transition-all group-hover:scale-110 " />
-                <span className="sr-only">Supplier</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Supplier</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                to="/categories"
-                className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
-                  location.pathname === "/categories"
-                    ? "bg-custom-sunnyGold text-custom-charcoalOlive "
-                    : "bg-transparent text-muted-foreground hover:text-white"
-                }`}
-              >
-                <Tag className="h-4 w-4 transition-all group-hover:scale-110 " />
-                <span className="sr-only">Category</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Category</TooltipContent>
+            <TooltipContent side="right">Dashboard</TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
@@ -166,6 +71,122 @@ const Navbar = () => {
             <TooltipContent side="right">Point of sale</TooltipContent>
           </Tooltip>
         </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                to="/analytics"
+                className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
+                  location.pathname === "/analytics"
+                    ? "bg-custom-sunnyGold text-custom-charcoalOlive "
+                    : "bg-transparent text-muted-foreground hover:text-white"
+                }`}
+              >
+                <LineChart className="h-4 w-4 transition-all group-hover:scale-110 " />
+                <span className="sr-only">Analytics</span>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right">Analytics</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <div className="my-6">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/inventory"
+                  className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
+                    location.pathname === "/inventory"
+                      ? "bg-custom-sunnyGold text-custom-charcoalOlive "
+                      : "bg-transparent text-muted-foreground hover:text-white"
+                  }`}
+                >
+                  <Warehouse className="h-4 w-4 transition-all group-hover:scale-110 " />
+                  <span className="sr-only">Inventory</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Inventory</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/product"
+                  className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
+                    location.pathname === "/product"
+                      ? "bg-custom-sunnyGold text-custom-charcoalOlive "
+                      : "bg-transparent text-muted-foreground hover:text-white"
+                  }`}
+                >
+                  <Package className="h-4 w-4 transition-all group-hover:scale-110 " />
+                  <span className="sr-only">Product</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Product</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/transaction"
+                  className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
+                    location.pathname === "/transaction"
+                      ? "bg-custom-sunnyGold text-custom-charcoalOlive "
+                      : "bg-transparent text-muted-foreground hover:text-white"
+                  }`}
+                >
+                  <ReceiptText className="h-4 w-4 transition-all group-hover:scale-110 " />
+                  <span className="sr-only">Transaction</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Transaction</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/supplier"
+                  className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
+                    location.pathname === "/supplier"
+                      ? "bg-custom-sunnyGold text-custom-charcoalOlive "
+                      : "bg-transparent text-muted-foreground hover:text-white"
+                  }`}
+                >
+                  <Truck className="h-4 w-4 transition-all group-hover:scale-110 " />
+                  <span className="sr-only">Supplier</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Supplier</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/categories"
+                  className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
+                    location.pathname === "/categories"
+                      ? "bg-custom-sunnyGold text-custom-charcoalOlive "
+                      : "bg-transparent text-muted-foreground hover:text-white"
+                  }`}
+                >
+                  <Tag className="h-4 w-4 transition-all group-hover:scale-110 " />
+                  <span className="sr-only">Category</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Category</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+
+ 
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-4">
         <TooltipProvider>
