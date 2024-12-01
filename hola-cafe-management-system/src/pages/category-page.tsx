@@ -1,22 +1,12 @@
-import { categoryColumns, productColumns } from "@/components/columns";
-import AddProductForm from "@/components/products/add-product";
-import DeleteProduct from "@/components/products/delete-product";
-import EditProduct from "@/components/products/edit-product";
-import ProductTable from "@/components/products/product-table";
+import { categoryColumns } from "@/components/columns";
 import StockStatus from "@/components/stock/stock-status";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/authContext";
 import { Category } from "@/models/category";
-import Product from "@/models/product";
 import dataFetch from "@/services/data-service";
-import { PackagePlus, Plus, Tag } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
 import CategoryTable from "@/components/category/category-table";
 import AddCategoryForm from "@/components/category/add-category";
 import EditCategory from "@/components/category/edit-category";

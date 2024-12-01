@@ -30,7 +30,7 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
   return (
     <div className="w-1/4 border-l pt-12 pb-24 pl-4 pr-4 fixed top-0 right-0 h-full bg-white shadow-lg z-10">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold underline">Transaction</h2>
+        <h2 className="text-2xl text-gray-700 font-semibold underline">Transaction</h2>
       </div>
 
       <div className="border rounded-lg p-4 h-full flex flex-col">

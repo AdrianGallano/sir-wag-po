@@ -1,13 +1,10 @@
 import PosHeader from '@/components/pos/header';
 import PosMenus from '@/components/pos/menus';
 import PosTransaction from '@/components/pos/transaction';
-import CartSheet from '@/components/pos/cart';
 import { useAuth } from '@/context/authContext';
 import dataFetch from '@/services/data-service';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import TransactionPopup from '@/components/pos/popup';
-import { set } from 'date-fns';
-import { Toast } from '@radix-ui/react-toast';
 import { Toaster } from 'sonner';
 import { toast } from 'sonner';
 import { CircleCheck, X } from 'lucide-react';
@@ -19,6 +16,7 @@ const PosPage = () => {
   const [isTransactionPopupOpen, setIsTransactionPopupOpen] = useState(false); // Popup state
   const { token, id } = useAuth();
   const [service_crew] = useState(id);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchMenus();
@@ -31,7 +29,7 @@ const PosPage = () => {
         console.error('Token not found');
         return;
       }
-      const endPoint = '/api/image/product/';
+      const endPoint = '/api/image/category/product/';
       const method = 'GET';
 
       const response = await dataFetch(endPoint, method, {}, token);
@@ -182,23 +180,31 @@ const PosPage = () => {
   
 
   const handleFilterChange = (categoryName: string) => {
-    const categoryId = categoryName === 'all' ? 'all' : parseInt(categoryName, 10);
-    if (categoryId === 'all') {
-      setFilteredMenus(menus); // Show all products
+    if (categoryName === 'all') {
+      setFilteredMenus(menus);
     } else {
-      const filtered = menus.filter((menu: any) => menu.category === categoryId);
+      const filtered = menus.filter((menu: { category: { name: string } }) => menu.category.name === categoryName);
       setFilteredMenus(filtered);
     }
   };
-  
 
+  const handleSearchChange = (term: string) => {
+    setSearchTerm(term);
+    const filtered = menus.filter((menu: { name: string }) =>
+      menu.name.toLowerCase().includes(term.toLowerCase())
+    );
+    setFilteredMenus(filtered);
+  };
 
   return (
     <div className="flex">
       <Toaster position="top-right" />
       {/* Main content */}
       <div className="flex-1 p-6">
-        <PosHeader onFilterChange={handleFilterChange} />
+        <PosHeader
+          onFilterChange={handleFilterChange} 
+          onSearchChange={handleSearchChange}
+          />
         <PosMenus menus={filteredMenus} addToCart={addToCart} />
       </div>
 
@@ -214,9 +220,9 @@ const PosPage = () => {
           onClose={closeTransactionPopup}
           onSubmitTransaction={createTransaction}
           totalPrice={calculateTotalPrice()}
-          products = {cart}
-          serviceCrewId={service_crew}
-         />
+          products={cart}
+          serviceCrewId={service_crew} 
+          open={true}         />
       )}
 
     </div>
