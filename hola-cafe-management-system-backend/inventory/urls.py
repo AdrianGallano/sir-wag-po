@@ -132,7 +132,12 @@ urlpatterns = [
     path("product/transaction/product-order/<int:pk>", views.ProductTransactionProductOrderViewSet.as_view({
         "get": "retrieve"})
     ),
-    
+    path("product/product-order/transaction/", views.ProductProductOrderTransactionViewSet.as_view({
+        "get": "list"})
+    ),
+    path("product/product-order/transaction/<int:pk>", views.ProductProductOrderTransactionViewSet.as_view({
+        "get": "retrieve"})
+    ),       
 
 
 

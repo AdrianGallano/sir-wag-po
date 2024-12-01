@@ -20,7 +20,8 @@ from .serializers import (
     ProductCategoryImageSerializer,
     ProductServiceCrewCartSerializer,
     UserUserLogSerializer,
-    ProductTransactionProductOrderSerializer
+    ProductTransactionProductOrderSerializer,
+    ProductProductOrderTransactionSerializer
 )
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -527,6 +528,10 @@ class ProductTransactionProductOrderViewSet(viewsets.ModelViewSet):
     serializer_class = ProductTransactionProductOrderSerializer
 
 
+class ProductProductOrderTransactionViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Transaction.objects.prefetch_related('productorder_set', "service_crew")
+    serializer_class = ProductProductOrderTransactionSerializer
 
 
 

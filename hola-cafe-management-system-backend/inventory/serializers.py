@@ -119,7 +119,19 @@ class ProductTransactionProductOrderSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ProductOrderProductSerializer(serializers.ModelSerializer):
+    product = ProductSerializer()
+    
+    class Meta:
+        model = ProductOrder
+        exclude = ["transaction"]
 
+class ProductProductOrderTransactionSerializer(serializers.ModelSerializer):
+    product_orders = ProductOrderProductSerializer(source='productorder_set', many=True)
+    service_crew = UserSerializer()
+    class Meta:
+        model = Transaction
+        fields = ['id', 'service_crew', 'total_price', 'payment_method', 'created_at', 'updated_at', 'product_orders']
 # productorder
 # transaction
 
