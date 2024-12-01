@@ -138,6 +138,23 @@ urlpatterns = [
     path("product/product-order/transaction/<int:pk>", views.ProductProductOrderTransactionViewSet.as_view({
         "get": "retrieve"})
     ),       
+    path("excel/stock/", views.StockExcelViewSet.as_view({
+        "get": "list"
+    }) 
+    ),
+    path("excel/product/", views.ProductExcelViewSet.as_view({
+        "get": "list"
+    }) 
+    ),
+    path("excel/transaction/", views.TransactionExcelViewSet.as_view({
+        "get": "list"
+    }) 
+    ),
+    path("excel/supplier/", views.SupplierExcelViewSet.as_view({
+        "get": "list"
+    }) 
+    ),
+    
 
 
 

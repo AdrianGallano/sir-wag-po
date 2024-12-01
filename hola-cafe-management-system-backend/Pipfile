@@ -15,6 +15,7 @@ drf-yasg = "*"
 djangorestframework-simplejwt = "*"
 setuptools = "*"
 pillow = "*"
+drf-excel = "*"
 
 [dev-packages]
 

@@ -30,6 +30,11 @@ import os
 from uuid import uuid4
 from .throttles import GeneralRequestThrottle,GeneralImageThrottle,UploadImageThrottle
 from .helpers import creationBasedUserLog, modificationBasedUserLog, deletionBasedUserLog
+from rest_framework.viewsets import ReadOnlyModelViewSet
+from drf_excel.mixins import XLSXFileMixin
+from drf_excel.renderers import XLSXRenderer
+
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     throttle_classes = [GeneralRequestThrottle]
@@ -533,76 +538,287 @@ class ProductProductOrderTransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.prefetch_related('productorder_set', "service_crew")
     serializer_class = ProductProductOrderTransactionSerializer
 
+class SupplierExcelViewSet(XLSXFileMixin, ReadOnlyModelViewSet):
+    queryset = Supplier.objects.all()
+    serializer_class = SupplierSerializer
+    renderer_classes = (XLSXRenderer,)
+    filename = "supplier_data.xlsx"
+    
+    column_header = {
+        'height': 25,
+        'style': {
+            'fill': {
+                'fill_type': 'solid',
+                'start_color': '363535',
+            },
+            'alignment': {
+                'horizontal': 'left',
+                'vertical': 'center',
+                'wrapText': True,
+                'shrink_to_fit': True,
+            },
+            'font': {
+                'name': 'Arial',
+                'size': 11,
+                'bold': True,
+                'color': 'FFFFFF',
+            },
+            'border_side': {
+                'border_style': 'thin',
+                'color': '363535',
+            },
+            
+        },
+    }
+    body = {
+        'height': 20,
+        'style': {
+            'fill': {
+                'fill_type': 'solid',
+                'start_color': 'FFFFFF',
+                
+            },
+            'alignment': {
+                'horizontal': 'left',
+                'vertical': 'center',
+                'wrapText': False,
+                'shrink_to_fit': True,
+            },
+            'border_side': {
+                'border_style': 'thin',
+                'color': '363535',
+            },
+            'font': {
+                'name': 'Arial',
+                'size': 11,
+                'color': '000000',
+                
+            }
+        },
+    }
+    column_data_styles = {
+        'distance': {
+            'alignment': {
+                'horizontal': 'right',
+                'vertical': 'top',
+            },
+        },
+            'format': 'd.m.y h:mm',
+        }
+    
 
+class TransactionExcelViewSet(XLSXFileMixin, ReadOnlyModelViewSet):
+    queryset = Transaction.objects.prefetch_related('productorder_set', "service_crew")
+    serializer_class = ProductProductOrderTransactionSerializer
+    renderer_classes = (XLSXRenderer,)
+    filename = "transaction_data.xlsx"
+    
+    column_header = {
+        'height': 25,
+        'style': {
+            'fill': {
+                'fill_type': 'solid',
+                'start_color': '363535',
+            },
+            'alignment': {
+                'horizontal': 'left',
+                'vertical': 'center',
+                'wrapText': True,
+                'shrink_to_fit': True,
+            },
+            'font': {
+                'name': 'Arial',
+                'size': 11,
+                'bold': True,
+                'color': 'FFFFFF',
+            },
+            'border_side': {
+                'border_style': 'thin',
+                'color': '363535',
+            },
+            
+        },
+    }
+    body = {
+        'height': 20,
+        'style': {
+            'fill': {
+                'fill_type': 'solid',
+                'start_color': 'FFFFFF',
+                
+            },
+            'alignment': {
+                'horizontal': 'left',
+                'vertical': 'center',
+                'wrapText': False,
+                'shrink_to_fit': True,
+            },
+            'border_side': {
+                'border_style': 'thin',
+                'color': '363535',
+            },
+            'font': {
+                'name': 'Arial',
+                'size': 11,
+                'color': '000000',
+                
+            }
+        },
+    }
+    column_data_styles = {
+        'distance': {
+            'alignment': {
+                'horizontal': 'right',
+                'vertical': 'top',
+            },
+        },
+            'format': 'd.m.y h:mm',
+        }
+    
 
-# cart
-# userlogs
-# productorder
-# transaction
+class ProductExcelViewSet(XLSXFileMixin, ReadOnlyModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductCategoryImageSerializer
+    renderer_classes = (XLSXRenderer,)
+    filename = "product_data.xlsx"
+    
+    column_header = {
+        'height': 25,
+        'style': {
+            'fill': {
+                'fill_type': 'solid',
+                'start_color': '363535',
+            },
+            'alignment': {
+                'horizontal': 'left',
+                'vertical': 'center',
+                'wrapText': True,
+                'shrink_to_fit': True,
+            },
+            'font': {
+                'name': 'Arial',
+                'size': 11,
+                'bold': True,
+                'color': 'FFFFFF',
+            },
+            'border_side': {
+                'border_style': 'thin',
+                'color': '363535',
+            },
+            
+        },
+    }
+    body = {
+        'height': 20,
+        'style': {
+            'fill': {
+                'fill_type': 'solid',
+                'start_color': 'FFFFFF',
+                
+            },
+            'alignment': {
+                'horizontal': 'left',
+                'vertical': 'center',
+                'wrapText': False,
+                'shrink_to_fit': True,
+            },
+            'border_side': {
+                'border_style': 'thin',
+                'color': '363535',
+            },
+            'font': {
+                'name': 'Arial',
+                'size': 11,
+                'color': '000000',
+                
+            }
+        },
+    }
+    column_data_styles = {
+        'distance': {
+            'alignment': {
+                'horizontal': 'right',
+                'vertical': 'top',
+            },
+        },
+            'format': 'd.m.y h:mm',
+        }
 
-
-# class TransactionProductsOrderCartViewSet(viewsets.ViewSet):
-#     permission_classes = [IsAuthenticated]
-
-#     def list(self, request):
-#         transactions = Transaction.objects.all()
-#         product_orders = ProductOrder.objects.all()
-#         carts = Cart.objects.all()
-
-#         serialized_transactions = TransactionSerializer(transactions, many=True)
-#         serialized_product_orders = ProductOrderSerializer(product_orders, many=True)
-#         serialized_carts = CartSerializer(carts, many=True)
-
-#         return Response({
-#             "transactions": serialized_transactions.data,
-#             "product_orders": serialized_product_orders.data,
-#             "carts": serialized_carts.data
-#         })
-
-#     def retrieve(self, request, pk=None):
-#         transactions = Transaction.objects.get(pk=pk)
-#         product_orders = ProductOrder.objects.filter(transaction=transactions)
-#         carts = Cart.objects.filter(service_crew=transactions.service_crew)
-
-#         serialized_transactions = TransactionSerializer(transactions)
-#         serialized_product_orders = ProductOrderSerializer(product_orders, many=True)
-#         serialized_carts = CartSerializer(carts, many=True)
-
-#         return Response({
-#             "transaction": serialized_transactions.data,
-#             "product_orders": serialized_product_orders.data,
-#             "carts": serialized_carts.data
-#         })
-
-#     def create(self, request):
-#         pass
-
-#     def update(self, request, pk=None):
-#         pass
-
-#     def destroy(self, request, pk=None):
-#         pass    
-
-
-
-""" {}
-TODO:
- - Streamline on checkout 
-  - bale yung OrderProduct, Transaction, Cart
-  - Get info sa Cart 
-  - add a transaction
-  - Add sa OrderProduct 
-    - Then delete sa Cart
- """
-
-
+class StockExcelViewSet(XLSXFileMixin, ReadOnlyModelViewSet):
+    queryset = Stock.objects.all()
+    serializer_class = StockSupplierIsStockedByImageSerializer
+    renderer_classes = (XLSXRenderer,)
+    filename = "stock_data.xlsx"
+    
+    column_header = {
+        'height': 25,
+        'style': {
+            'fill': {
+                'fill_type': 'solid',
+                'start_color': '363535',
+            },
+            'alignment': {
+                'horizontal': 'left',
+                'vertical': 'center',
+                'wrapText': True,
+                'shrink_to_fit': True,
+            },
+            'font': {
+                'name': 'Arial',
+                'size': 11,
+                'bold': True,
+                'color': 'FFFFFF',
+            },
+            'border_side': {
+                'border_style': 'thin',
+                'color': '363535',
+            },
+            
+        },
+    }
+    body = {
+        'height': 20,
+        'style': {
+            'fill': {
+                'fill_type': 'solid',
+                'start_color': 'FFFFFF',
+                
+            },
+            'alignment': {
+                'horizontal': 'left',
+                'vertical': 'center',
+                'wrapText': False,
+                'shrink_to_fit': True,
+            },
+            'border_side': {
+                'border_style': 'thin',
+                'color': '363535',
+            },
+            'font': {
+                'name': 'Arial',
+                'size': 11,
+                'color': '000000',
+                
+            }
+        },
+    }
+    column_data_styles = {
+        'distance': {
+            'alignment': {
+                'horizontal': 'right',
+                'vertical': 'top',
+            },
+        },
+            'format': 'd.m.y h:mm',
+        }
 """ 
-- Dashboard 
-    - Immediate analytics
+- Dashboard (staka to)
+    - Immediate analytics (to nalang kulang)
     - Inventory tables
     - Logs
     - User
-
- """
+- Import Export (staka to)
+- Analytics
+"""
 
 
