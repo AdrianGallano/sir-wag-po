@@ -47,7 +47,22 @@ const CategoryPage = () => {
     setIsDeletePopupOpen(true);
   };
 
-  const columns = categoryColumns(handleEdit, handleDelete);
+  const handleMassDelete = async (categories: Category[]) => {
+    try {
+      console.log("Deleting categories", categories);
+      for (const category of categories) {
+        await dataFetch(`api/categories/${category.id}/`, "DELETE", {}, token!);
+      }
+
+      setCategories((prev) =>
+        prev.filter((category) => !categories.some((c) => c.id === category.id))
+      );
+    } catch (error) {
+      console.log("Failed to delete categories", error);
+    }
+  };
+
+  const columns = categoryColumns(handleEdit, handleDelete, handleMassDelete);
 
   useEffect(() => {
     fetchCategories();
@@ -78,6 +93,7 @@ const CategoryPage = () => {
           data={categories}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onMassDeletion={handleMassDelete}
         />
       </div>
 

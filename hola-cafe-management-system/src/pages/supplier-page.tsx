@@ -40,6 +40,27 @@ const SupplierPage = () => {
     }
   };
 
+  const exportSupplier = async () => {
+    try {
+      const response = await dataFetch(
+        "api/excel/supplier/",
+        "GET",
+        {},
+        token!,
+        "blob"
+      );
+
+      const blob = new Blob([response], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+
+      window.open(url);
+    } catch (error) {
+      console.error("Failed to fetch Excel file", error);
+    }
+  };
+
   useEffect(() => {
     fetchSuppliers();
   }, []);
@@ -80,6 +101,7 @@ const SupplierPage = () => {
           data={suppliers}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onExport={exportSupplier}
         />
       </div>
 

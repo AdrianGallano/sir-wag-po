@@ -34,11 +34,16 @@ import placeholder from "@/assets/images/no-order.png";
 interface ProductTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  onEdit: (product: Category) => void;
-  onDelete: (product: Category) => void;
+  onEdit: (category: Category) => void;
+  onDelete: (category: Category) => void;
+  onMassDeletion: (category: Category[]) => void;
 }
 
-const CategoryTable = ({ columns, data }: ProductTableProps<Category, any>) => {
+const CategoryTable = ({
+  columns,
+  data,
+  onMassDeletion,
+}: ProductTableProps<Category, any>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -62,6 +67,13 @@ const CategoryTable = ({ columns, data }: ProductTableProps<Category, any>) => {
       columnVisibility,
     },
   });
+
+  const massDeletion = () => {
+    const selectedRows = table.getRowModel().rows;
+    const selectedCategories = selectedRows.map((row) => row.original);
+    onMassDeletion(selectedCategories);
+    console.log(selectedCategories);
+  };
 
   return (
     <div className="relative">
@@ -102,6 +114,14 @@ const CategoryTable = ({ columns, data }: ProductTableProps<Category, any>) => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      <Button
+        variant="destructive"
+        disabled={table.getSelectedRowModel().rows.length === 0}
+        onClick={massDeletion}
+      >
+        Delete Selected
+      </Button>
 
       <Table>
         <TableHeader>

@@ -71,6 +71,7 @@ const Navbar = () => {
             <TooltipContent side="right">Point of sale</TooltipContent>
           </Tooltip>
         </TooltipProvider>
+
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -89,7 +90,8 @@ const Navbar = () => {
             <TooltipContent side="right">Analytics</TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <div className="my-6">
+
+        <div className="my-6 flex flex-col gap-1.5 ">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -185,8 +187,6 @@ const Navbar = () => {
             </Tooltip>
           </TooltipProvider>
         </div>
-
- 
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-4">
         <TooltipProvider>

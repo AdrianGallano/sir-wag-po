@@ -73,11 +73,26 @@ export const stocksColumns = (
 
   {
     accessorKey: "id",
-    header: () => {
-      return <div className="text-center min-w-28">Stock ID</div>;
+    header: ({ column }) => {
+      return (
+        <Button
+          variant={"ghost"}
+          className="inline-flex items-center justify-center"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Stock ID
+          {column.getIsSorted() === "desc" ? (
+            <ArrowDownIcon className="ml-2 h-4 w-4" />
+          ) : column.getIsSorted() === "asc" ? (
+            <ArrowUpIcon className="ml-2 h-4 w-4" />
+          ) : (
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          )}
+        </Button>
+      );
     },
     cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("id")}</div>;
+      return <div className="text-center ">{row.getValue("id")}</div>;
     },
   },
 
@@ -140,7 +155,6 @@ export const stocksColumns = (
     },
     cell: ({ row }) => {
       const price = parseFloat(row.getValue("cost_price"));
-      console.log("price", price);
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "PHP",
@@ -150,36 +164,36 @@ export const stocksColumns = (
     },
   },
 
-  {
-    accessorKey: "created_at",
-    header: ({ column }) => (
-      <Button
-        variant={"ghost"}
-        className="inline-flex justify-center text-center"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Date Shelved
-        {column.getIsSorted() === "desc" ? (
-          <ArrowDownIcon className="ml-2 h-4 w-4" />
-        ) : column.getIsSorted() === "asc" ? (
-          <ArrowUpIcon className="ml-2 h-4 w-4" />
-        ) : (
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        )}
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const date: string = row.getValue("created_at");
-      return (
-        <div className="capitalize text-center">{dateFormatter(date)}</div>
-      );
-    },
-    filterFn: (row, id, value) => {
-      const rowDate = new Date(row.getValue(id));
-      const [startDate, endDate] = value;
-      return rowDate >= startDate && rowDate <= endDate;
-    },
-  },
+  // {
+  //   accessorKey: "created_at",
+  //   header: ({ column }) => (
+  //     <Button
+  //       variant={"ghost"}
+  //       className="inline-flex justify-center text-center"
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //     >
+  //       Date Shelved
+  //       {column.getIsSorted() === "desc" ? (
+  //         <ArrowDownIcon className="ml-2 h-4 w-4" />
+  //       ) : column.getIsSorted() === "asc" ? (
+  //         <ArrowUpIcon className="ml-2 h-4 w-4" />
+  //       ) : (
+  //         <ArrowUpDown className="ml-2 h-4 w-4" />
+  //       )}
+  //     </Button>
+  //   ),
+  //   cell: ({ row }) => {
+  //     const date: string = row.getValue("created_at");
+  //     return (
+  //       <div className="capitalize text-center">{dateFormatter(date)}</div>
+  //     );
+  //   },
+  //   filterFn: (row, id, value) => {
+  //     const rowDate = new Date(row.getValue(id));
+  //     const [startDate, endDate] = value;
+  //     return rowDate >= startDate && rowDate <= endDate;
+  //   },
+  // },
 
   {
     accessorKey: "expiration_date",
@@ -213,13 +227,24 @@ export const stocksColumns = (
   },
 
   {
+    accessorKey: "supplier",
+    header: () => {
+      return <div className="text-center">Supplier</div>;
+    },
+    cell: ({ row }) => {
+      const supplier: Supplier = row.getValue("supplier");
+      return <div>{toTitleCase(supplier.name)}</div>;
+    },
+  },
+
+  {
     accessorKey: "is_stocked_by",
     header: () => {
       return <div className="text-center min-w-28">Is Stocked By</div>;
     },
     cell: ({ row }) => {
-      // const supplier: Supplier = row.getValue("is_stocked_by");
-      return <div className="text-center">Statis</div>;
+      const crew: ServiceCrew = row.getValue("is_stocked_by");
+      return <div className="text-center">{toTitleCase(crew.username)}</div>;
     },
   },
 
@@ -530,11 +555,11 @@ export const productColumns = (
   {
     accessorKey: "category",
     header: () => {
-      return <div className="text-center min-w-28">Category</div>;
+      return <h1 className="text-center min-w-28">Category</h1>;
     },
     cell: ({ row }) => {
       const category: Category = row.getValue("category");
-      return <div>{category.id}</div>;
+      return <div className="text-center">{toTitleCase(category.name)}</div>;
     },
   },
 
@@ -677,7 +702,9 @@ export const transactionColumns = (
     },
     cell: ({ row }) => {
       const service_crew: ServiceCrew = row.getValue("service_crew");
-      return <div>{service_crew.username!}</div>;
+      return (
+        <div className="text-center">{toTitleCase(service_crew.username!)}</div>
+      );
     },
   },
 
@@ -711,7 +738,8 @@ export const transactionColumns = (
 
 export const categoryColumns = (
   onEdit: (category: Category) => void,
-  onDelete: (category: Category) => void
+  onDelete: (category: Category) => void,
+  massDelete: (categories: Category[]) => void
 ): ColumnDef<Category>[] => [
   {
     id: "select",
@@ -734,26 +762,6 @@ export const categoryColumns = (
     ),
     enableSorting: false,
     enableHiding: false,
-  },
-
-  {
-    accessorKey: "image",
-    header: () => {
-      return <div className="text-center min-w-28">Product Image</div>;
-    },
-    cell: ({ row }) => {
-      const image_obj = row.getValue("image");
-      const image = image_obj as Image;
-
-      return (
-        <div className="flex justify-center">
-          <img
-            src={image?.image_url || placeholder}
-            className="w-10 object-center rounded-sm"
-          />
-        </div>
-      );
-    },
   },
 
   {
@@ -799,7 +807,7 @@ export const categoryColumns = (
           className="inline-flex justify-center text-center "
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Date Shelved
+          Date Creation
           {column.getIsSorted() === "desc" ? (
             <ArrowDownIcon className="ml-2 h-4 w-4" />
           ) : column.getIsSorted() === "asc" ? (

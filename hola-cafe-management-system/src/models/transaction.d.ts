@@ -1,3 +1,4 @@
+import { ProductOrder } from "./product-order";
 import ServiceCrew from "./service_crew";
 
 export default interface Transaction {
@@ -7,4 +8,5 @@ export default interface Transaction {
   created_at: string;
   updated_at: string;
   service_crew: ServiceCrew;
+  product_orders: ProductOrder[];
 }

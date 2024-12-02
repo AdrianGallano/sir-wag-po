@@ -2,13 +2,10 @@ import { transactionColumns } from "@/components/columns";
 import StockStatus from "@/components/stock/stock-status";
 import Deletetransaction from "@/components/transaction/delete-transaction";
 import TransactionTable from "@/components/transaction/transactiontable";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/authContext";
-import Product from "@/models/product";
 import Transaction from "@/models/transaction";
 import dataFetch from "@/services/data-service";
-import { PackagePlus } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
 const TransactionPage = () => {
@@ -21,7 +18,7 @@ const TransactionPage = () => {
   const fetchTransactions = async () => {
     try {
       const transaction = (await dataFetch(
-        "api/transactions/",
+        "api/product/product-order/transaction/",
         "GET",
         {},
         token!
@@ -30,6 +27,27 @@ const TransactionPage = () => {
       console.log(transaction);
     } catch (error) {
       console.error("Failed to fetch transaction", error);
+    }
+  };
+
+  const exportTransaction = async () => {
+    try {
+      const response = await dataFetch(
+        "api/excel/transaction/",
+        "GET",
+        {},
+        token!,
+        "blob"
+      );
+
+      const blob = new Blob([response], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+
+      window.open(url);
+    } catch (error) {
+      console.error("Failed to fetch Excel file", error);
     }
   };
 
@@ -59,6 +77,7 @@ const TransactionPage = () => {
           columns={columns}
           data={transaction}
           onDelete={handleDelete}
+          onExport={exportTransaction}
         />
       </div>
 
