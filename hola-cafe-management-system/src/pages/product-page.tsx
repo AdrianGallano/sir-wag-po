@@ -1,4 +1,4 @@
-  import { productColumns } from "@/components/columns";
+import { productColumns } from "@/components/columns";
 import AddProductForm from "@/components/products/add-product";
 import DeleteProduct from "@/components/products/delete-product";
 import EditProduct from "@/components/products/edit-product";
@@ -30,9 +30,29 @@ const ProductPage = () => {
         token!
       )) as Product[];
       setProducts(products);
-      console.log(products);
     } catch (error) {
       console.error("Failed to fetch products", error);
+    }
+  };
+
+  const exportProducts = async () => {
+    try {
+      const response = await dataFetch(
+        "api/excel/product",
+        "GET",
+        {},
+        token!,
+        "blob"
+      );
+
+      const blob = new Blob([response], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+
+      window.open(url);
+    } catch (error) {
+      console.error("Failed to fetch Excel file", error);
     }
   };
 
@@ -45,7 +65,6 @@ const ProductPage = () => {
         token!
       )) as Category[];
       setCategories(categories);
-      console.log("Categories", categories);
     } catch (error) {
       console.error("Failed to fetch stocks", error);
     }
@@ -97,6 +116,7 @@ const ProductPage = () => {
           data={products}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onExport={exportProducts}
         />
       </div>
       {isAddProductOpen && (
@@ -125,8 +145,6 @@ const ProductPage = () => {
           onUpdate={onUpdate}
         />
       )}
-
-      
     </main>
   );
 };
