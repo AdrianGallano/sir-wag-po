@@ -8,6 +8,7 @@ import {
   Tag,
   Truck,
   Warehouse,
+  LayoutDashboard
 } from "lucide-react";
 import {
   Tooltip,
@@ -45,7 +46,7 @@ const Navbar = () => {
                     : "bg-transparent text-muted-foreground hover:text-white"
                 }`}
               >
-                <LineChart className="h-4 w-4 transition-all group-hover:scale-110 " />
+                <LayoutDashboard className="h-4 w-4 transition-all group-hover:scale-110 " />
                 <span className="sr-only">Dashboard</span>
               </Link>
             </TooltipTrigger>
