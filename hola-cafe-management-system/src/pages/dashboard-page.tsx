@@ -15,6 +15,14 @@ import ServiceCrew from "@/models/service_crew";
 import StockTableDashboard from "@/components/stock/stock-table-dashboard";
 import UserLogTable from "@/components/stock/user-logs";
 
+interface UserLog {
+  id: string;
+  user: ServiceCrew;
+  description: string;
+  object_data: {};
+  created_at: string;
+}
+
 const DashboardPage = () => {
   /* 
     General Data Collection
@@ -22,9 +30,7 @@ const DashboardPage = () => {
     */
   const { token } = useAuth();
   const [stock, setStock] = useState<Stock[]>([]);
-  const [userlogs, setUserLogs] = useState([]);
-  const [serviceCrew, setServiceCrew] = useState<ServiceCrew[]>([]);
-  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [userlogs, setUserLogs] = useState<UserLog[]>([]);
 
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
@@ -45,13 +51,18 @@ const DashboardPage = () => {
   };
 
   const fetchUserLogs = async () => {
-    try {
-      const userlogs = await dataFetch("api/user-log/", "GET", {}, token!);
-      setUserLogs(userlogs);
-    } catch (error) {
-      console.error("Failed to fetch stocks", error);
-    }
-  };
+  try {
+    const newLogs = await dataFetch("api/user-log/", "GET", {}, token!);
+    setUserLogs((prevLogs) =>
+      [...newLogs, ...prevLogs].sort(
+        (a: UserLog, b: UserLog) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )
+    );
+  } catch (error) {
+    console.error("Failed to fetch user logs", error);
+  }
+};
+
 
   useEffect(() => {
     fetchStocks();

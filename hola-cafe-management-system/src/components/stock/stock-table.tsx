@@ -40,12 +40,14 @@ interface StockTableProps<TData, TValue> {
   onEdit: (stock: Stock) => void;
   onDelete: (stock: Stock) => void;
   onExport: () => void;
+  oncallback?: () => void;
 }
 
 const StockTable = ({
   columns,
   data,
   onExport,
+  oncallback,
 }: StockTableProps<Stock, any>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -197,6 +199,7 @@ const StockTable = ({
           selectedStock={selectedStock}
           stocks={data as Stock[]}
           onClose={() => setSelectedStock(null)}
+          callback={oncallback}
         />
       )}
     </div>

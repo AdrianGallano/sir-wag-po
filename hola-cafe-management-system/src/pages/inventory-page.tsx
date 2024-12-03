@@ -123,6 +123,7 @@ const InventoryPage = () => {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onExport={exportStocks}
+          oncallback={fetchStocks}
         />
       </div>
 
