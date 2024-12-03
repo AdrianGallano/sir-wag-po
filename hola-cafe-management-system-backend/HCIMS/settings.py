@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     "django_filters",
     # local apps
     "inventory",
+    "pos",
+    "core",
 ]
 
 MIDDLEWARE = [
