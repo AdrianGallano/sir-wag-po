@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { type CarouselApi } from "@/components/ui/carousel";
 import {
   Dialog,
@@ -38,7 +38,9 @@ const StockPreview = ({
 }: StockPreviewProps) => {
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const maxQuantityRef = useRef<number>(Number(selectedStock?.quantity));
 
+  console.log(maxQuantityRef);
   useEffect(() => {
     if (carouselApi && selectedStock) {
       const index = stocks.findIndex((stock) => stock.id === selectedStock.id);
@@ -62,6 +64,15 @@ const StockPreview = ({
       carouselApi.off("select", handleSelect);
     };
   }, [carouselApi]);
+
+  const getStockStatus = (quantity: number): string => {
+    const maxQuantity = maxQuantityRef.current;
+    const lowStockThreshold = maxQuantity / 4;
+
+    if (quantity <= 0) return "Out of Stock";
+    if (quantity > 0 && quantity <= lowStockThreshold) return "Low Stock";
+    return "In Stock";
+  };
 
   if (!isOpen || stocks.length === 0) return null;
 
@@ -153,6 +164,20 @@ const StockPreview = ({
                         <p className="underline text-wrap text-xl">
                           We have {stock.quantity} stocks left
                         </p>
+
+                        <span
+                          className={`text-sm ${
+                            getStockStatus(Number(stock.quantity)) ===
+                            "Out of Stock"
+                              ? "text-red-500"
+                              : getStockStatus(Number(stock.quantity)) ===
+                                "Low Stock"
+                              ? "text-yellow-500"
+                              : "text-green-500"
+                          }`}
+                        >
+                          {getStockStatus(Number(stock.quantity))}
+                        </span>
                       </div>
                     </div>
                   </CardContent>

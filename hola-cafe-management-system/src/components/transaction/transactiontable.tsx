@@ -37,11 +37,13 @@ interface TransactionTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   onDelete: (transaction: Transaction) => void;
+  onExport: () => void;
 }
 
 const TransactionTable = ({
   columns,
   data,
+  onExport,
 }: TransactionTableProps<Transaction, any>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -68,44 +70,55 @@ const TransactionTable = ({
 
   return (
     <div className="relative">
-      <div className="flex w-full justify-end item-center my-2.5 gap-2">
-        <Input
-          placeholder="Search by service crew"
-          value={
-            (table.getColumn("service_crew")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("service_crew")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm rounded-full"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="rounded-full">
-              <span>Filter by type</span>
-              <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value: any) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="w-full flex justify-between items-center mt-2 ">
+        <Button
+          onClick={onExport}
+          className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive"
+        >
+          Export Transactions
+        </Button>
+        <div className="flex w-full justify-end item-center my-2.5 gap-2">
+          <Input
+            placeholder="Search by service crew"
+            value={
+              (table.getColumn("service_crew")?.getFilterValue() as string) ??
+              ""
+            }
+            onChange={(event) =>
+              table
+                .getColumn("service_crew")
+                ?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm rounded-full"
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="rounded-full">
+                <span>Filter by type</span>
+                <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value: any) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <Table className="mb-14">
         <TableHeader>

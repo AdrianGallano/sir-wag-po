@@ -36,22 +36,30 @@ const InventoryPage = () => {
         token!
       )) as Stock[];
       setStock(stocks);
+      console.log("Stock:", stocks);
     } catch (error) {
       console.error("Failed to fetch stocks", error);
     }
   };
 
-  const fetchServiceCrew = async () => {
+  const exportStocks = async () => {
     try {
-      const serviceCrew = (await dataFetch(
-        "api/service-crew/",
+      const response = await dataFetch(
+        "api/excel/stock/",
         "GET",
         {},
-        token!
-      )) as ServiceCrew[];
-      setServiceCrew(serviceCrew);
+        token!,
+        "blob"
+      );
+
+      const blob = new Blob([response], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+
+      window.open(url);
     } catch (error) {
-      console.error("Failed to fetch service crew", error);
+      console.error("Failed to fetch Excel file", error);
     }
   };
 
@@ -74,7 +82,6 @@ const InventoryPage = () => {
   };
 
   useEffect(() => {
-    fetchServiceCrew();
     fetchSupplier();
     fetchStocks();
   }, []);
@@ -115,6 +122,7 @@ const InventoryPage = () => {
           data={stock}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onExport={exportStocks}
         />
       </div>
 

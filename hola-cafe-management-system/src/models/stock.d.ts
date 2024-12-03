@@ -12,9 +12,11 @@ export interface Stock {
   created_at: string;
   updated_at: string;
   expiration_date: string;
+  date_shelved: string;
   supplier: Supplier;
+  status: string;
   image?: Image;
-  is_stocked_by: string;
+  is_stocked_by: ServiceCrew;
   onEdit: (product: Stock) => void;
   onDelete: (product: Stock) => void;
 }
