@@ -34,7 +34,7 @@ class ProductServiceCrewCartSerializer(serializers.ModelSerializer):
 class ProductTransactionProductOrderSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
     transaction = TransactionSerializer()
-    
+
     class Meta:
         model = ProductOrder
         fields = "__all__"
@@ -42,15 +42,24 @@ class ProductTransactionProductOrderSerializer(serializers.ModelSerializer):
 
 class ProductOrderProductSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
-    
+
     class Meta:
         model = ProductOrder
         exclude = ["transaction"]
 
 
 class ProductProductOrderTransactionSerializer(serializers.ModelSerializer):
-    product_orders = ProductOrderProductSerializer(source='productorder_set', many=True)
+    product_orders = ProductOrderProductSerializer(source="productorder_set", many=True)
     service_crew = UserSerializer()
+
     class Meta:
         model = Transaction
-        fields = ['id', 'service_crew', 'total_price', 'payment_method', 'created_at', 'updated_at', 'product_orders']
+        fields = [
+            "id",
+            "service_crew",
+            "total_price",
+            "payment_method",
+            "created_at",
+            "updated_at",
+            "product_orders",
+        ]

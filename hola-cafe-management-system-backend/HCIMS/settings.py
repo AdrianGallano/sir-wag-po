@@ -101,11 +101,10 @@ DATABASES = {
         "PORT": os.getenv("PORT"),
         "OPTIONS": {
             # "ssl": {
-            #     "ca": os.getenv("CA_PATH"),  
+            #     "ca": os.getenv("CA_PATH"),
             # },
-            'ssl': {'disabled': True},  # Disable SSL connection
+            "ssl": {"disabled": True},  # Disable SSL connection
         },
-
     }
 }
 
@@ -148,7 +147,7 @@ STATIC_URL = "static/"
 
 MEDIA_URL = "/media/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -163,11 +162,7 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
-        'drf_excel.renderers.XLSXRenderer',
-
-        # "rest_framework_xml.renderers.XMLRenderer",
-        # "rest_framework_yaml.renderers.YAMLRenderer",
-        # "rest_framework_csv.renderers.CSVRenderer",
+        "drf_excel.renderers.XLSXRenderer",
     ],
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
@@ -177,18 +172,15 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.UserRateThrottle",
-        "inventory.throttles.UploadImageThrottle",
-        "inventory.throttles.GeneralImageThrottle",
-        "inventory.throttles.GeneralRequestThrottle",
-
+        "core.throttles.UploadImageThrottle",
+        "core.throttles.GeneralImageThrottle",
+        "core.throttles.GeneralRequestThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
         "user": "500/day",
         "upload_image": "200/day",
         "general_image": "500/day",
         "general_request": "2000/day",
-
-
     },
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -218,4 +210,4 @@ SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
 }
 
-DRF_EXCEL_DATETIME_FORMAT = 'mm-dd-yy h:mm AM/PM'
+DRF_EXCEL_DATETIME_FORMAT = "mm-dd-yy h:mm AM/PM"

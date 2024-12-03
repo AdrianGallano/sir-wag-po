@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import Category, Stock, Supplier, Image, Product
+from .models import Category, Stock, Supplier, Product
 from djoser.serializers import UserSerializer
+from core.serializers import ImageSerializer
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -15,33 +16,23 @@ class SupplierSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ImageSerializer(serializers.ModelSerializer):
-    image_url = serializers.URLField( read_only=True)
-    
-    class Meta:
-        model = Image
-        fields = ["id", "image_url"]
-
-
 class StockSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Stock
         fields = "__all__"
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Product
         fields = "__all__"
 
 
-
-
 class StockImageSerializer(serializers.ModelSerializer):
     image = ImageSerializer()
-    
+
     class Meta:
         model = Stock
         fields = "__all__"
@@ -49,12 +40,10 @@ class StockImageSerializer(serializers.ModelSerializer):
 
 class ProductImageSerializer(serializers.ModelSerializer):
     image = ImageSerializer()
-    
+
     class Meta:
         model = Product
         fields = "__all__"
-
-
 
 
 class StockSupplierIsStockedByImageSerializer(serializers.ModelSerializer):
@@ -74,4 +63,3 @@ class ProductCategoryImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = "__all__"
-

@@ -18,11 +18,6 @@ urlpatterns = [
             {"get": "retrieve", "put": "update", "delete": "destroy"}
         ),
     ),
-    path("images/", views.ImageViewSet.as_view({"get": "list", "post": "upload"})),
-    path(
-        "images/<int:pk>/",
-        views.ImageViewSet.as_view({"get": "retrieve", "delete": "destroy"}),
-    ),
     path(
         "suppliers/", views.SupplierViewSet.as_view({"get": "list", "post": "create"})
     ),
@@ -45,9 +40,7 @@ urlpatterns = [
         views.ProductImageViewSet.as_view({"get": "retrieve"}),
     ),
     path("image/stock/", views.StockImageViewSet.as_view({"get": "list"})),
-    path(
-        "image/stock/<int:pk>/", views.StockImageViewSet.as_view({"get": "retrieve"})
-    ), 
+    path("image/stock/<int:pk>/", views.StockImageViewSet.as_view({"get": "retrieve"})),
     path(
         "image/is-stocked-by/supplier/stock/",
         views.StockSupplierIsStockedByImageViewSet.as_view({"get": "list"}),
@@ -63,7 +56,7 @@ urlpatterns = [
     path(
         "image/category/product/<int:pk>",
         views.ProductCategoryImageViewSet.as_view({"get": "retrieve"}),
-    ),  
+    ),
     path("excel/stock/", views.StockExcelViewSet.as_view({"get": "list"})),
     path("excel/product/", views.ProductExcelViewSet.as_view({"get": "list"})),
     path("excel/supplier/", views.SupplierExcelViewSet.as_view({"get": "list"})),
