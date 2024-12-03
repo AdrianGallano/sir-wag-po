@@ -18,18 +18,13 @@ urlpatterns = [
             {"get": "retrieve", "put": "update", "delete": "destroy"}
         ),
     ),
-    path("images/", views.ImageViewSet.as_view({
-        "get":"list",
-        "post":"upload"
-    })),
-    path("images/<int:pk>/",
-          views.ImageViewSet.as_view( 
-            {"get": "retrieve", 
-             "delete": "destroy"})),
+    path("images/", views.ImageViewSet.as_view({"get": "list", "post": "upload"})),
     path(
-        "suppliers/", views.SupplierViewSet.as_view({
-            "get": "list",
-             "post": "create"})
+        "images/<int:pk>/",
+        views.ImageViewSet.as_view({"get": "retrieve", "delete": "destroy"}),
+    ),
+    path(
+        "suppliers/", views.SupplierViewSet.as_view({"get": "list", "post": "create"})
     ),
     path(
         "suppliers/<int:pk>/",
@@ -37,127 +32,39 @@ urlpatterns = [
             {"get": "retrieve", "put": "update", "delete": "destroy"}
         ),
     ),
-    path(
-        "carts/", views.CartViewSet.as_view({
-            "get": "list",
-            "post": "create"})
-    ),
-    path(
-        "carts/<int:pk>/",
-        views.CartViewSet.as_view(
-            {"get": "retrieve", "put": "update", "delete": "destroy"}
-        ),
-    ),
-    path(
-        "products/", views.ProductViewSet.as_view({
-            "get": "list",
-            "post": "create"})
-    ),
+    path("products/", views.ProductViewSet.as_view({"get": "list", "post": "create"})),
     path(
         "products/<int:pk>/",
         views.ProductViewSet.as_view(
             {"get": "retrieve", "put": "update", "delete": "destroy"}
         ),
     ),
+    path("image/product/", views.ProductImageViewSet.as_view({"get": "list"})),
     path(
-        "transactions/", views.TransactionViewSet.as_view({
-            "get": "list",
-            "post": "create"})
+        "image/product/<int:pk>/",
+        views.ProductImageViewSet.as_view({"get": "retrieve"}),
     ),
+    path("image/stock/", views.StockImageViewSet.as_view({"get": "list"})),
     path(
-        "transactions/<int:pk>/",
-        views.TransactionViewSet.as_view(
-            {"get": "retrieve", "put": "update", "delete": "destroy"}
-        ),
-    ),
+        "image/stock/<int:pk>/", views.StockImageViewSet.as_view({"get": "retrieve"})
+    ), 
     path(
-        "product-orders/", views.ProductOrderViewSet.as_view({
-            "get": "list",
-            "post": "create"})
+        "image/is-stocked-by/supplier/stock/",
+        views.StockSupplierIsStockedByImageViewSet.as_view({"get": "list"}),
     ),
     path(
-        "product-orders/<int:pk>/",
-        views.ProductOrderViewSet.as_view(
-            {"get": "retrieve", "put": "update", "delete": "destroy"}
-        ),
+        "image/is-stocked-by/supplier/stock/<int:pk>/",
+        views.StockSupplierIsStockedByImageViewSet.as_view({"get": "retrieve"}),
     ),
-    path("user-log/", views.UserLogViewSet.as_view({
-        "get": "list",
-        "post": "create"})
+    path(
+        "image/category/product/",
+        views.ProductCategoryImageViewSet.as_view({"get": "list"}),
     ),
-    path("user-log/<int:pk>/", views.UserLogViewSet.as_view({
-        "get": "retrieve", 
-        "put": "update", 
-        "delete": "destroy"})
-    ),
-    path("image/product/", views.ProductImageViewSet.as_view({
-        "get": "list"})
-    ),
-    path("image/product/<int:pk>/", views.ProductImageViewSet.as_view({
-        "get": "retrieve"})
-    ),
-    path("image/stock/", views.StockImageViewSet.as_view({
-        "get": "list"})
-    ),
-    path("image/stock/<int:pk>/", views.StockImageViewSet.as_view({
-        "get": "retrieve"})
-    ), # from here
-    path("image/is-stocked-by/supplier/stock/", views.StockSupplierIsStockedByImageViewSet.as_view({
-        "get": "list"})
-    ),
-    path("image/is-stocked-by/supplier/stock/<int:pk>/", views.StockSupplierIsStockedByImageViewSet.as_view({
-        "get": "retrieve"})
-    ),
-    path("image/category/product/", views.ProductCategoryImageViewSet.as_view({
-        "get": "list"})
-    ),
-    path("image/category/product/<int:pk>", views.ProductCategoryImageViewSet.as_view({
-        "get": "retrieve"})
-    ),# start here
-    path("product/service-crew/cart/", views.ProductServiceCrewCartViewSet.as_view({
-        "get": "list"})
-    ),
-    path("product/service-crew/cart/<int:pk>", views.ProductServiceCrewCartViewSet.as_view({
-        "get": "retrieve"})
-    ),
-    path("user/user-log/", views.UserUserLogViewSet.as_view({
-        "get": "list"})
-    ),
-    path("user/user-log/<int:pk>", views.UserUserLogViewSet.as_view({
-        "get": "retrieve"})
-    ),
-    path("product/transaction/product-order/", views.ProductTransactionProductOrderViewSet.as_view({
-        "get": "list"})
-    ),
-    path("product/transaction/product-order/<int:pk>", views.ProductTransactionProductOrderViewSet.as_view({
-        "get": "retrieve"})
-    ),
-    path("product/product-order/transaction/", views.ProductProductOrderTransactionViewSet.as_view({
-        "get": "list"})
-    ),
-    path("product/product-order/transaction/<int:pk>", views.ProductProductOrderTransactionViewSet.as_view({
-        "get": "retrieve"})
-    ),       
-    path("excel/stock/", views.StockExcelViewSet.as_view({
-        "get": "list"
-    }) 
-    ),
-    path("excel/product/", views.ProductExcelViewSet.as_view({
-        "get": "list"
-    }) 
-    ),
-    path("excel/transaction/", views.TransactionExcelViewSet.as_view({
-        "get": "list"
-    }) 
-    ),
-    path("excel/supplier/", views.SupplierExcelViewSet.as_view({
-        "get": "list"
-    }) 
-    ),
-    
-
-
-
+    path(
+        "image/category/product/<int:pk>",
+        views.ProductCategoryImageViewSet.as_view({"get": "retrieve"}),
+    ),  
+    path("excel/stock/", views.StockExcelViewSet.as_view({"get": "list"})),
+    path("excel/product/", views.ProductExcelViewSet.as_view({"get": "list"})),
+    path("excel/supplier/", views.SupplierExcelViewSet.as_view({"get": "list"})),
 ]
-
-

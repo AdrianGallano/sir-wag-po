@@ -44,7 +44,7 @@ class Image(models.Model):
 class Stock(models.Model):
     """ 
     Single unique raw material in the cafe.
-     """
+    """
 
     image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=255)
@@ -62,7 +62,7 @@ class Stock(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
     status = models.CharField(max_length=255, null=True)
-   
+
     def __str__(self):
         return self.name
 
@@ -91,86 +91,6 @@ class Product(models.Model):
         indexes = [models.Index(fields=["name"])]
     
 
-# POS PART
-
-class Cart(models.Model): 
-    """  
-    stores the items to be transacted
-    """
-    service_crew = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
-
-    class Meta:
-        unique_together = ['service_crew', 'product']
-
-
-class Transaction(models.Model):
-    service_crew = models.ForeignKey(User, on_delete=models.CASCADE)
-    total_price = models.DecimalField(
-        default=0, max_digits=10, decimal_places=2, null=True
-    )
-    payment_method = models.CharField(max_length=255, null=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
-
-
-class ProductOrder(models.Model): 
-    """ 
-    connect the product to the transaction so that we can put the 
-    products that has been ordered in a single transaction
-     """
-    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
-
-
-class UserLog(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    description = models.CharField(max_length=500, null=True)
-    object_data = models.JSONField(default=dict)
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    
-
-""" 
-
-how can we determine what items should go sa transaction
-- Create a Cart
-- Add items to the cart
-- Checkout the cart
-    - Create a transaction
-    - Create a 
-
-so the problem is
-- we cannot add a transaction relationship directly to the prodct 
-since we also need to access it on the single table page
-- the POS is a diffrent feature than when you just isolate the product information
-    - Transactions
-    - Order information 
-    - Etc.
 
 
 
-what are the things that needs to have an excel?
-- Transaction
-- Product
-- Stock
-- Supplier
-
-The additional things are
-- Profit 
-- and other Data analytics things
-
-
-
-TODO:
- - Excel, Importing and Exporting
- - Authorizations
- - Data analytics
- - Logs
- """
