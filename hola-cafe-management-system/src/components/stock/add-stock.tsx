@@ -24,9 +24,9 @@ import { useState } from "react";
 import { useAuth } from "@/context/authContext";
 import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
-import ImageManager from "@/components/image-manager";
 import { toast } from "sonner";
-import { CheckCircle, CircleCheck, X } from "lucide-react";
+import { CheckCircle, CircleCheck, Image, ImagePlus, X } from "lucide-react";
+import ImageManager from "../image/image-manager";
 
 interface AddStockFormProps {
   isOpen: boolean;
@@ -198,23 +198,38 @@ const AddStockForm = ({
             </div>
           ))}
         </div>
-        <div className="mb-4">
-          <Label>Select Image</Label>
+        <div className="mb-4 max-w-full">
+          <Label>Image</Label>
           <div
-            className="w-full h-40 flex items-center justify-center border border-gray-300 p-2 rounded-md"
+            className="max-w-sm mx-auto mt-1 h-fit min-h-52 flex items-center justify-center border border-dashed border-gray-300 p-2 rounded-md"
             onClick={() => setIsImageManagerOpen(true)}
           >
-            {selectedImageURL ? (
-              <img
-                src={selectedImageURL}
-                alt="Selected"
-                className="max-h-full object-contain"
-              />
-            ) : (
-              <img src={placeholder} className="max-h-full object-contain" />
-            )}
+            <div className="text-center  w-full h-full ">
+              {selectedImageURL ? (
+                <div className="rounded-md flex justify-center items-center aspect-square">
+                  <img
+                    src={selectedImageURL}
+                    alt="Selected"
+                    className=" object-contain object-center w-full h-auto min-h-40 max-h-fit rounded-md"
+                  />
+                </div>
+              ) : (
+                <ImagePlus className="mx-auto h-12 w-12" />
+              )}
+              <h3 className="mt-2 text-sm font-medium text-gray-900">
+                <label
+                  htmlFor="file-upload"
+                  className="relative cursor-pointer"
+                >
+                  <span>Select</span>
+                  <span className="text-indigo-600"> or add</span>
+                  <span> an image.</span>
+                </label>
+              </h3>
+            </div>
           </div>
         </div>
+
         <DialogFooter>
           <Button
             onClick={handleSubmit}

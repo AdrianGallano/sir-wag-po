@@ -29,7 +29,7 @@ import {
 
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Notebook, ReceiptText } from "lucide-react";
 import placeholder from "@/assets/images/no-order.png";
 import Transaction from "@/models/transaction";
 
@@ -140,7 +140,7 @@ const TransactionTable = ({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {table.getRowModel().rows &&
             table.getRowModel().rows.map((row) => (
               <TableRow
                 onClick={() =>
@@ -155,46 +155,61 @@ const TransactionTable = ({
                   </TableCell>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                <img className="w-10 mx-auto" src={placeholder} alt="" />
-                <span>No Product Found.</span>
-              </TableCell>
-            </TableRow>
-          )}
+            ))}
         </TableBody>
       </Table>
 
-      <div className="bg-white fixed bottom-0  flex items-center  justify-between w-full py-4 z-10">
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
+      {!table.getRowModel().rows.length && (
+        <div>
+          <div className="flex justify-center w-full text-center">
+            <div className="flex items-center justify-center h-full w-full">
+              <div className=" w-full max-w-md mx-auto  ">
+                <div className="flex flex-col items-center">
+                  <ReceiptText className="text-gray-400 text-6xl" />
+                  <h2 className="mt-4 text-xl font-semibold text-gray-700">
+                    No Transaction Found
+                  </h2>
+                  <p className="mt-2 text-center text-gray-500">
+                    It looks like we couldn’t find any transactions here. Start
+                    by adding some new transactions to see them listed here.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+      {table.getRowModel().rows.length > 0 && (
+        <div className="bg-white fixed bottom-0  flex items-center  justify-between min-w-full py-4 z-10">
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </div>
+          <div className="mr-24">
+            <span className="font-medium text-sm">
+              {" "}
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </span>
+          </div>
         </div>
-        <div className="mr-24">
-          <span className="font-medium text-sm">
-            {" "}
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </span>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

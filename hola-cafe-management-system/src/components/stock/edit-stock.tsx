@@ -19,16 +19,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/authContext";
-import ImageManager from "@/components/image-manager";
 import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
 import { Supplier } from "@/models/supplier";
 import { Category } from "@/models/category";
 import { Stock } from "@/models/stock";
-import { toast} from "sonner";
+import { toast } from "sonner";
 import { Toaster } from "../ui/sonner";
-import { CheckCheck, CircleCheck, CircleCheckBig, X } from "lucide-react";
-
+import {
+  CheckCheck,
+  CircleCheck,
+  CircleCheckBig,
+  ImagePlus,
+  X,
+} from "lucide-react";
+import ImageManager from "../image/image-manager";
 
 interface EditStockProps {
   isOpen: boolean;
@@ -63,7 +68,7 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
   const [formData, setFormData] = useState<{ [key: string]: any }>(initialData);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [selectedImageId, setSelectedImageId] = useState<number | undefined>(
-    stock.image?.id
+    Number(stock.image?.id)
   );
   const [selectedImageURL, setSelectedImageURL] = useState<string | undefined>(
     stock.image?.image_url
@@ -135,10 +140,11 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
         console.log("Stock updated:", response);
 
         toast("Successfully update stock!", {
-          duration: 1000, 
-          icon: <CircleCheckBig className="text-green-500"/>,
-           className:"bg-white text-black"
-         });       } else {
+          duration: 1000,
+          icon: <CircleCheckBig className="text-green-500" />,
+          className: "bg-white text-black",
+        });
+      } else {
         console.log("Stock not updated:", response);
       }
     } catch (error) {
@@ -147,10 +153,10 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
         className: "bg-white text-red-500 ",
       });
       toast("Failed to update stock!", {
-         duration: 1000, 
-         icon: <X className="text-red-500"/>,
-          className:"bg-white text-black"
-        }); 
+        duration: 1000,
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-black",
+      });
       console.error("Error updating stock:", error);
     }
 
@@ -245,21 +251,35 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
             </div>
           ))}
         </div>
-        <div className="mb-4">
-          <Label>Select Image</Label>
+        <div className="mb-4 max-w-full">
+          <Label>Image</Label>
           <div
-            className="w-full h-40 flex items-center justify-center border border-gray-300 p-2 rounded-md"
-            onClick={() => setIsImageManagerOpen(true)} // Open ImageManager
+            className="max-w-sm mx-auto mt-1 h-fit min-h-52 flex items-center justify-center border border-dashed border-gray-300 p-2 rounded-md"
+            onClick={() => setIsImageManagerOpen(true)}
           >
-            {selectedImageURL ? (
-              <img
-                src={selectedImageURL}
-                alt="Selected"
-                className="max-h-full object-contain"
-              />
-            ) : (
-              <img src={placeholder} className="max-h-full object-contain" />
-            )}
+            <div className="text-center  w-full h-full ">
+              {selectedImageURL ? (
+                <div className="rounded-md flex justify-center items-center aspect-square">
+                  <img
+                    src={selectedImageURL}
+                    alt="Selected"
+                    className=" object-contain object-center w-full h-auto min-h-40 max-h-fit rounded-md"
+                  />
+                </div>
+              ) : (
+                <ImagePlus className="mx-auto h-12 w-12" />
+              )}
+              <h3 className="mt-2 text-sm font-medium text-gray-900">
+                <label
+                  htmlFor="file-upload"
+                  className="relative cursor-pointer"
+                >
+                  <span>Select</span>
+                  <span className="text-indigo-600"> or add</span>
+                  <span> an image.</span>
+                </label>
+              </h3>
+            </div>
           </div>
         </div>
         <DialogFooter>
@@ -279,8 +299,7 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
         onSelectImage={handleImageSelect}
       />
 
-    <Toaster position="top-right"/>
-
+      <Toaster position="top-right" />
     </Dialog>
   );
 };

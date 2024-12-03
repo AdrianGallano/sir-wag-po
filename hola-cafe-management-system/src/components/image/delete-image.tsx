@@ -3,67 +3,50 @@ import { Button } from "@/components/ui/button";
 import { Supplier } from "@/models/supplier";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import dataFetch from "@/services/data-service";
 import { useAuth } from "@/context/authContext";
 import { CircleCheck, X } from "lucide-react";
 import { toast } from "sonner";
+import { Image } from "@/models/image";
 
-interface DeletePopupProps {
+interface DeleteImageProps {
   isOpen: boolean;
-  supplier: Supplier;
   onClose: () => void;
   onUpdate: () => void;
+  image: Image;
 }
 
-const DeleteSupplier: React.FC<DeletePopupProps> = ({
+const DeleteImage: React.FC<DeleteImageProps> = ({
   isOpen,
-  supplier,
   onClose,
   onUpdate,
+  image,
 }) => {
   const { token } = useAuth();
+  console.log("Image:", image);
+  const handleDeleteImage = async () => {
+    const endpoint = `/api/images/${image.id}/`;
 
-  console.log("supplier", supplier);
+    if (!token) {
+      console.error("Token not found");
+      return;
+    }
 
-  const handleDeleteConfirmation = async () => {
-    if (supplier) {
-      try {
-        const apiUrl = `/api/suppliers/${supplier.id}/`;
-        if (!token) {
-          console.error("Token not found");
-          return;
-        }
-
-        const response = await dataFetch(apiUrl, "DELETE", {}, token);
-        console.log("Supplier deleted", response);
-        if (response) {
-          toast("Supplier successfully deleted", {
-            duration: 2000,
-            icon: <CircleCheck className="fill-green-500 text-white" />,
-            className: "bg-white text-custom-charcoalOlive",
-          });
-          onUpdate();
-        }
-      } catch (error) {
-        toast.error("Failed to delete supplier", {
-          icon: <X className="text-red-500" />,
-          className: "bg-white text-red-500 ",
-        });
-      }
-
+    try {
+      const response = await dataFetch(endpoint, "DELETE", {}, token);
+      console.log("Image deleted:", response);
+      onUpdate();
       onClose();
+    } catch (error) {
+      console.error("Error deleting image:", error);
     }
   };
-
-  console.log("Stock", supplier);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -74,8 +57,7 @@ const DeleteSupplier: React.FC<DeletePopupProps> = ({
           </DialogTitle>
           <DialogDescription className="text-gray-800">
             This action cannot be undone. Are you sure you want to permanently
-            delete <span className="font-semibold">{supplier.name}</span> from
-            our servers?
+            delete this from our servers?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -85,7 +67,7 @@ const DeleteSupplier: React.FC<DeletePopupProps> = ({
           <Button
             className="bg-custom-char hover:bg-custom-charcoalOlive"
             type="submit"
-            onClick={handleDeleteConfirmation}
+            onClick={handleDeleteImage}
           >
             Confirm
           </Button>
@@ -95,4 +77,4 @@ const DeleteSupplier: React.FC<DeletePopupProps> = ({
   );
 };
 
-export default DeleteSupplier;
+export default DeleteImage;

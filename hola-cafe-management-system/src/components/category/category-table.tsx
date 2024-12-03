@@ -27,7 +27,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Tag } from "lucide-react";
 import { Input } from "../ui/input";
 import placeholder from "@/assets/images/no-order.png";
 
@@ -115,15 +115,15 @@ const CategoryTable = ({
         </DropdownMenu>
       </div>
 
-      <Button
+      {/* <Button
         variant="destructive"
         disabled={table.getSelectedRowModel().rows.length === 0}
         onClick={massDeletion}
       >
         Delete Selected
-      </Button>
+      </Button> */}
 
-      <Table>
+      <Table className="mb-14">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -143,7 +143,7 @@ const CategoryTable = ({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {table.getRowModel().rows &&
             table.getRowModel().rows.map((row) => (
               <TableRow
                 onClick={() => setSelectedCategory(row.original as Category)}
@@ -156,46 +156,61 @@ const CategoryTable = ({
                   </TableCell>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                <img className="w-10 mx-auto" src={placeholder} alt="" />
-                <span>No Category Found.</span>
-              </TableCell>
-            </TableRow>
-          )}
+            ))}
         </TableBody>
       </Table>
 
-      <div className="bg-white fixed bottom-0  flex items-center  justify-between min-w-full py-4">
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
+      {!table.getRowModel().rows.length && (
+        <div>
+          <div className="flex justify-center w-full text-center ">
+            <div className="flex items-center justify-center h-full w-full">
+              <div className=" w-full max-w-md mx-auto  ">
+                <div className="flex flex-col items-center">
+                  <Tag className="text-gray-400 text-6xl" />
+                  <h2 className="mt-4 text-xl font-semibold text-gray-700">
+                    No Category Found
+                  </h2>
+                  <p className="mt-2 text-center text-gray-500">
+                    It looks like we couldn’t find any categories here. Start by
+                    adding some new categories to see them listed here.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+      {table.getRowModel().rows.length > 0 && (
+        <div className="bg-white fixed bottom-0  flex items-center  justify-between min-w-full py-4 z-10">
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </div>
+          <div className="mr-24">
+            <span className="font-medium text-sm">
+              {" "}
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </span>
+          </div>
         </div>
-        <div className="mr-24">
-          <span className="font-medium text-sm">
-            {" "}
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </span>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

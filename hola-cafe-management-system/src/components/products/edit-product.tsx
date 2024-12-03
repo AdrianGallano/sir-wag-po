@@ -23,9 +23,9 @@ import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
 import { Category } from "@/models/category";
 import Product from "@/models/product";
-import ImageManager from "../image-manager";
 import { CircleCheck, X } from "lucide-react";
 import { toast } from "sonner";
+import ImageManager from "../image/image-manager";
 
 interface EditProductProps {
   isOpen: boolean;
@@ -62,7 +62,7 @@ const EditProduct = ({
   const [formData, setFormData] = useState<{ [key: string]: any }>(initialData);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [selectedImageId, setSelectedImageId] = useState<number | undefined>(
-    product.image?.id
+    Number(product.image?.id)
   );
   const [selectedImageURL, setSelectedImageURL] = useState<string | undefined>(
     product.image?.image_url

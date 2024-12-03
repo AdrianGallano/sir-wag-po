@@ -29,10 +29,11 @@ import {
 
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { ChevronDown, Search } from "lucide-react";
+import { Box, Boxes, ChevronDown, Inbox, Search } from "lucide-react";
 import { Stock } from "@/models/stock";
 import placeholder from "@/assets/images/no-order.png";
 import StockPreview from "./stock-preview";
+import { Label } from "../ui/label";
 
 interface StockTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -74,12 +75,6 @@ const StockTable = ({
   return (
     <div className="relative">
       <div className="w-full flex items-center justify-between mt-2">
-        <Button
-          onClick={onExport}
-          className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive"
-        >
-          Export Stocks
-        </Button>
         <div className="flex w-full justify-end item-center my-2.5 gap-2">
           <Input
             placeholder="Filter products..."
@@ -116,6 +111,12 @@ const StockTable = ({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
+          <Button
+            onClick={onExport}
+            className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive"
+          >
+            Export Stocks
+          </Button>
         </div>
       </div>
       <Table className="mb-14">
@@ -138,7 +139,7 @@ const StockTable = ({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {table.getRowModel().rows &&
             table.getRowModel().rows.map((row) => (
               <TableRow
                 onClick={() => setSelectedStock(row.original as Stock)}
@@ -152,46 +153,61 @@ const StockTable = ({
                   </TableCell>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                <img className="w-10 mx-auto" src={placeholder} alt="" />
-                <span>No Stock Found.</span>
-              </TableCell>
-            </TableRow>
-          )}
+            ))}
         </TableBody>
       </Table>
 
-      <div className="bg-white fixed bottom-0  flex items-center  justify-between min-w-full py-4 z-10">
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
+      {!table.getRowModel().rows.length && (
+        <div>
+          <div className="flex justify-center w-full text-center">
+            <div className="flex items-center justify-center h-full w-full">
+              <div className=" w-full max-w-md mx-auto  ">
+                <div className="flex flex-col items-center">
+                  <Boxes className="text-gray-400 text-6xl" />
+                  <h2 className="mt-4 text-xl font-semibold text-gray-700">
+                    No Stock Found
+                  </h2>
+                  <p className="mt-2 text-center text-gray-500">
+                    It looks like we couldn’t find any stocks here. Start by
+                    adding some new stocks to see them listed here.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+      {table.getRowModel().rows.length > 0 && (
+        <div className="bg-white fixed bottom-0  flex items-center  justify-between min-w-full py-4 z-10">
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </div>
+          <div className="mr-24">
+            <span className="font-medium text-sm">
+              {" "}
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </span>
+          </div>
         </div>
-        <div className="mr-24">
-          <span className="font-medium text-sm">
-            {" "}
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </span>
-        </div>
-      </div>
+      )}
 
       {selectedStock && (
         <StockPreview
