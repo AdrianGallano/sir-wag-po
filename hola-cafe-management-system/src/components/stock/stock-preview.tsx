@@ -151,11 +151,11 @@
                   <Card className="w-full bg-white border-none">
                     <CardContent>
                       <div className="grid grid-cols-2   gap-2 ">
-                        <div className="border-2 border-gray-500 rounded-lg w-full min-h-72 h-full ">
+                        <div className="border-2 border-gray-500 rounded-lg w-full min-h-80 h-52 ">
                           <img
                             src={stock.image?.image_url}
                             alt={stock.name}
-                            className="h-full w-full object-contain rounded-lg"
+                            className="h-full w-full object-cover rounded-lg"
                           />
                         </div>
                         <div className=" w-full flex flex-col gap-5 justify-start text-wrap">

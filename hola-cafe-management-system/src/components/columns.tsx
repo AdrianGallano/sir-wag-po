@@ -54,17 +54,17 @@ export const stocksColumns = (
   {
     accessorKey: "image",
     header: () => {
-      return <div className="text-center min-w-28">Stock Image</div>;
+      return <div className="text-center min-w-20">Stock Image</div>;
     },
     cell: ({ row }) => {
       const image_obj = row.getValue("image");
       const image = image_obj as Image;
 
       return (
-        <div className="flex justify-center">
+        <div className="flex w-20 h-14 object-cover justify-center">
           <img
             src={image?.image_url || placeholder}
-            className="w-10 object-center rounded-sm"
+            className=" object-center rounded-sm"
           />
         </div>
       );
