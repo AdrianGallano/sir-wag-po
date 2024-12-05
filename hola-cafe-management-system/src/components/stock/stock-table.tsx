@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -29,7 +29,7 @@ import {
 
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Box, Boxes, ChevronDown, Inbox, Search } from "lucide-react";
+import { Box, Boxes, ChevronDown, Inbox, Search, Trash2 } from "lucide-react";
 import { Stock } from "@/models/stock";
 import placeholder from "@/assets/images/no-order.png";
 import StockPreview from "./stock-preview";
@@ -42,6 +42,7 @@ interface StockTableProps<TData, TValue> {
   onDelete: (stock: Stock) => void;
   onExport: () => void;
   oncallback?: () => void;
+  onMassDeletion: (stock: Stock[]) => void;
 }
 
 const StockTable = ({
@@ -49,15 +50,23 @@ const StockTable = ({
   data,
   onExport,
   oncallback,
+  onMassDeletion,
 }: StockTableProps<Stock, any>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -65,12 +74,24 @@ const StockTable = ({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-    },
+    onRowSelectionChange: setRowSelection,
   });
+
+  const massDeletion = () => {
+    const selectedRows = table.getSelectedRowModel().rows; // Only selected rows
+    const selectedStocks = selectedRows.map((row) => row.original);
+    onMassDeletion(selectedStocks);
+  };
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (table.getSelectedRowModel().rows.length > 0) {
+      setIsVisible(true);
+    } else {
+      setTimeout(() => setIsVisible(false), 100);
+    }
+  }, [table.getSelectedRowModel().rows.length]);
 
   return (
     <div className="relative">
@@ -208,6 +229,25 @@ const StockTable = ({
           </div>
         </div>
       )}
+
+      <div
+        className={`fixed bottom-10 left-[40%] w-full border border-gray-700 rounded-xl z-20 flex justify-center items-center max-w-md 
+          ${isVisible && "opacity-100 translate-y-0 animate-fadeinup"}`}
+        style={{
+          visibility: isVisible ? "visible" : "hidden",
+        }}
+      >
+        <div className="flex  items-center w-full justify-around gap-3 p-2">
+          <p>
+            {table.getSelectedRowModel().rows.length}{" "}
+            {table.getSelectedRowModel().rows.length === 1 ? "item" : "items"}{" "}
+            selected
+          </p>
+          <Button variant="destructive" onClick={massDeletion}>
+            <Trash2 className="w-5 h-5" />
+          </Button>
+        </div>
+      </div>
 
       {selectedStock && (
         <StockPreview

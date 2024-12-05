@@ -51,12 +51,35 @@ const TransactionPage = () => {
     }
   };
 
+  const handleMassDelete = async (transactions: Transaction[]) => {
+    try {
+      console.log("Deleting categories", transactions);
+      console.log(token);
+      for (const transaction of transactions) {
+        await dataFetch(
+          `api/transactions/${transaction.id}/`,
+          "DELETE",
+          {},
+          token!
+        );
+      }
+
+      setTransaction((prev) =>
+        prev.filter(
+          (transaction) => !transactions.some((c) => c.id === transaction.id)
+        )
+      );
+    } catch (error) {
+      console.log("Failed to delete transactions", error);
+    }
+  };
+
   const handleDelete = (transaction: Transaction) => {
     setSelectedTransaction(transaction);
     setIsDeletePopupOpen(true);
   };
 
-  const columns = transactionColumns(handleDelete);
+  const columns = transactionColumns(handleDelete, handleMassDelete);
 
   useEffect(() => {
     fetchTransactions();
@@ -78,6 +101,7 @@ const TransactionPage = () => {
           data={transaction}
           onDelete={handleDelete}
           onExport={exportTransaction}
+          onMassDeletion={handleMassDelete}
         />
       </div>
 

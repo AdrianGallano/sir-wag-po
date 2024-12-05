@@ -50,6 +50,7 @@ const CategoryPage = () => {
   const handleMassDelete = async (categories: Category[]) => {
     try {
       console.log("Deleting categories", categories);
+      console.log(token);
       for (const category of categories) {
         await dataFetch(`api/categories/${category.id}/`, "DELETE", {}, token!);
       }

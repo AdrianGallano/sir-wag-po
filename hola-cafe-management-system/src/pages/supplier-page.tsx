@@ -61,6 +61,22 @@ const SupplierPage = () => {
     }
   };
 
+  const handleMassDelete = async (suppliers: Supplier[]) => {
+    try {
+      console.log("Deleting suppliers", suppliers);
+      console.log(token);
+      for (const supplier of suppliers) {
+        await dataFetch(`api/suppliers/${supplier.id}/`, "DELETE", {}, token!);
+      }
+
+      setSuppliers((prev) =>
+        prev.filter((supplier) => !suppliers.some((c) => c.id === supplier.id))
+      );
+    } catch (error) {
+      console.log("Failed to delete suppliers", error);
+    }
+  };
+
   useEffect(() => {
     fetchSuppliers();
   }, []);
@@ -75,7 +91,7 @@ const SupplierPage = () => {
     setIsDeletePopupOpen(true);
   };
 
-  const columns = supplierColumns(handleEdit, handleDelete);
+  const columns = supplierColumns(handleEdit, handleDelete, handleMassDelete);
 
   return (
     <main className="h-screen w-full p-3.5">
@@ -102,6 +118,7 @@ const SupplierPage = () => {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onExport={exportSupplier}
+          onMassDeletion={handleMassDelete}
         />
       </div>
 

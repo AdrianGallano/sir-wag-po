@@ -11,7 +11,7 @@ import {
   getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import {
   Table,
@@ -27,9 +27,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Tag } from "lucide-react";
+import { ChevronDown, Tag, Trash, Trash2 } from "lucide-react";
 import { Input } from "../ui/input";
-import placeholder from "@/assets/images/no-order.png";
 
 interface ProductTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -50,10 +49,17 @@ const CategoryTable = ({
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -61,19 +67,24 @@ const CategoryTable = ({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-    },
+    onRowSelectionChange: setRowSelection,
   });
 
   const massDeletion = () => {
-    const selectedRows = table.getRowModel().rows;
+    const selectedRows = table.getSelectedRowModel().rows; // Only selected rows
     const selectedCategories = selectedRows.map((row) => row.original);
     onMassDeletion(selectedCategories);
-    console.log(selectedCategories);
   };
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (table.getSelectedRowModel().rows.length > 0) {
+      setIsVisible(true);
+    } else {
+      setTimeout(() => setIsVisible(false), 100);
+    }
+  }, [table.getSelectedRowModel().rows.length]);
 
   return (
     <div className="relative">
@@ -114,14 +125,6 @@ const CategoryTable = ({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
-      {/* <Button
-        variant="destructive"
-        disabled={table.getSelectedRowModel().rows.length === 0}
-        onClick={massDeletion}
-      >
-        Delete Selected
-      </Button> */}
 
       <Table className="mb-14">
         <TableHeader>
@@ -211,6 +214,25 @@ const CategoryTable = ({
           </div>
         </div>
       )}
+
+      <div
+        className={`fixed bottom-10 left-[40%] w-full border border-gray-700 rounded-xl z-20 flex justify-center items-center max-w-md 
+          ${isVisible && "opacity-100 translate-y-0 animate-fadeinup"}`}
+        style={{
+          visibility: isVisible ? "visible" : "hidden",
+        }}
+      >
+        <div className="flex  items-center w-full justify-around gap-3 p-2">
+          <p>
+            {table.getSelectedRowModel().rows.length}{" "}
+            {table.getSelectedRowModel().rows.length === 1 ? "item" : "items"}{" "}
+            selected
+          </p>
+          <Button variant="destructive" onClick={massDeletion}>
+            <Trash2 className="w-5 h-5" />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
