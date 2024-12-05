@@ -44,14 +44,11 @@ const DeleteSupplier: React.FC<DeletePopupProps> = ({
 
         const response = await dataFetch(apiUrl, "DELETE", {}, token);
         console.log("Supplier deleted", response);
-        if (response) {
-          toast("Supplier successfully deleted", {
-            duration: 2000,
-            icon: <CircleCheck className="fill-green-500 text-white" />,
-            className: "bg-white text-custom-charcoalOlive",
-          });
-          onUpdate();
-        }
+        toast.success("Supplier successfully deleted", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+        });
+        onUpdate();
       } catch (error) {
         toast.error("Failed to delete supplier", {
           icon: <X className="text-red-500" />,

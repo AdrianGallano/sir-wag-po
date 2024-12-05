@@ -109,16 +109,15 @@ const AddProductForm = ({
     };
 
     try {
-      console.log("Final Data:", finalData);
       if (!token) throw new Error("Token not found");
-
       const endpoint = "/api/products/";
+
       const response = await dataFetch(endpoint, "POST", finalData, token);
-      if (response) {
+      console.log("Product added", response);
+      if (response != null) {
         toast("Product successfully added", {
           duration: 2000,
           icon: <CircleCheck className="fill-green-500 text-white" />,
-          className: "bg-white text-custom-charcoalOlive",
         });
         onUpdate();
       }

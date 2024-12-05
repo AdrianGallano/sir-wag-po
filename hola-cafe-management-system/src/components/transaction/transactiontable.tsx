@@ -32,6 +32,7 @@ import { Button } from "../ui/button";
 import { ChevronDown, Notebook, ReceiptText } from "lucide-react";
 import placeholder from "@/assets/images/no-order.png";
 import Transaction from "@/models/transaction";
+import TransactionPreview from "./transaction-preview";
 
 interface TransactionTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -209,6 +210,14 @@ const TransactionTable = ({
             </span>
           </div>
         </div>
+      )}
+
+      {selectedTransaction && (
+        <TransactionPreview
+          isOpen={!!selectedTransaction}
+          onClose={() => setSelectedTransaction(null)}
+          transaction={selectedTransaction}
+        />
       )}
     </div>
   );
