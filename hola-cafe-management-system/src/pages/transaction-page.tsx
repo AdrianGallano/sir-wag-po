@@ -6,7 +6,7 @@ import { useAuth } from "@/context/authContext";
 import Transaction from "@/models/transaction";
 import dataFetch from "@/services/data-service";
 import { useEffect, useState } from "react";
-import { Toaster } from "sonner";
+import { toast, Toaster } from "sonner";
 
 const TransactionPage = () => {
   const { token } = useAuth();
@@ -53,8 +53,6 @@ const TransactionPage = () => {
 
   const handleMassDelete = async (transactions: Transaction[]) => {
     try {
-      console.log("Deleting categories", transactions);
-      console.log(token);
       for (const transaction of transactions) {
         await dataFetch(
           `api/transactions/${transaction.id}/`,
@@ -69,8 +67,9 @@ const TransactionPage = () => {
           (transaction) => !transactions.some((c) => c.id === transaction.id)
         )
       );
+      toast.success("Transactions deleted successfully");
     } catch (error) {
-      console.log("Failed to delete transactions", error);
+      toast.error("Failed to delete transactions");
     }
   };
 

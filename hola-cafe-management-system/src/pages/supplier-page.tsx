@@ -63,8 +63,6 @@ const SupplierPage = () => {
 
   const handleMassDelete = async (suppliers: Supplier[]) => {
     try {
-      console.log("Deleting suppliers", suppliers);
-      console.log(token);
       for (const supplier of suppliers) {
         await dataFetch(`api/suppliers/${supplier.id}/`, "DELETE", {}, token!);
       }
@@ -72,8 +70,9 @@ const SupplierPage = () => {
       setSuppliers((prev) =>
         prev.filter((supplier) => !suppliers.some((c) => c.id === supplier.id))
       );
+      toast.success("Suppliers deleted successfully");
     } catch (error) {
-      console.log("Failed to delete suppliers", error);
+      toast.error("Failed to delete suppliers");
     }
   };
 

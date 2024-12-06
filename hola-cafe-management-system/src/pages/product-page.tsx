@@ -11,6 +11,7 @@ import Product from "@/models/product";
 import dataFetch from "@/services/data-service";
 import { PackagePlus } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const ProductPage = () => {
   const { token } = useAuth();
@@ -72,8 +73,6 @@ const ProductPage = () => {
 
   const handleMassDelete = async (products: Product[]) => {
     try {
-      console.log("Deleting products", products);
-      console.log(token);
       for (const product of products) {
         await dataFetch(`api/products/${product.id}/`, "DELETE", {}, token!);
       }
@@ -81,8 +80,9 @@ const ProductPage = () => {
       setProducts((prev) =>
         prev.filter((product) => !products.some((c) => c.id === product.id))
       );
+      toast.success("Products deleted successfully");
     } catch (error) {
-      console.log("Failed to delete products", error);
+      toast.error("Failed to delete products");
     }
   };
 

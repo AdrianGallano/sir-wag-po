@@ -53,6 +53,7 @@ const TransactionTable = ({
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
   const [rowSelection, setRowSelection] = useState({});
+  const [isVisible, setIsVisible] = useState(false);
 
   const table = useReactTable({
     data,
@@ -77,9 +78,13 @@ const TransactionTable = ({
     const selectedRows = table.getSelectedRowModel().rows; // Only selected rows
     const selectedTransactions = selectedRows.map((row) => row.original);
     onMassDeletion(selectedTransactions);
+
+    setRowSelection({});
   };
 
-  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    setRowSelection({});
+  }, [data]);
 
   useEffect(() => {
     if (table.getSelectedRowModel().rows.length > 0) {
@@ -88,6 +93,7 @@ const TransactionTable = ({
       setTimeout(() => setIsVisible(false), 100);
     }
   }, [table.getSelectedRowModel().rows.length]);
+
   return (
     <div className="relative">
       <div className="w-full flex justify-between items-center mt-2 ">
