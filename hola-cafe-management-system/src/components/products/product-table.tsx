@@ -130,13 +130,15 @@ const ProductTable = ({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button
-            onClick={onExport}
-            className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive rounded-full"
-          >
-            <Download className="w-5 h-5" />
-            <span className="sr-only">Export Products</span>
-          </Button>
+          {table.getRowModel().rows.length != 0 && (
+            <Button
+              onClick={onExport}
+              className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive rounded-full"
+            >
+              <Download className="w-5 h-5" />
+              <span className="sr-only">Export Products</span>
+            </Button>
+          )}
         </div>
       </div>
 

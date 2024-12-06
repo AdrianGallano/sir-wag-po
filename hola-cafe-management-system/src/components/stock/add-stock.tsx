@@ -38,7 +38,7 @@ interface AddStockFormProps {
 const AddStockForm = ({
   isOpen,
   onClose,
-  supplier,
+  supplier = [],
   onChanges,
 }: AddStockFormProps) => {
   const { token, id } = useAuth();
@@ -94,7 +94,7 @@ const AddStockForm = ({
       }
     };
 
-  const handleSubmit = async () => {
+  const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
     fields.forEach((field) => {
       const value = formData[field.key];
@@ -105,47 +105,45 @@ const AddStockForm = ({
         newErrors[field.key] = `${field.label} is required`;
       }
     });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
 
-    if (id !== null) {
+    try {
+      if (!token) throw new Error("Token not found");
+
       const finalData = {
         ...formData,
-        category: formData.category || undefined,
         supplier: formData.supplier || undefined,
         image: selectedImageId || undefined,
         expiration_date: formData.expiration_date || null,
+        is_stocked_by: id,
       };
 
-      try {
-        if (!token) throw new Error("Token not found");
-
-        const endpoint = "/api/stocks/";
-        const response = await dataFetch(endpoint, "POST", finalData, token);
-        if (response) {
-          onChanges();
-          toast("Stock successfully added", {
-            duration: 2000,
-            icon: <CircleCheck className="fill-green-500 text-white" />,
-            className: "bg-white text-custom-charcoalOlive",
-          });
-        }
-      } catch (error) {
-        toast.error("Failed to add stock", {
-          icon: <X className="text-red-500" />,
-          className: "bg-white text-red-500 ",
+      const endpoint = "/api/stocks/";
+      const response = await dataFetch(endpoint, "POST", finalData, token);
+      if (response) {
+        onChanges();
+        toast("Stock successfully added", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
         });
+        onClose();
       }
-
-      onClose();
+    } catch (error) {
+      toast.error("Failed to add stock", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
     }
   };
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add Stock</DialogTitle>

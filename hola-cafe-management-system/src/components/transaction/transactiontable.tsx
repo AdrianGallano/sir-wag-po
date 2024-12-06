@@ -144,13 +144,15 @@ const TransactionTable = ({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button
-            onClick={onExport}
-            className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive rounded-full"
-          >
-            <Download className="w-5 h-5" />
-            <span className="sr-only">Export Transactions</span>
-          </Button>
+          {table.getRowModel().rows.length != 0 && (
+            <Button
+              onClick={onExport}
+              className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive rounded-full"
+            >
+              <Download className="w-5 h-5" />
+              <span className="sr-only">Export Transactions</span>
+            </Button>
+          )}
         </div>
       </div>
       <Table className="mb-14">
