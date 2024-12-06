@@ -27,7 +27,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Package, Trash2 } from "lucide-react";
+import { ChevronDown, Download, Package, Trash2 } from "lucide-react";
 import { Input } from "../ui/input";
 import placeholder from "@/assets/images/no-order.png";
 
@@ -94,12 +94,6 @@ const ProductTable = ({
   return (
     <div className="relative">
       <div className="w-full flex mt-2 items-center justify-between">
-        <Button
-          onClick={onExport}
-          className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive"
-        >
-          Export Products
-        </Button>
         <div className="flex w-full justify-end item-center my-2.5 gap-2">
           <Input
             placeholder="Filter products..."
@@ -136,6 +130,13 @@ const ProductTable = ({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
+          <Button
+            onClick={onExport}
+            className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive rounded-full"
+          >
+            <Download className="w-5 h-5" />
+            <span className="sr-only">Export Products</span>
+          </Button>
         </div>
       </div>
 

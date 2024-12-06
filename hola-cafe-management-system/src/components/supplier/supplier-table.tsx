@@ -29,7 +29,7 @@ import {
 
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { ChevronDown, Trash2, Truck } from "lucide-react";
+import { ChevronDown, Download, Trash2, Truck } from "lucide-react";
 import { Supplier } from "@/models/supplier";
 
 interface SupplierTableProps<TData extends Supplier, TValue> {
@@ -94,12 +94,6 @@ const SupplierTable = <TData extends Supplier, TValue>({
   return (
     <div className="relative">
       <div className="flex w-full justify-between items-center mt-2">
-        <Button
-          onClick={onExport}
-          className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive"
-        >
-          Export Suppliers
-        </Button>
         <div className="flex w-full justify-end item-center my-2.5 gap-2">
           <Input
             placeholder="Filter supplier..."
@@ -136,6 +130,13 @@ const SupplierTable = <TData extends Supplier, TValue>({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
+          <Button
+            onClick={onExport}
+            className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive rounded-full"
+          >
+            <Download className="w-5 h-5" />
+            <span className="sr-only">Export Suppliers</span>
+          </Button>
         </div>
       </div>
 

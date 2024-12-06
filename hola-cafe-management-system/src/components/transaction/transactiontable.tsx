@@ -29,7 +29,13 @@ import {
 
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { ChevronDown, Notebook, ReceiptText, Trash2 } from "lucide-react";
+import {
+  ChevronDown,
+  Download,
+  Notebook,
+  ReceiptText,
+  Trash2,
+} from "lucide-react";
 import Transaction from "@/models/transaction";
 import TransactionPreview from "./transaction-preview";
 
@@ -97,12 +103,6 @@ const TransactionTable = ({
   return (
     <div className="relative">
       <div className="w-full flex justify-between items-center mt-2 ">
-        <Button
-          onClick={onExport}
-          className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive"
-        >
-          Export Transactions
-        </Button>
         <div className="flex w-full justify-end item-center my-2.5 gap-2">
           <Input
             placeholder="Search by service crew"
@@ -144,6 +144,13 @@ const TransactionTable = ({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
+          <Button
+            onClick={onExport}
+            className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive rounded-full"
+          >
+            <Download className="w-5 h-5" />
+            <span className="sr-only">Export Transactions</span>
+          </Button>
         </div>
       </div>
       <Table className="mb-14">
@@ -174,6 +181,7 @@ const TransactionTable = ({
                 }
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                className="cursor-pointer"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
