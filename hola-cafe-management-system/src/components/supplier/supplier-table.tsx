@@ -51,6 +51,7 @@ const SupplierTable = <TData extends Supplier, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [isVisible, setIsVisible] = useState(false);
 
   const table = useReactTable({
     data,
@@ -75,9 +76,12 @@ const SupplierTable = <TData extends Supplier, TValue>({
     const selectedRows = table.getSelectedRowModel().rows; // Only selected rows
     const selectedSuppliers = selectedRows.map((row) => row.original);
     onMassDeletion(selectedSuppliers);
+    setRowSelection({});
   };
 
-  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    setRowSelection({});
+  }, [data]);
 
   useEffect(() => {
     if (table.getSelectedRowModel().rows.length > 0) {

@@ -6,7 +6,7 @@ import { Category } from "@/models/category";
 import dataFetch from "@/services/data-service";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Toaster } from "sonner";
+import { toast, Toaster } from "sonner";
 import CategoryTable from "@/components/category/category-table";
 import AddCategoryForm from "@/components/category/add-category";
 import EditCategory from "@/components/category/edit-category";
@@ -49,8 +49,6 @@ const CategoryPage = () => {
 
   const handleMassDelete = async (categories: Category[]) => {
     try {
-      console.log("Deleting categories", categories);
-      console.log(token);
       for (const category of categories) {
         await dataFetch(`api/categories/${category.id}/`, "DELETE", {}, token!);
       }
@@ -58,8 +56,9 @@ const CategoryPage = () => {
       setCategories((prev) =>
         prev.filter((category) => !categories.some((c) => c.id === category.id))
       );
+      toast.success("Categories deleted successfully");
     } catch (error) {
-      console.log("Failed to delete categories", error);
+      toast.error("Failed to delete categories");
     }
   };
 

@@ -19,7 +19,6 @@ import ServiceCrew from "@/models/service_crew";
 const InventoryPage = () => {
   const { token } = useAuth();
   const [stock, setStock] = useState<Stock[]>([]);
-  const [serviceCrew, setServiceCrew] = useState<ServiceCrew[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
   const [isStockPopupOpen, setIsStockPopupOpen] = useState<boolean>(false);
@@ -88,8 +87,9 @@ const InventoryPage = () => {
       setStock((prev) =>
         prev.filter((stock) => !stocks.some((c) => c.id === stock.id))
       );
+      toast.success("Stocks deleted successfully");
     } catch (error) {
-      console.log("Failed to delete stocks", error);
+      toast.error("Failed to delete stocks");
     }
   };
 

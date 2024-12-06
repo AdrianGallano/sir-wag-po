@@ -51,6 +51,7 @@ const ProductTable = ({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [rowSelection, setRowSelection] = useState({});
+  const [isVisible, setIsVisible] = useState(false);
 
   const table = useReactTable({
     data,
@@ -75,9 +76,12 @@ const ProductTable = ({
     const selectedRows = table.getSelectedRowModel().rows;
     const selectedProducts = selectedRows.map((row) => row.original);
     onMassDeletion(selectedProducts);
+    setRowSelection({});
   };
 
-  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    setRowSelection({});
+  }, [data]);
 
   useEffect(() => {
     if (table.getSelectedRowModel().rows.length > 0) {

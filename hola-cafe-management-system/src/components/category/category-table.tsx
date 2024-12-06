@@ -50,6 +50,7 @@ const CategoryTable = ({
     null
   );
   const [rowSelection, setRowSelection] = useState({});
+  const [isVisible, setIsVisible] = useState(false);
 
   const table = useReactTable({
     data,
@@ -74,9 +75,12 @@ const CategoryTable = ({
     const selectedRows = table.getSelectedRowModel().rows; // Only selected rows
     const selectedCategories = selectedRows.map((row) => row.original);
     onMassDeletion(selectedCategories);
+    setRowSelection({});
   };
 
-  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    setRowSelection({});
+  }, [data]);
 
   useEffect(() => {
     if (table.getSelectedRowModel().rows.length > 0) {
