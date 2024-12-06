@@ -29,7 +29,15 @@ import {
 
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Box, Boxes, ChevronDown, Inbox, Search, Trash2 } from "lucide-react";
+import {
+  Box,
+  Boxes,
+  ChevronDown,
+  Download,
+  Inbox,
+  Search,
+  Trash2,
+} from "lucide-react";
 import { Stock } from "@/models/stock";
 import placeholder from "@/assets/images/no-order.png";
 import StockPreview from "./stock-preview";
@@ -138,9 +146,10 @@ const StockTable = ({
           </DropdownMenu>
           <Button
             onClick={onExport}
-            className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive"
+            className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive rounded-full"
           >
-            Export Stocks
+            <Download className="w-5 h-5" />
+            <span className="sr-only">Export Stocks</span>
           </Button>
         </div>
       </div>
