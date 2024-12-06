@@ -70,6 +70,22 @@ const ProductPage = () => {
     }
   };
 
+  const handleMassDelete = async (products: Product[]) => {
+    try {
+      console.log("Deleting products", products);
+      console.log(token);
+      for (const product of products) {
+        await dataFetch(`api/products/${product.id}/`, "DELETE", {}, token!);
+      }
+
+      setProducts((prev) =>
+        prev.filter((product) => !products.some((c) => c.id === product.id))
+      );
+    } catch (error) {
+      console.log("Failed to delete products", error);
+    }
+  };
+
   const handleEdit = (product: Product) => {
     setSelectedProduct(product);
     setIsEditPopupOpen(true);
@@ -80,7 +96,7 @@ const ProductPage = () => {
     setIsDeletePopupOpen(true);
   };
 
-  const columns = productColumns(handleEdit, handleDelete);
+  const columns = productColumns(handleEdit, handleDelete, handleMassDelete);
 
   const onUpdate = () => {
     fetchProducts();
@@ -117,6 +133,7 @@ const ProductPage = () => {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onExport={exportProducts}
+          onMassDeletion={handleMassDelete}
         />
       </div>
       {isAddProductOpen && (

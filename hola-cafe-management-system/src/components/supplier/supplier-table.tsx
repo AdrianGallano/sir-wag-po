@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -21,15 +21,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -38,31 +29,38 @@ import {
 
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { ChevronDown, Truck } from "lucide-react";
-import { Stock } from "@/models/stock";
+import { ChevronDown, Trash2, Truck } from "lucide-react";
 import { Supplier } from "@/models/supplier";
-import placeholder from "@/assets/images/man.png";
 
-interface SupplierTableProps<TData, TValue> {
+interface SupplierTableProps<TData extends Supplier, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   onEdit: (supplier: Supplier) => void;
   onDelete: (supplier: Supplier) => void;
   onExport: () => void;
+  onMassDeletion: (supplier: Supplier[]) => void;
 }
 
-const SupplierTable = <TData, TValue>({
+const SupplierTable = <TData extends Supplier, TValue>({
   columns,
   data,
   onExport,
+  onMassDeletion,
 }: SupplierTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -70,12 +68,24 @@ const SupplierTable = <TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-    },
+    onRowSelectionChange: setRowSelection,
   });
+
+  const massDeletion = () => {
+    const selectedRows = table.getSelectedRowModel().rows; // Only selected rows
+    const selectedSuppliers = selectedRows.map((row) => row.original);
+    onMassDeletion(selectedSuppliers);
+  };
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (table.getSelectedRowModel().rows.length > 0) {
+      setIsVisible(true);
+    } else {
+      setTimeout(() => setIsVisible(false), 100);
+    }
+  }, [table.getSelectedRowModel().rows.length]);
 
   return (
     <div className="relative">
@@ -212,6 +222,25 @@ const SupplierTable = <TData, TValue>({
           </div>
         </div>
       )}
+
+      <div
+        className={`fixed bottom-10 left-[40%] w-full border border-gray-700 rounded-xl z-20 flex justify-center items-center max-w-md 
+          ${isVisible && "opacity-100 translate-y-0 animate-fadeinup"}`}
+        style={{
+          visibility: isVisible ? "visible" : "hidden",
+        }}
+      >
+        <div className="flex  items-center w-full justify-around gap-3 p-2">
+          <p>
+            {table.getSelectedRowModel().rows.length}{" "}
+            {table.getSelectedRowModel().rows.length === 1 ? "item" : "items"}{" "}
+            selected
+          </p>
+          <Button variant="destructive" onClick={massDeletion}>
+            <Trash2 className="w-5 h-5" />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

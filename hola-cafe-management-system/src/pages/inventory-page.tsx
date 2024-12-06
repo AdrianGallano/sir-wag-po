@@ -77,6 +77,22 @@ const InventoryPage = () => {
     }
   };
 
+  const handleMassDelete = async (stocks: Stock[]) => {
+    try {
+      console.log("Deleting stocks", stocks);
+      console.log(token);
+      for (const stock of stocks) {
+        await dataFetch(`api/stocks/${stock.id}/`, "DELETE", {}, token!);
+      }
+
+      setStock((prev) =>
+        prev.filter((stock) => !stocks.some((c) => c.id === stock.id))
+      );
+    } catch (error) {
+      console.log("Failed to delete stocks", error);
+    }
+  };
+
   const onUpdate = () => {
     fetchStocks();
   };
@@ -96,7 +112,7 @@ const InventoryPage = () => {
     setIsDeletePopupOpen(true);
   };
 
-  const columns = stocksColumns(handleEdit, handleDelete);
+  const columns = stocksColumns(handleEdit, handleDelete, handleMassDelete);
 
   return (
     <main className="h-screen w-full p-3.5">
@@ -124,6 +140,7 @@ const InventoryPage = () => {
           onDelete={handleDelete}
           onExport={exportStocks}
           oncallback={fetchStocks}
+          onMassDeletion={handleMassDelete}
         />
       </div>
 

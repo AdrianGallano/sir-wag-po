@@ -11,7 +11,7 @@ import {
   getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import {
   Table,
@@ -27,7 +27,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Package } from "lucide-react";
+import { ChevronDown, Package, Trash2 } from "lucide-react";
 import { Input } from "../ui/input";
 import placeholder from "@/assets/images/no-order.png";
 
@@ -37,21 +37,30 @@ interface ProductTableProps<TData, TValue> {
   onEdit: (product: Product) => void;
   onDelete: (product: Product) => void;
   onExport: () => void;
+  onMassDeletion: (product: Product[]) => void;
 }
 
 const ProductTable = ({
   columns,
   data,
   onExport,
+  onMassDeletion,
 }: ProductTableProps<Product, any>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -59,12 +68,24 @@ const ProductTable = ({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-    },
+    onRowSelectionChange: setRowSelection,
   });
+
+  const massDeletion = () => {
+    const selectedRows = table.getSelectedRowModel().rows;
+    const selectedProducts = selectedRows.map((row) => row.original);
+    onMassDeletion(selectedProducts);
+  };
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (table.getSelectedRowModel().rows.length > 0) {
+      setIsVisible(true);
+    } else {
+      setTimeout(() => setIsVisible(false), 100);
+    }
+  }, [table.getSelectedRowModel().rows.length]);
 
   return (
     <div className="relative">
@@ -202,6 +223,25 @@ const ProductTable = ({
           </div>
         </div>
       )}
+
+      <div
+        className={`fixed bottom-10 left-[40%] w-full border border-gray-700 rounded-xl z-20 flex justify-center items-center max-w-md 
+          ${isVisible && "opacity-100 translate-y-0 animate-fadeinup"}`}
+        style={{
+          visibility: isVisible ? "visible" : "hidden",
+        }}
+      >
+        <div className="flex  items-center w-full justify-around gap-3 p-2">
+          <p>
+            {table.getSelectedRowModel().rows.length}{" "}
+            {table.getSelectedRowModel().rows.length === 1 ? "item" : "items"}{" "}
+            selected
+          </p>
+          <Button variant="destructive" onClick={massDeletion}>
+            <Trash2 className="w-5 h-5" />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

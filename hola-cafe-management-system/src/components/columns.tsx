@@ -26,15 +26,19 @@ import ServiceCrew from "@/models/service_crew";
 
 export const stocksColumns = (
   onEdit: (stock: Stock) => void,
-  onDelete: (stock: Stock) => void
+  onDelete: (stock: Stock) => void,
+  massDelete: (stock: Stock[]) => void
 ): ColumnDef<Stock>[] => [
   {
     id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected()
+            ? true
+            : table.getIsSomePageRowsSelected()
+            ? "indeterminate"
+            : false
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -315,15 +319,19 @@ export const stocksColumns = (
 
 export const supplierColumns = (
   onEdit: (supplier: Supplier) => void,
-  onDelete: (supplier: Supplier) => void
+  onDelete: (supplier: Supplier) => void,
+  massDelete: (supplier: Supplier[]) => void
 ): ColumnDef<Supplier>[] => [
   {
     id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected()
+            ? true
+            : table.getIsSomePageRowsSelected()
+            ? "indeterminate"
+            : false
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -419,15 +427,19 @@ export const supplierColumns = (
 
 export const productColumns = (
   onEdit: (prodoct: Product) => void,
-  onDelete: (product: Product) => void
+  onDelete: (product: Product) => void,
+  massDelete: (product: Product[]) => void
 ): ColumnDef<Product>[] => [
   {
     id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected()
+            ? true
+            : table.getIsSomePageRowsSelected()
+            ? "indeterminate"
+            : false
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -594,15 +606,19 @@ export const productColumns = (
 ];
 
 export const transactionColumns = (
-  onDelete: (transaction: Transaction) => void
+  onDelete: (transaction: Transaction) => void,
+  massDelete: (transaction: Transaction[]) => void
 ): ColumnDef<Transaction>[] => [
   {
     id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected()
+            ? true
+            : table.getIsSomePageRowsSelected()
+            ? "indeterminate"
+            : false
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -746,8 +762,11 @@ export const categoryColumns = (
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected()
+            ? true
+            : table.getIsSomePageRowsSelected()
+            ? "indeterminate"
+            : false
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"

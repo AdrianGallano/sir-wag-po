@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -29,8 +29,7 @@ import {
 
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { ChevronDown, Notebook, ReceiptText } from "lucide-react";
-import placeholder from "@/assets/images/no-order.png";
+import { ChevronDown, Notebook, ReceiptText, Trash2 } from "lucide-react";
 import Transaction from "@/models/transaction";
 import TransactionPreview from "./transaction-preview";
 
@@ -39,22 +38,31 @@ interface TransactionTableProps<TData, TValue> {
   data: TData[];
   onDelete: (transaction: Transaction) => void;
   onExport: () => void;
+  onMassDeletion: (transaction: Transaction[]) => void;
 }
 
 const TransactionTable = ({
   columns,
   data,
   onExport,
+  onMassDeletion,
 }: TransactionTableProps<Transaction, any>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -62,13 +70,24 @@ const TransactionTable = ({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-    },
+    onRowSelectionChange: setRowSelection,
   });
 
+  const massDeletion = () => {
+    const selectedRows = table.getSelectedRowModel().rows; // Only selected rows
+    const selectedTransactions = selectedRows.map((row) => row.original);
+    onMassDeletion(selectedTransactions);
+  };
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (table.getSelectedRowModel().rows.length > 0) {
+      setIsVisible(true);
+    } else {
+      setTimeout(() => setIsVisible(false), 100);
+    }
+  }, [table.getSelectedRowModel().rows.length]);
   return (
     <div className="relative">
       <div className="w-full flex justify-between items-center mt-2 ">
@@ -211,6 +230,25 @@ const TransactionTable = ({
           </div>
         </div>
       )}
+
+      <div
+        className={`fixed bottom-10 left-[40%] w-full border border-gray-700 rounded-xl z-20 flex justify-center items-center max-w-md 
+          ${isVisible && "opacity-100 translate-y-0 animate-fadeinup"}`}
+        style={{
+          visibility: isVisible ? "visible" : "hidden",
+        }}
+      >
+        <div className="flex  items-center w-full justify-around gap-3 p-2">
+          <p>
+            {table.getSelectedRowModel().rows.length}{" "}
+            {table.getSelectedRowModel().rows.length === 1 ? "item" : "items"}{" "}
+            selected
+          </p>
+          <Button variant="destructive" onClick={massDeletion}>
+            <Trash2 className="w-5 h-5" />
+          </Button>
+        </div>
+      </div>
 
       {selectedTransaction && (
         <TransactionPreview
