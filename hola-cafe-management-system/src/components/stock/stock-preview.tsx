@@ -24,6 +24,7 @@
   import { Info } from "lucide-react";
   import dataFetch from "@/services/data-service";
   import { useAuth } from "@/context/authContext";
+  import PlaceHolder from "../../assets/images/hola_logo.jpg"
 
   interface StockPreviewProps {
     isOpen: boolean;
@@ -46,7 +47,6 @@
     const [quantity, setQuantity] = useState(1); // Start with 1 as default quantity
     const { token } = useAuth();
     const [updatedStocks, setUpdatedStocks] = useState<Stock[]>(stocks);
-
 
     const handleQuantityChange = (change: number) => {
       setQuantity((prev) => Math.max(1, prev + change)); // Ensure quantity is at least 1
@@ -113,13 +113,11 @@
     
 
     const getStockStatus = (quantity: number): string => {
-      const maxQuantity = maxQuantityRef.current;
-      const lowStockThreshold = maxQuantity / 4;
-
-      if (quantity <= 0) return "Out of Stock";
-      if (quantity > 0 && quantity <= lowStockThreshold) return "Low Stock";
+      if (quantity === 0) return "Out of Stock";
+      if (quantity <= 50) return "Low Stock";
       return "In Stock";
     };
+    
 
     if (!isOpen || stocks.length === 0) return null;
 
@@ -153,7 +151,7 @@
                       <div className="grid grid-cols-2   gap-2 ">
                         <div className="border-2 border-gray-500 rounded-lg w-full min-h-80 h-52 ">
                           <img
-                            src={stock.image?.image_url}
+                            src={stock.image?.image_url || PlaceHolder}
                             alt={stock.name}
                             className="h-full w-full object-cover rounded-lg"
                           />
@@ -229,20 +227,25 @@
                         </div>
                       </div>
 
-                      <div className="w-full flex items-center gap-1.5    mt-3">
-                        <span className="bg-green-500 w-1/4   block h-5 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full"></span>
-                        <div className="w-full">
-                          <p className="underline text-wrap text-xl">
-                            We have {Number(stock.quantity).toFixed(2)} stocks left
+                      <div className="w-full flex items-center gap-1.5 mt-3">
+                        <span
+                          className={`block h-5 w-24 rounded-full ${
+                            getStockStatus(Number(stock.quantity)) === "Out of Stock"
+                              ? "bg-red-500"
+                              : getStockStatus(Number(stock.quantity)) === "Low Stock"
+                              ? "bg-yellow-500"
+                              : "bg-green-500"
+                          }`}
+                        ></span>
+                        <div className="flex flex-col">
+                          <p className="text-xl font-semibold">
+                            {`We have ${Number(stock.quantity).toFixed(2)} stocks left`}
                           </p>
-
                           <span
-                            className={`text-sm ${
-                              getStockStatus(Number(stock.quantity)) ===
-                              "Out of Stock"
+                            className={`text-sm font-medium ${
+                              getStockStatus(Number(stock.quantity)) === "Out of Stock"
                                 ? "text-red-500"
-                                : getStockStatus(Number(stock.quantity)) ===
-                                  "Low Stock"
+                                : getStockStatus(Number(stock.quantity)) === "Low Stock"
                                 ? "text-yellow-500"
                                 : "text-green-500"
                             }`}
@@ -251,6 +254,7 @@
                           </span>
                         </div>
                       </div>
+
                     </CardContent>
                   </Card>
                 </CarouselItem>
