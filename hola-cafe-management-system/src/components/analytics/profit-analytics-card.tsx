@@ -33,7 +33,7 @@ const chartConfig = {
 
 } satisfies ChartConfig
 
-const ProfitAnalyticsCard = () => {
+const ProfitAnalyticsCard = ({ date_range }: { date_range: string }) => {
     /* Show the profit in a analytic card */
 
     return (
@@ -46,7 +46,7 @@ const ProfitAnalyticsCard = () => {
                 <CardHeader className="py-0">
                     <div className="flex items-center gap-3">
                         <CardTitle className="sr-only">Profit</CardTitle>
-                        <CardDescription>monthly profit</CardDescription>
+                        <CardDescription>{date_range} profit</CardDescription>
                     </div>
                 </CardHeader>
                 <CardContent className="text-xl font-semibold py-0">₱50,120.50

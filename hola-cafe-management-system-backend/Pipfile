@@ -16,6 +16,7 @@ djangorestframework-simplejwt = "*"
 setuptools = "*"
 pillow = "*"
 drf-excel = "*"
+python-dateutil = "*"
 
 [dev-packages]
 

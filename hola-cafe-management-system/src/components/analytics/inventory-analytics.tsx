@@ -5,16 +5,17 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 
-import { ShoppingBasket } from "lucide-react"
+import { ShoppingBasket } from "lucide-react";
 import {
     ChartConfig,
     ChartContainer,
     ChartTooltip,
     ChartTooltipContent,
-} from "@/components/ui/chart"
-import { Line, LineChart } from "recharts"
+} from "@/components/ui/chart";
+import { Line, LineChart } from "recharts";
+import { useEffect } from "react";
 
 const stockData = [
     { month: "January", stock: 305 },
@@ -23,18 +24,18 @@ const stockData = [
     { month: "April", stock: 209 },
     { month: "May", stock: 120 },
     { month: "June", stock: 100 },
-]
+];
 
 const chartConfig = {
     stock: {
         label: "Stock",
-
     },
+} satisfies ChartConfig;
 
-} satisfies ChartConfig
+const StockAnalyticsCard = ({ date_range }: { date_range: string }) => {
 
-const StockAnalyticsCard = () => {
-    /* Show the stock in a analytic card */
+    
+    /* Show the stock in a analytic card */    
 
     return (
         <Card className="flex items-center p-4 red">
@@ -46,18 +47,16 @@ const StockAnalyticsCard = () => {
                 <CardHeader className="py-0">
                     <div className="flex items-center gap-3">
                         <CardTitle className="sr-only">Stock</CardTitle>
-                        <CardDescription>monthly stock</CardDescription>
+                        <CardDescription>{date_range} stock</CardDescription>
                     </div>
                 </CardHeader>
-                <CardContent className="text-xl font-semibold py-0">100 avg
+                <CardContent className="text-xl font-semibold py-0">
+                    100 avg
                 </CardContent>
             </div>
             <div className="h-16 w-24 flex">
                 <ChartContainer config={chartConfig}>
-                    <LineChart
-                        accessibilityLayer
-                        data={stockData}
-                    >
+                    <LineChart accessibilityLayer data={stockData}>
                         <Line
                             dataKey="stock"
                             type="natural"
@@ -69,7 +68,7 @@ const StockAnalyticsCard = () => {
                 </ChartContainer>
             </div>
         </Card>
-    )
-}
+    );
+};
 
-export default StockAnalyticsCard
+export default StockAnalyticsCard;

@@ -23,8 +23,8 @@ class Transaction(models.Model):
         default=0, max_digits=10, decimal_places=2, null=True
     )
     payment_method = models.CharField(max_length=255, null=True)
-    created_at = models.DateTimeField(null=True)
-    updated_at = models.DateTimeField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
     
 
 class ProductOrder(models.Model): 

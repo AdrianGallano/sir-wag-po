@@ -43,7 +43,7 @@ def get_expenses(request):
 
     expenses = 0
     for stock in stocks:
-        expenses += float(stock["unit_price"]) * float(stock["quantity"])
+        expenses += float(stock["total_cost_price"])
 
     return Response({"expenses": expenses, "data": stocks})
 
@@ -82,7 +82,7 @@ def get_expense_by_this_month(request):
 
     expenses = 0
     for stock in stocks:
-        expenses += float(stock["unit_price"]) * float(stock["quantity"])
+        expenses += float(stock["total_cost_price"])
 
     return Response({"expenses": expenses, "data": stocks})
 
@@ -121,7 +121,7 @@ def get_expense_by_this_year(request):
 
     expenses = 0
     for stock in stocks:
-        expenses += float(stock["unit_price"]) * float(stock["quantity"])
+        expenses += float(stock["total_cost_price"])
 
     return Response({"expenses": expenses, "data": stocks})
 
@@ -159,7 +159,7 @@ def get_expense_by_this_week(request):
 
     expenses = 0
     for stock in stocks:
-        expenses += float(stock["unit_price"]) * float(stock["quantity"])
+        expenses += float(stock["total_cost_price"])
 
     return Response({"expenses": expenses, "data": stocks})
 
@@ -197,6 +197,6 @@ def get_expense_by_this_day(request):
 
     expenses = 0
     for stock in stocks:
-        expenses += float(stock["unit_price"]) * float(stock["quantity"])
+        expenses += float(stock["total_cost_price"])
 
     return Response({"expenses": expenses, "data": stocks})

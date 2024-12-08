@@ -26,68 +26,67 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 
-interface RevenueData {
+interface ExpenseData {
     price_sold: number;
     sold_at: string;
     payment_method: string;
 }
 
-interface Revenue {
-    revenue: number;
+interface Expense {
+    expenses: number;
     data: {};
 }
 
 const RevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
-    /* Show the revenue in a analytic card */
-    const [revenue, setRevenue] = useState<Revenue>();
-    const [revenueData, setRevenueData] = useState<RevenueData[]>();
-    const [revenueChartData , setRevenueChartData] = useState<[]>([]);
+    /* Show the expenses in a analytic card */
+    const [expenses, setExpenses] = useState<Expense>();
+    const [expensesData, setExpensesData] = useState<ExpenseData[]>();
+    const [expensesChartData , setExpensesChartData] = useState<[]>([]);
     const { token } = useAuth();
 
-    async function fetchRevenue(date: string) {
+    async function fetchExpenses(date: string) {
         try {
             const response = await dataFetch(
-                `api/analytics/${date}/revenue/`,
+                `api/analytics/${date}/expenses/`,
                 "GET",
                 {},
                 token!
             );
 
-            setRevenue(response);
-            setRevenueData(response.data);
+            setExpenses(response);
+            setExpensesData(response.data);
 
-            (revenueData as RevenueData[]).forEach((rev) => {
-                rev.sold_at = new Date(rev.sold_at).toLocaleDateString();
+            (expensesData as ExpenseData[]).forEach((exp) => {
+                exp.sold_at = new Date(exp.sold_at).toLocaleDateString();
             });
 
         } catch (error) {
-            console.error("Failed to fetch revenue", error);
+            console.error("Failed to fetch expenses", error);
         }
     }
 
-    async function revenueSelection(date_range: string) {
+    async function expensesSelection(date_range: string) {
         switch (date_range) {
             case "Daily":
-                await fetchRevenue("day");
-                console.log(revenueData);
+                await fetchExpenses("day");
                 break;
             case "Weekly":
-                await fetchRevenue("week");
+                await fetchExpenses("week");
                 break;
             case "Monthly":
-                await fetchRevenue("month");
+                await fetchExpenses("month");
                 break;
             case "Yearly":
-                await fetchRevenue("year");
+                await fetchExpenses("year");
                 break;
         }
     }
 
     useEffect(() => {
-        const asyncFetchRevenue = async () => {
-            await revenueSelection(date_range);
+        const asyncFetchExpenses = async () => {
+            await expensesSelection(date_range);
         };
-        asyncFetchRevenue();
+        asyncFetchExpenses();
     }, [date_range]);
 
     return (
@@ -96,19 +95,19 @@ const RevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
             <div>
                 <CardHeader className="py-0">
                     <div className="flex items-center gap-3">
-                        <CardTitle className="sr-only">Revenue</CardTitle>
-                        <CardDescription>{date_range} revenue</CardDescription>
+                        <CardTitle className="sr-only">Expenses</CardTitle>
+                        <CardDescription>{date_range} expenses</CardDescription>
                     </div>
                 </CardHeader>
                 <CardContent className="text-xl font-semibold py-0">
-                    ₱{revenue?.revenue}
+                    ₱{expenses?.expenses}
                 </CardContent>
             </div>
             <div className="h-16 w-24 flex">
                 <ChartContainer config={chartConfig}>
-                    <LineChart accessibilityLayer data={revenueData}>
+                    <LineChart accessibilityLayer data={expensesData}>
                         <Line
-                            dataKey="price_sold"
+                            dataKey="unit_price"
                             type="natural"
                             stroke="#22c55e"
                             strokeWidth={2}
