@@ -66,10 +66,10 @@ export const stocksColumns = (
       const image = image_obj as Image;
 
       return (
-        <div className="flex w-20 h-14 object-cover justify-center">
+        <div className="flex justify-center">
           <img
             src={image?.image_url || placeholder}
-            className=" object-center rounded-sm"
+            className="w-10 object-center h-10 rounded-sm"
           />
         </div>
       );
@@ -470,7 +470,7 @@ export const productColumns = (
         <div className="flex justify-center">
           <img
             src={image?.image_url || placeholder}
-            className="w-10 object-center rounded-sm"
+            className="w-10 object-center h-10 rounded-sm"
           />
         </div>
       );

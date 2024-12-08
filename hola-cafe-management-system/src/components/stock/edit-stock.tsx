@@ -259,13 +259,14 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
           >
             <div className="text-center  w-full h-full ">
               {selectedImageURL ? (
-                <div className="rounded-md flex justify-center items-center aspect-square">
-                  <img
-                    src={selectedImageURL}
-                    alt="Selected"
-                    className=" object-contain object-center w-full h-auto min-h-40 max-h-fit rounded-md"
-                  />
-                </div>
+                <div className="rounded-md flex justify-center items-center aspect-square overflow-hidden">
+                <img
+                  src={selectedImageURL}
+                  alt="Selected"
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              
               ) : (
                 <ImagePlus className="mx-auto h-12 w-12" />
               )}
