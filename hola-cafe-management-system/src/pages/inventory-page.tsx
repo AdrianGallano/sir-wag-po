@@ -34,7 +34,7 @@ const InventoryPage = () => {
         {},
         token!
       )) as Stock[];
-      setStock(stocks);
+      setStock(stocks.reverse());
       console.log("Stock:", stocks);
     } catch (error) {
       console.error("Failed to fetch stocks", error);

@@ -33,7 +33,7 @@ const SupplierPage = () => {
         {},
         token!
       )) as Supplier[];
-      setSuppliers(suppliers);
+      setSuppliers(suppliers.reverse());
       console.log("Suppliers fetched", suppliers);
     } catch (error) {
       console.error("Failed to fetch suppliers", error);

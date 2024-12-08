@@ -30,7 +30,7 @@ const CategoryPage = () => {
         {},
         token!
       )) as Category[];
-      setCategories(categories);
+      setCategories(categories.reverse());
       console.log("Categories", categories);
     } catch (error) {
       console.error("Failed to fetch stocks", error);
