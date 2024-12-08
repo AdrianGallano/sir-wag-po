@@ -172,16 +172,16 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.UserRateThrottle",
-        "core.throttles.UploadImageThrottle",
-        "core.throttles.GeneralImageThrottle",
-        "core.throttles.GeneralRequestThrottle",
+        # "core.throttles.UploadImageThrottle",
+        # "core.throttles.GeneralImageThrottle",
+        # "core.throttles.GeneralRequestThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {
-        "user": "500/day",
-        "upload_image": "200/day",
-        "general_image": "500/day",
-        "general_request": "20000/sec",
-    },
+    # "DEFAULT_THROTTLE_RATES": {
+    #     "user": "500/day",
+    #     "upload_image": "200/day",
+    #     "general_image": "500/day",
+    #     "general_request": "20000/sec",
+    # },
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],

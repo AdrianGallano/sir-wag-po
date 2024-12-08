@@ -13,7 +13,7 @@ from core.helpers import (
     modificationBasedUserLog,
     deletionBasedUserLog,
 )
-from core.throttles import GeneralRequestThrottle
+# from core.throttles import GeneralRequestThrottle
 from .models import Category, Stock, Supplier, Product
 from .serializers import (
     CategorySerializer,
@@ -34,7 +34,6 @@ from core.excel_style import COLUMN_HEADER, BODY, COLUMN_BODY_STYLES
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    throttle_classes = [GeneralRequestThrottle]
     permission_classes = [IsAuthenticated]
     filterset_fields = [
         "name",
@@ -87,7 +86,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class SupplierViewSet(viewsets.ModelViewSet):
-    throttle_classes = [GeneralRequestThrottle]
     permission_classes = [IsAuthenticated]
 
     filterset_fields = [
@@ -147,7 +145,6 @@ class SupplierViewSet(viewsets.ModelViewSet):
 
 
 class StockViewSet(viewsets.ModelViewSet):
-    throttle_classes = [GeneralRequestThrottle]
     permission_classes = [IsAuthenticated]
     queryset = Stock.objects.all()
     serializer_class = StockSerializer

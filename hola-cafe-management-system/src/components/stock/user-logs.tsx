@@ -50,7 +50,7 @@ function UserLogTable({ userlogs }: { userlogs: Array<UserLog> }) {
           <CardDescription>Showing user actions</CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="px-2 sm:p-6 overflow-y-scroll max-h-52">
+      <CardContent className="px-2 sm:p-6 overflow-y-scroll max-h-96">
         <Table className="mb-14">
           <TableHeader>
             <TableRow>

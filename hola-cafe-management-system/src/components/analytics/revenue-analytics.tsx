@@ -25,7 +25,6 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
-
 interface RevenueData {
     price_sold: number;
     sold_at: string;
@@ -41,7 +40,6 @@ const RevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
     /* Show the revenue in a analytic card */
     const [revenue, setRevenue] = useState<Revenue>();
     const [revenueData, setRevenueData] = useState<RevenueData[]>();
-    const [revenueChartData , setRevenueChartData] = useState<[]>([]);
     const { token } = useAuth();
 
     async function fetchRevenue(date: string) {
@@ -59,7 +57,6 @@ const RevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
             (revenueData as RevenueData[]).forEach((rev) => {
                 rev.sold_at = new Date(rev.sold_at).toLocaleDateString();
             });
-
         } catch (error) {
             console.error("Failed to fetch revenue", error);
         }
@@ -103,13 +100,17 @@ const RevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
                     ₱{revenue?.revenue}
                 </CardContent>
             </div>
-            <div className="h-16 w-24 flex">
+            <div className="h-24 w-24 flex">
                 <ChartContainer config={chartConfig}>
-                    <LineChart accessibilityLayer data={revenueData}>
+                    <LineChart
+                        accessibilityLayer
+                        data={revenueData}
+                        margin={{ top: 30, right: 20, left: 10, bottom: 30 }}
+                    >
                         <Line
                             dataKey="price_sold"
                             type="natural"
-                            stroke="#22c55e"
+                            stroke="#36027a"
                             strokeWidth={2}
                             dot={false}
                         />

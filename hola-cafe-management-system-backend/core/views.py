@@ -15,7 +15,6 @@ import os
 # CUSTOM
 from .models import UserLog, Image
 from .serializers import UserLogSerializer, UserUserLogSerializer, ImageSerializer
-from .throttles import GeneralImageThrottle, UploadImageThrottle
 
 
 # |
@@ -44,14 +43,6 @@ class ImageViewSet(viewsets.ModelViewSet):
     ordering_fields = "__all__"
     host_address = os.getenv("WEB_HOST")
 
-    def get_throttles(self):
-
-        if self.action == "upload":
-            self.throttle_classes = [UploadImageThrottle]
-        else:
-            self.throttle_classes = [GeneralImageThrottle]
-
-        return [throttle() for throttle in self.throttle_classes]
 
     def upload(self, request):
         uploaded_images = []

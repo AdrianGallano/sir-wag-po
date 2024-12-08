@@ -152,8 +152,8 @@ const ProfitAnalyticsCard = ({ date_range }: { date_range: string }) => {
                     ₱{computeProfit()}
                 </CardContent>
             </div>
-            <div className="h-16 w-24 flex justify-center items-center">
-                { computeProfit() >= 0 ? <Smile color="green" /> : <Frown color="red" /> }
+            <div className="h-24 w-24 flex justify-center items-center">
+                { computeProfit() > 0 ? <Smile color="green" /> : <Frown color="red" /> }
             </div>
         </Card>
     );

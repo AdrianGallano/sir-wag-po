@@ -2,46 +2,41 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-
 import { Landmark } from "lucide-react";
-import {
-    ChartConfig,
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent,
-} from "@/components/ui/chart";
+import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { Line, LineChart } from "recharts";
 import { useEffect, useState } from "react";
 import dataFetch from "@/services/data-service";
 import { useAuth } from "@/context/authContext";
 
 const chartConfig = {
-    price_sold: {
-        label: "price_sold",
+    total_cost_price: {
+        label: "Total Cost Price=",
+        color: "hsl(var(--chart-1))",
     },
 } satisfies ChartConfig;
 
-
 interface ExpenseData {
-    price_sold: number;
-    sold_at: string;
-    payment_method: string;
+    name: string;
+    unit_price: number;
+    quantity: number;
+    bought_at: number;
+    total_cost_price: number;
+    sold_at: string; // Added 'sold_at' as it was referenced
 }
 
 interface Expense {
     expenses: number;
-    data: {};
+    data: any; // Specify an appropriate type for 'data'
 }
 
-const RevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
-    /* Show the expenses in a analytic card */
+const ExpensesAnalyticsCard = ({ date_range }: { date_range: string }) => {
     const [expenses, setExpenses] = useState<Expense>();
-    const [expensesData, setExpensesData] = useState<ExpenseData[]>();
-    const [expensesChartData , setExpensesChartData] = useState<[]>([]);
+    const [expensesData, setExpensesData] = useState<ExpenseData[]>([]);
+    const [expensesChartData, setExpensesChartData] = useState<any[]>([]);
     const { token } = useAuth();
 
     async function fetchExpenses(date: string) {
@@ -56,10 +51,14 @@ const RevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
             setExpenses(response);
             setExpensesData(response.data);
 
-            (expensesData as ExpenseData[]).forEach((exp) => {
-                exp.sold_at = new Date(exp.sold_at).toLocaleDateString();
-            });
+            // Map the expenses data to chart data
+            const chartData = (response.data as ExpenseData[]).map((exp) => ({
+                name: exp.name,
+                unit_price: exp.unit_price,
+                sold_at: new Date(exp.sold_at).toLocaleDateString(), // Format date
+            }));
 
+            setExpensesChartData(chartData); // Update chart data
         } catch (error) {
             console.error("Failed to fetch expenses", error);
         }
@@ -103,13 +102,17 @@ const RevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
                     ₱{expenses?.expenses}
                 </CardContent>
             </div>
-            <div className="h-16 w-24 flex">
+            <div className="h-24 w-24 flex">
                 <ChartContainer config={chartConfig}>
-                    <LineChart accessibilityLayer data={expensesData}>
+                    <LineChart
+                        data={expensesData}
+                        accessibilityLayer
+                        margin={{ top: 30, right: 20, left: 10, bottom: 30 }}
+                    >
                         <Line
-                            dataKey="unit_price"
+                            dataKey="total_cost_price"
                             type="natural"
-                            stroke="#22c55e"
+                            stroke="#cf3400"
                             strokeWidth={2}
                             dot={false}
                         />
@@ -120,4 +123,4 @@ const RevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
     );
 };
 
-export default RevenueAnalyticsCard;
+export default ExpensesAnalyticsCard;
