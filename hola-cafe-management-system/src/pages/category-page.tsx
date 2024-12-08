@@ -11,6 +11,7 @@ import CategoryTable from "@/components/category/category-table";
 import AddCategoryForm from "@/components/category/add-category";
 import EditCategory from "@/components/category/edit-category";
 import DeleteCategory from "@/components/category/delete-category";
+import { useNavigate } from "react-router-dom";
 
 const CategoryPage = () => {
   const { token } = useAuth();
@@ -21,6 +22,7 @@ const CategoryPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
+  const navigate = useNavigate();
 
   const fetchCategories = async () => {
     try {
@@ -65,6 +67,9 @@ const CategoryPage = () => {
   const columns = categoryColumns(handleEdit, handleDelete, handleMassDelete);
 
   useEffect(() => {
+    if (!token) {
+      navigate("login");
+    }
     fetchCategories();
   }, []);
 

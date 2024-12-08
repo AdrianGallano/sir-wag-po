@@ -167,7 +167,7 @@
                           </div>
                           <div>
                             <p className="text-3xl font-medium tracking-wide">
-                              ₱{stock.cost_price}
+                              ₱{stock.unit_price}
                             </p>
                           </div>
                           <div className="flex flex-col">

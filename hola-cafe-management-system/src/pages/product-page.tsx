@@ -12,6 +12,7 @@ import dataFetch from "@/services/data-service";
 import { PackagePlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const ProductPage = () => {
   const { token } = useAuth();
@@ -21,6 +22,7 @@ const ProductPage = () => {
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const Navigate = useNavigate();
 
   const fetchProducts = async () => {
     try {
@@ -103,6 +105,9 @@ const ProductPage = () => {
   };
 
   useEffect(() => {
+    if(!token) {
+      Navigate("login");
+    }
     fetchCategories();
     fetchProducts();
   }, []);

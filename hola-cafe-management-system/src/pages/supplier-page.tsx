@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import AddSupplierForm from "@/components/supplier/add-supplier";
 import EditSupplier from "@/components/supplier/edit-supplier";
 import DeleteSupplier from "@/components/supplier/delete-supplier";
+import { useNavigate } from "react-router-dom";
 
 const SupplierPage = () => {
   const { token } = useAuth();
@@ -24,6 +25,7 @@ const SupplierPage = () => {
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(
     null
   );
+  const navigate = useNavigate();
 
   const fetchSuppliers = async () => {
     try {
@@ -77,6 +79,9 @@ const SupplierPage = () => {
   };
 
   useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
     fetchSuppliers();
   }, []);
 

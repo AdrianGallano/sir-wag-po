@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface Product {
   id: number;
@@ -59,7 +60,7 @@ const TransactionPopup: React.FC<TransactionPopupProps> = ({
 
   const handleSubmit = () => {
     if (!paymentMethod) {
-      alert("Please select a payment method");
+      toast.error("Please select a payment method.");
       return;
     }
 

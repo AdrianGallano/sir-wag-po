@@ -14,6 +14,7 @@ import { stocksColumns } from "@/components/columns";
 import ServiceCrew from "@/models/service_crew";
 import StockTableDashboard from "@/components/stock/stock-table-dashboard";
 import UserLogTable from "@/components/stock/user-logs";
+import { useNavigate } from "react-router-dom";
 
 interface UserLog {
     id: string;
@@ -35,6 +36,7 @@ const DashboardPage = () => {
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
     const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
     const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
+    const navigate = useNavigate();
 
     const fetchStocks = async () => {
         try {
@@ -60,6 +62,9 @@ const DashboardPage = () => {
     };
 
     useEffect(() => {
+        if (!token) {
+            navigate("/login");
+        }
         fetchStocks();
         fetchUserLogs();
     }, []);

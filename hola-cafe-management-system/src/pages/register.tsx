@@ -34,6 +34,9 @@ const Register = () => {
     } catch (err) {
       console.error("Error during registration:", err);
       setError("Registration failed. Please check the entered details.");
+      toast.error("Registration failed. Please check the entered details.", {
+        duration: 1000,
+      });
     }
   };
 
