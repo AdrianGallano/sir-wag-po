@@ -11,6 +11,7 @@ import Product from "@/models/product";
 import dataFetch from "@/services/data-service";
 import { PackagePlus } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const ProductPage = () => {
   const { token } = useAuth();
@@ -29,7 +30,7 @@ const ProductPage = () => {
         {},
         token!
       )) as Product[];
-      setProducts(products);
+      setProducts(products.reverse());
     } catch (error) {
       console.error("Failed to fetch products", error);
     }
@@ -70,6 +71,21 @@ const ProductPage = () => {
     }
   };
 
+  const handleMassDelete = async (products: Product[]) => {
+    try {
+      for (const product of products) {
+        await dataFetch(`api/products/${product.id}/`, "DELETE", {}, token!);
+      }
+
+      setProducts((prev) =>
+        prev.filter((product) => !products.some((c) => c.id === product.id))
+      );
+      toast.success("Products deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete products");
+    }
+  };
+
   const handleEdit = (product: Product) => {
     setSelectedProduct(product);
     setIsEditPopupOpen(true);
@@ -80,7 +96,7 @@ const ProductPage = () => {
     setIsDeletePopupOpen(true);
   };
 
-  const columns = productColumns(handleEdit, handleDelete);
+  const columns = productColumns(handleEdit, handleDelete, handleMassDelete);
 
   const onUpdate = () => {
     fetchProducts();
@@ -117,6 +133,7 @@ const ProductPage = () => {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onExport={exportProducts}
+          onMassDeletion={handleMassDelete}
         />
       </div>
       {isAddProductOpen && (

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -29,31 +29,47 @@ import {
 
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { ChevronDown } from "lucide-react";
-import placeholder from "@/assets/images/no-order.png";
+import {
+  ChevronDown,
+  Download,
+  Notebook,
+  ReceiptText,
+  Trash2,
+} from "lucide-react";
 import Transaction from "@/models/transaction";
+import TransactionPreview from "./transaction-preview";
 
 interface TransactionTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   onDelete: (transaction: Transaction) => void;
   onExport: () => void;
+  onMassDeletion: (transaction: Transaction[]) => void;
 }
 
 const TransactionTable = ({
   columns,
   data,
   onExport,
+  onMassDeletion,
 }: TransactionTableProps<Transaction, any>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
+  const [rowSelection, setRowSelection] = useState({});
+  const [isVisible, setIsVisible] = useState(false);
 
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -61,22 +77,32 @@ const TransactionTable = ({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-    },
+    onRowSelectionChange: setRowSelection,
   });
+
+  const massDeletion = () => {
+    const selectedRows = table.getSelectedRowModel().rows; // Only selected rows
+    const selectedTransactions = selectedRows.map((row) => row.original);
+    onMassDeletion(selectedTransactions);
+
+    setRowSelection({});
+  };
+
+  useEffect(() => {
+    setRowSelection({});
+  }, [data]);
+
+  useEffect(() => {
+    if (table.getSelectedRowModel().rows.length > 0) {
+      setIsVisible(true);
+    } else {
+      setTimeout(() => setIsVisible(false), 100);
+    }
+  }, [table.getSelectedRowModel().rows.length]);
 
   return (
     <div className="relative">
       <div className="w-full flex justify-between items-center mt-2 ">
-        <Button
-          onClick={onExport}
-          className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive"
-        >
-          Export Transactions
-        </Button>
         <div className="flex w-full justify-end item-center my-2.5 gap-2">
           <Input
             placeholder="Search by service crew"
@@ -118,6 +144,15 @@ const TransactionTable = ({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
+          {table.getRowModel().rows.length != 0 && (
+            <Button
+              onClick={onExport}
+              className="bg-white text-custom-char border border-custom-charcoalOlive hover:text-white text-sm hover:bg-custom-charcoalOlive rounded-full"
+            >
+              <Download className="w-5 h-5" />
+              <span className="sr-only">Export Transactions</span>
+            </Button>
+          )}
         </div>
       </div>
       <Table className="mb-14">
@@ -140,7 +175,7 @@ const TransactionTable = ({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {table.getRowModel().rows &&
             table.getRowModel().rows.map((row) => (
               <TableRow
                 onClick={() =>
@@ -148,6 +183,7 @@ const TransactionTable = ({
                 }
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                className="cursor-pointer"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
@@ -155,46 +191,88 @@ const TransactionTable = ({
                   </TableCell>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                <img className="w-10 mx-auto" src={placeholder} alt="" />
-                <span>No Product Found.</span>
-              </TableCell>
-            </TableRow>
-          )}
+            ))}
         </TableBody>
       </Table>
 
-      <div className="bg-white fixed bottom-0  flex items-center  justify-between w-full py-4 z-10">
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+      {!table.getRowModel().rows.length && (
+        <div>
+          <div className="flex justify-center w-full text-center">
+            <div className="flex items-center justify-center h-full w-full">
+              <div className=" w-full max-w-md mx-auto  ">
+                <div className="flex flex-col items-center">
+                  <ReceiptText className="text-gray-400 text-6xl" />
+                  <h2 className="mt-4 text-xl font-semibold text-gray-700">
+                    No Transaction Found
+                  </h2>
+                  <p className="mt-2 text-center text-gray-500">
+                    It looks like we couldn’t find any transactions here. Start
+                    by adding some new transactions to see them listed here.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="mr-24">
-          <span className="font-medium text-sm">
-            {" "}
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </span>
+      )}
+
+      {table.getRowModel().rows.length > 0 && (
+        <div className="bg-white fixed bottom-0  flex items-center  justify-between min-w-full py-4 z-10">
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </div>
+          <div className="mr-24">
+            <span className="font-medium text-sm">
+              {" "}
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </span>
+          </div>
+        </div>
+      )}
+
+      <div
+        className={`fixed bottom-10 left-[40%] w-full border border-gray-700 rounded-xl z-20 flex justify-center items-center max-w-md 
+          ${isVisible && "opacity-100 translate-y-0 animate-fadeinup"}`}
+        style={{
+          visibility: isVisible ? "visible" : "hidden",
+        }}
+      >
+        <div className="flex  items-center w-full justify-around gap-3 p-2">
+          <p>
+            {table.getSelectedRowModel().rows.length}{" "}
+            {table.getSelectedRowModel().rows.length === 1 ? "item" : "items"}{" "}
+            selected
+          </p>
+          <Button variant="destructive" onClick={massDeletion}>
+            <Trash2 className="w-5 h-5" />
+          </Button>
         </div>
       </div>
+
+      {selectedTransaction && (
+        <TransactionPreview
+          isOpen={!!selectedTransaction}
+          onClose={() => setSelectedTransaction(null)}
+          transaction={selectedTransaction}
+        />
+      )}
     </div>
   );
 };

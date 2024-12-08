@@ -23,9 +23,9 @@ import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
 import { Category } from "@/models/category";
 import Product from "@/models/product";
-import ImageManager from "../image-manager";
-import { CircleCheck, X } from "lucide-react";
+import { CircleCheck, ImagePlus, X } from "lucide-react";
 import { toast } from "sonner";
+import ImageManager from "../image/image-manager";
 
 interface EditProductProps {
   isOpen: boolean;
@@ -46,7 +46,7 @@ const EditProduct = ({
     name: product.name || "",
     description: product.description || "",
     price: product.price || "",
-    image: product.image.id || "",
+    image: product.image || "",
     category: product.category.id,
     user: id,
   };
@@ -62,7 +62,7 @@ const EditProduct = ({
   const [formData, setFormData] = useState<{ [key: string]: any }>(initialData);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [selectedImageId, setSelectedImageId] = useState<number | undefined>(
-    product.image?.id
+    Number(product.image?.id)
   );
   const [selectedImageURL, setSelectedImageURL] = useState<string | undefined>(
     product.image?.image_url
@@ -197,21 +197,36 @@ const EditProduct = ({
             </div>
           ))}
         </div>
-        <div className="mb-4">
-          <Label>Select Image</Label>
+        <div className="mb-4 max-w-full">
+          <Label>Image</Label>
           <div
-            className="w-full h-40 flex items-center justify-center border border-gray-300 p-2 rounded-md"
-            onClick={() => setIsImageManagerOpen(true)} // Open ImageManager
+            className="max-w-sm mx-auto mt-1 h-fit min-h-52 flex items-center justify-center border border-dashed border-gray-300 p-2 rounded-md"
+            onClick={() => setIsImageManagerOpen(true)}
           >
-            {selectedImageURL ? (
-              <img
-                src={selectedImageURL}
-                alt="Selected"
-                className="max-h-full object-contain"
-              />
-            ) : (
-              <img src={placeholder} className="max-h-full object-contain" />
-            )}
+            <div className="text-center  w-full h-full ">
+              {selectedImageURL ? (
+                <div className="rounded-md flex justify-center items-center aspect-square overflow-hidden">
+                <img
+                  src={selectedImageURL}
+                  alt="Selected"
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              
+              ) : (
+                <ImagePlus className="mx-auto h-12 w-12" />
+              )}
+              <h3 className="mt-2 text-sm font-medium text-gray-900">
+                <label
+                  htmlFor="file-upload"
+                  className="relative cursor-pointer"
+                >
+                  <span>Select</span>
+                  <span className="text-indigo-600"> or add</span>
+                  <span> an image.</span>
+                </label>
+              </h3>
+            </div>
           </div>
         </div>
         <DialogFooter>

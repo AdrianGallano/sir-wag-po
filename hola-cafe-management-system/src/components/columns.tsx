@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Supplier } from "@/models/supplier";
 import { dateFormatter, toTitleCase } from "@/utils/formatter";
 import { Image } from "@/models/image";
-import placeholder from "./../assets/images/placeholder.png";
+import placeholder from "../assets/images/hola_logo.jpg"
 import {
   ArrowDownIcon,
   ArrowUpDown,
@@ -26,15 +26,19 @@ import ServiceCrew from "@/models/service_crew";
 
 export const stocksColumns = (
   onEdit: (stock: Stock) => void,
-  onDelete: (stock: Stock) => void
+  onDelete: (stock: Stock) => void,
+  massDelete: (stock: Stock[]) => void
 ): ColumnDef<Stock>[] => [
   {
     id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected()
+            ? true
+            : table.getIsSomePageRowsSelected()
+            ? "indeterminate"
+            : false
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -43,6 +47,7 @@ export const stocksColumns = (
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
+        onClick={(e) => e.stopPropagation()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
       />
@@ -54,7 +59,7 @@ export const stocksColumns = (
   {
     accessorKey: "image",
     header: () => {
-      return <div className="text-center min-w-28">Stock Image</div>;
+      return <div className="text-center min-w-20">Stock Image</div>;
     },
     cell: ({ row }) => {
       const image_obj = row.getValue("image");
@@ -64,7 +69,7 @@ export const stocksColumns = (
         <div className="flex justify-center">
           <img
             src={image?.image_url || placeholder}
-            className="w-10 object-center rounded-sm"
+            className="w-10 object-center h-10 rounded-sm"
           />
         </div>
       );
@@ -315,15 +320,19 @@ export const stocksColumns = (
 
 export const supplierColumns = (
   onEdit: (supplier: Supplier) => void,
-  onDelete: (supplier: Supplier) => void
+  onDelete: (supplier: Supplier) => void,
+  massDelete: (supplier: Supplier[]) => void
 ): ColumnDef<Supplier>[] => [
   {
     id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected()
+            ? true
+            : table.getIsSomePageRowsSelected()
+            ? "indeterminate"
+            : false
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -419,15 +428,19 @@ export const supplierColumns = (
 
 export const productColumns = (
   onEdit: (prodoct: Product) => void,
-  onDelete: (product: Product) => void
+  onDelete: (product: Product) => void,
+  massDelete: (product: Product[]) => void
 ): ColumnDef<Product>[] => [
   {
     id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected()
+            ? true
+            : table.getIsSomePageRowsSelected()
+            ? "indeterminate"
+            : false
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -457,7 +470,7 @@ export const productColumns = (
         <div className="flex justify-center">
           <img
             src={image?.image_url || placeholder}
-            className="w-10 object-center rounded-sm"
+            className="w-10 object-center h-10 rounded-sm"
           />
         </div>
       );
@@ -594,15 +607,19 @@ export const productColumns = (
 ];
 
 export const transactionColumns = (
-  onDelete: (transaction: Transaction) => void
+  onDelete: (transaction: Transaction) => void,
+  massDelete: (transaction: Transaction[]) => void
 ): ColumnDef<Transaction>[] => [
   {
     id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected()
+            ? true
+            : table.getIsSomePageRowsSelected()
+            ? "indeterminate"
+            : false
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -611,6 +628,7 @@ export const transactionColumns = (
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
+        onClick={(e) => e.stopPropagation()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
       />
@@ -746,8 +764,11 @@ export const categoryColumns = (
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected()
+            ? true
+            : table.getIsSomePageRowsSelected()
+            ? "indeterminate"
+            : false
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"

@@ -76,7 +76,7 @@ body {
 
 /* Universal scrollbar styling for WebKit-based browsers */
 * {
-  scrollbar-width: thin;
+  scrollbar-width: none;
 }
 
 *::-webkit-scrollbar {

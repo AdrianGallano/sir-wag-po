@@ -24,9 +24,10 @@ import { useState } from "react";
 import { useAuth } from "@/context/authContext";
 import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
-import ImageManager from "@/components/image-manager";
 import { toast } from "sonner";
-import { CheckCircle, CircleCheck, X } from "lucide-react";
+import { CheckCircle, CircleCheck, Image, ImagePlus, X } from "lucide-react";
+import ImageManager from "../image/image-manager";
+import { set } from "date-fns";
 
 interface AddStockFormProps {
   isOpen: boolean;
@@ -38,7 +39,7 @@ interface AddStockFormProps {
 const AddStockForm = ({
   isOpen,
   onClose,
-  supplier,
+  supplier = [],
   onChanges,
 }: AddStockFormProps) => {
   const { token, id } = useAuth();
@@ -87,6 +88,11 @@ const AddStockForm = ({
       const value = typeof e === "string" ? e : e.target.value;
       setFormData({ ...formData, [key]: value });
 
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [key]: "",
+      }));
+      
       if (key === "supplier") {
         const selectedSupplier = (supplier ?? []).find(
           (supplier: { id: number }) => supplier.id === Number(value)
@@ -94,58 +100,62 @@ const AddStockForm = ({
       }
     };
 
-  const handleSubmit = async () => {
-    const newErrors: { [key: string]: string } = {};
-    fields.forEach((field) => {
-      const value = formData[field.key];
-      if (
-        field.key !== "expiration_date" &&
-        (!value || (typeof value === "string" && !value.trim()))
-      ) {
-        newErrors[field.key] = `${field.label} is required`;
+    const validateForm = () => {
+      const newErrors: { [key: string]: string } = {};
+      fields.forEach((field) => {
+        const value = formData[field.key];
+        if (
+          field.key !== "expiration_date" &&
+          (!value || (typeof value === "string" && !value.trim()))
+        ) {
+          newErrors[field.key] = `${field.label} is required`;
+        }
+      });
+  
+      // Special validation for numeric fields
+      if (formData.price && isNaN(Number(formData.price))) {
+        newErrors.price = "Price must be a number";
       }
-    });
-
-    if (Object.keys(newErrors).length > 0) {
+  
       setErrors(newErrors);
-      return;
-    }
+      return Object.keys(newErrors).length === 0;
+    };
 
-    if (id !== null) {
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+
+    try {
+      if (!token) throw new Error("Token not found");
+
       const finalData = {
         ...formData,
-        category: formData.category || undefined,
         supplier: formData.supplier || undefined,
         image: selectedImageId || undefined,
         expiration_date: formData.expiration_date || null,
+        is_stocked_by: id,
       };
 
-      try {
-        if (!token) throw new Error("Token not found");
-
-        const endpoint = "/api/stocks/";
-        const response = await dataFetch(endpoint, "POST", finalData, token);
-        if (response) {
-          onChanges();
-          toast("Stock successfully added", {
-            duration: 2000,
-            icon: <CircleCheck className="fill-green-500 text-white" />,
-            className: "bg-white text-custom-charcoalOlive",
-          });
-        }
-      } catch (error) {
-        toast.error("Failed to add stock", {
-          icon: <X className="text-red-500" />,
-          className: "bg-white text-red-500 ",
+      const endpoint = "/api/stocks/";
+      const response = await dataFetch(endpoint, "POST", finalData, token);
+      if (response) {
+        onChanges();
+        toast("Stock successfully added", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+          className: "bg-white text-custom-charcoalOlive",
         });
+        onClose();
       }
-
-      onClose();
+    } catch (error) {
+      toast.error("Failed to add stock", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
     }
   };
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add Stock</DialogTitle>
@@ -198,23 +208,38 @@ const AddStockForm = ({
             </div>
           ))}
         </div>
-        <div className="mb-4">
-          <Label>Select Image</Label>
+        <div className="mb-4 max-w-full">
+          <Label>Image</Label>
           <div
-            className="w-full h-40 flex items-center justify-center border border-gray-300 p-2 rounded-md"
+            className="max-w-sm mx-auto mt-1 h-fit min-h-52 flex items-center justify-center border border-dashed border-gray-300 p-2 rounded-md"
             onClick={() => setIsImageManagerOpen(true)}
           >
-            {selectedImageURL ? (
-              <img
-                src={selectedImageURL}
-                alt="Selected"
-                className="max-h-full object-contain"
-              />
-            ) : (
-              <img src={placeholder} className="max-h-full object-contain" />
-            )}
+            <div className="text-center  w-full h-full ">
+              {selectedImageURL ? (
+                <div className="rounded-md flex justify-center items-center aspect-square">
+                  <img
+                    src={selectedImageURL}
+                    alt="Selected"
+                    className=" object-contain object-center w-full h-auto min-h-40 max-h-fit rounded-md"
+                  />
+                </div>
+              ) : (
+                <ImagePlus className="mx-auto h-12 w-12" />
+              )}
+              <h3 className="mt-2 text-sm font-medium text-gray-900">
+                <label
+                  htmlFor="file-upload"
+                  className="relative cursor-pointer"
+                >
+                  <span>Select</span>
+                  <span className="text-indigo-600"> or add</span>
+                  <span> an image.</span>
+                </label>
+              </h3>
+            </div>
           </div>
         </div>
+
         <DialogFooter>
           <Button
             onClick={handleSubmit}

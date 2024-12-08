@@ -6,7 +6,7 @@ import { useAuth } from "@/context/authContext";
 import Transaction from "@/models/transaction";
 import dataFetch from "@/services/data-service";
 import { useEffect, useState } from "react";
-import { Toaster } from "sonner";
+import { toast, Toaster } from "sonner";
 
 const TransactionPage = () => {
   const { token } = useAuth();
@@ -23,7 +23,7 @@ const TransactionPage = () => {
         {},
         token!
       )) as Transaction[];
-      setTransaction(transaction);
+      setTransaction(transaction.reverse());
       console.log(transaction);
     } catch (error) {
       console.error("Failed to fetch transaction", error);
@@ -51,12 +51,34 @@ const TransactionPage = () => {
     }
   };
 
+  const handleMassDelete = async (transactions: Transaction[]) => {
+    try {
+      for (const transaction of transactions) {
+        await dataFetch(
+          `api/transactions/${transaction.id}/`,
+          "DELETE",
+          {},
+          token!
+        );
+      }
+
+      setTransaction((prev) =>
+        prev.filter(
+          (transaction) => !transactions.some((c) => c.id === transaction.id)
+        )
+      );
+      toast.success("Transactions deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete transactions");
+    }
+  };
+
   const handleDelete = (transaction: Transaction) => {
     setSelectedTransaction(transaction);
     setIsDeletePopupOpen(true);
   };
 
-  const columns = transactionColumns(handleDelete);
+  const columns = transactionColumns(handleDelete, handleMassDelete);
 
   useEffect(() => {
     fetchTransactions();
@@ -78,6 +100,7 @@ const TransactionPage = () => {
           data={transaction}
           onDelete={handleDelete}
           onExport={exportTransaction}
+          onMassDeletion={handleMassDelete}
         />
       </div>
 

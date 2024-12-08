@@ -20,7 +20,7 @@ const PosHeader: React.FC<PosHeaderProps> = ({ onFilterChange, onSearchChange })
     <div className="mr-[26%]">
       {/* Header */}
       <div className="text-gray-700 text-lg font-semibold mb-4 underline">
-        You are currently attempting to make changes to your stocks.
+        Hola Café's Point Of Sale
       </div>
 
       {/* Filter Section */}

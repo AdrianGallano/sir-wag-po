@@ -25,7 +25,7 @@ import { useState } from "react";
 import { useAuth } from "@/context/authContext";
 import placeholder from "@/assets/images/fileupload.png";
 import dataFetch from "@/services/data-service";
-import ImageManager from "@/components/image-manager";
+import ImageManager from "@/components/image/image-manager";
 import { CircleCheck, X } from "lucide-react";
 import { toast } from "sonner";
 

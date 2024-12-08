@@ -41,14 +41,11 @@ const DeleteCategory: React.FC<DeleteCategoryProps> = ({
         }
 
         const response = await dataFetch(apiUrl, "DELETE", {}, token);
-        if (response) {
-          toast("Category successfully deleted", {
-            duration: 2000,
-            icon: <CircleCheck className="fill-green-500 text-white" />,
-            className: "bg-white text-custom-charcoalOlive",
-          });
-          onUpdate();
-        }
+        toast.success("Category successfully deleted", {
+          duration: 2000,
+          icon: <CircleCheck className="fill-green-500 text-white" />,
+        });
+        onUpdate();
       } catch (error) {
         toast.error("Failed to delete category", {
           icon: <X className="text-red-500" />,

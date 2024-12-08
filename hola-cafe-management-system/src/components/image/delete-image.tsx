@@ -1,63 +1,52 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import Transaction from "@/models/transaction";
+import { Supplier } from "@/models/supplier";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import dataFetch from "@/services/data-service";
 import { useAuth } from "@/context/authContext";
 import { CircleCheck, X } from "lucide-react";
 import { toast } from "sonner";
+import { Image } from "@/models/image";
 
-interface DeletePopupProps {
+interface DeleteImageProps {
   isOpen: boolean;
-  transaction: Transaction;
   onClose: () => void;
   onUpdate: () => void;
+  image: Image;
 }
 
-const Deletetransaction: React.FC<DeletePopupProps> = ({
+const DeleteImage: React.FC<DeleteImageProps> = ({
   isOpen,
-  transaction,
   onClose,
   onUpdate,
+  image,
 }) => {
   const { token } = useAuth();
+  console.log("Image:", image);
+  const handleDeleteImage = async () => {
+    const endpoint = `/api/images/${image.id}/`;
 
-  const handleDeleteConfirmation = async () => {
-    if (transaction) {
-      try {
-        const apiUrl = `/api/transactions/${transaction.id}/`;
-        if (!token) {
-          console.error("Token not found");
-          return;
-        }
+    if (!token) {
+      console.error("Token not found");
+      return;
+    }
 
-        const response = await dataFetch(apiUrl, "DELETE", {}, token);
-        toast.success("Transaction successfully deleted", {
-          duration: 2000,
-          icon: <CircleCheck className="fill-green-500 text-white" />,
-          className: "bg-white text-custom-charcoalOlive",
-        });
-        onUpdate();
-      } catch (error) {
-        toast.error("Failed to delete transaction", {
-          icon: <X className="text-red-500" />,
-          className: "bg-white text-red-500 ",
-        });
-      }
+    try {
+      const response = await dataFetch(endpoint, "DELETE", {}, token);
+      console.log("Image deleted:", response);
+      onUpdate();
       onClose();
+    } catch (error) {
+      console.error("Error deleting image:", error);
     }
   };
-
-  console.log("transaction", transaction);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -68,7 +57,7 @@ const Deletetransaction: React.FC<DeletePopupProps> = ({
           </DialogTitle>
           <DialogDescription className="text-gray-800">
             This action cannot be undone. Are you sure you want to permanently
-            delete this transactin from our servers?
+            delete this from our servers?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -78,7 +67,7 @@ const Deletetransaction: React.FC<DeletePopupProps> = ({
           <Button
             className="bg-custom-char hover:bg-custom-charcoalOlive"
             type="submit"
-            onClick={handleDeleteConfirmation}
+            onClick={handleDeleteImage}
           >
             Confirm
           </Button>
@@ -88,4 +77,4 @@ const Deletetransaction: React.FC<DeletePopupProps> = ({
   );
 };
 
-export default Deletetransaction;
+export default DeleteImage;

@@ -41,13 +41,11 @@ const DeleteProduct: React.FC<DeleteProductProps> = ({
         }
 
         const response = await dataFetch(apiUrl, "DELETE", {}, token);
-        console.log("product deleted:", response);
-        onUpdate();
-        toast("Product successfully deleted", {
+        toast.success("Product successfully deleted", {
           duration: 2000,
           icon: <CircleCheck className="fill-green-500 text-white" />,
-          className: "bg-white text-custom-charcoalOlive",
         });
+        onUpdate();
       } catch (error) {
         toast.error("Failed to delete product", {
           icon: <X className="text-red-500" />,

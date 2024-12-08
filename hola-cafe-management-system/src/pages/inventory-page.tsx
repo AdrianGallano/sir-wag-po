@@ -19,7 +19,6 @@ import ServiceCrew from "@/models/service_crew";
 const InventoryPage = () => {
   const { token } = useAuth();
   const [stock, setStock] = useState<Stock[]>([]);
-  const [serviceCrew, setServiceCrew] = useState<ServiceCrew[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
   const [isStockPopupOpen, setIsStockPopupOpen] = useState<boolean>(false);
@@ -35,7 +34,7 @@ const InventoryPage = () => {
         {},
         token!
       )) as Stock[];
-      setStock(stocks);
+      setStock(stocks.reverse());
       console.log("Stock:", stocks);
     } catch (error) {
       console.error("Failed to fetch stocks", error);
@@ -77,6 +76,23 @@ const InventoryPage = () => {
     }
   };
 
+  const handleMassDelete = async (stocks: Stock[]) => {
+    try {
+      console.log("Deleting stocks", stocks);
+      console.log(token);
+      for (const stock of stocks) {
+        await dataFetch(`api/stocks/${stock.id}/`, "DELETE", {}, token!);
+      }
+
+      setStock((prev) =>
+        prev.filter((stock) => !stocks.some((c) => c.id === stock.id))
+      );
+      toast.success("Stocks deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete stocks");
+    }
+  };
+
   const onUpdate = () => {
     fetchStocks();
   };
@@ -96,7 +112,7 @@ const InventoryPage = () => {
     setIsDeletePopupOpen(true);
   };
 
-  const columns = stocksColumns(handleEdit, handleDelete);
+  const columns = stocksColumns(handleEdit, handleDelete, handleMassDelete);
 
   return (
     <main className="h-screen w-full p-3.5">
@@ -123,6 +139,8 @@ const InventoryPage = () => {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onExport={exportStocks}
+          oncallback={fetchStocks}
+          onMassDeletion={handleMassDelete}
         />
       </div>
 

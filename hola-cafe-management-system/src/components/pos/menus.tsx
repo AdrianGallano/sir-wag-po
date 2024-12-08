@@ -25,8 +25,6 @@ const PosMenus: React.FC<PosMenusProps> = ({ menus, addToCart }) => {
   // Group menus by category
   const categorizedMenus = menus.reduce((acc: Record<string, Menu[]>, menu) => {
     const categoryName = menu.category.name || "Uncategorized";
-    console.log(menu)
-    console.log('Category Name:', categoryName);
     if (!acc[categoryName]) {
       acc[categoryName] = [];
     }
