@@ -214,7 +214,7 @@
                           </button>
 
                             <div className="px-4 py-1 bg-transparent rounded-md border border-gray-300">
-                              <span className="text-lg font-semibold">{stock.quantity}</span>
+                              <span className="text-lg font-semibold">{Number(stock.quantity).toFixed(2)}</span>
                             </div>
                             <button
                               className="px-2 py-1 text-lg font-bold bg-transparent hover:border-gray-400 rounded border border-gray-300"
@@ -233,7 +233,7 @@
                         <span className="bg-green-500 w-1/4   block h-5 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full"></span>
                         <div className="w-full">
                           <p className="underline text-wrap text-xl">
-                            We have {stock.quantity} stocks left
+                            We have {Number(stock.quantity).toFixed(2)} stocks left
                           </p>
 
                           <span
