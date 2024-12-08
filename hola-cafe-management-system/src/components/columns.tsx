@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Supplier } from "@/models/supplier";
 import { dateFormatter, toTitleCase } from "@/utils/formatter";
 import { Image } from "@/models/image";
-import placeholder from "../assets/images/hola_logo.jpg"
+import placeholder from "../assets/images/hola_logo.jpg";
 import {
   ArrowDownIcon,
   ArrowUpDown,
@@ -117,20 +117,22 @@ export const stocksColumns = (
     accessorKey: "quantity",
     header: ({ column }) => {
       return (
-        <Button
-          variant={"ghost"}
-          className="inline-flex items-center justify-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Quantity
-          {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon className="ml-2 h-4 w-4" />
-          ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon className="ml-2 h-4 w-4" />
-          ) : (
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          )}
-        </Button>
+        <div className="flex w-full justify-center">
+          <Button
+            variant={"ghost"}
+            className="inline-flex"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Quantity
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDownIcon className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUpIcon className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => {
@@ -142,20 +144,22 @@ export const stocksColumns = (
     accessorKey: "cost_price",
     header: ({ column }) => {
       return (
-        <Button
-          variant={"ghost"}
-          className="inline-flex items-center justify-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Price
-          {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon className="ml-2 h-4 w-4" />
-          ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon className="ml-2 h-4 w-4" />
-          ) : (
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          )}
-        </Button>
+        <div className="flex w-full justify-center">
+          <Button
+            variant={"ghost"}
+            className="inline-flex"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Unit Price
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDownIcon className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUpIcon className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => {
@@ -202,22 +206,26 @@ export const stocksColumns = (
 
   {
     accessorKey: "expiration_date",
-    header: ({ column }) => (
-      <Button
-        variant={"ghost"}
-        className="inline-flex"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Expiration Date
-        {column.getIsSorted() === "desc" ? (
-          <ArrowDownIcon className="ml-2 h-4 w-4" />
-        ) : column.getIsSorted() === "asc" ? (
-          <ArrowUpIcon className="ml-2 h-4 w-4" />
-        ) : (
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        )}
-      </Button>
-    ),
+    header: ({ column }) => {
+      return (
+        <div className="flex w-full justify-center">
+          <Button
+            variant={"ghost"}
+            className="inline-flex"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Expiration Date
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDownIcon className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUpIcon className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const date: string = row.getValue("expiration_date");
       return (
@@ -271,7 +279,9 @@ export const stocksColumns = (
 
       return (
         <div className="flex items-center space-x-2">
+          {/* Colored progress indicator */}
           <div className={`rounded-full w-[50px] h-2 ${bgColor}`} />
+          {/* Accessible and visible status */}
           <span className="text-sm font-medium sr-only">{status}</span>
         </div>
       );
@@ -351,9 +361,28 @@ export const supplierColumns = (
 
   {
     accessorKey: "id",
-    header: () => <div className="text-center">Supplier ID</div>,
+    header: ({ column }) => {
+      return (
+        <div className="flex w-full justify-center">
+          <Button
+            variant={"ghost"}
+            className="inline-flex items-center justify-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Supplier ID
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDownIcon className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUpIcon className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("id")}</div>;
+      return <div className="text-center ">{row.getValue("id")}</div>;
     },
   },
 
@@ -479,8 +508,25 @@ export const productColumns = (
 
   {
     accessorKey: "id",
-    header: () => {
-      return <div className="text-center min-w-28">Product ID</div>;
+    header: ({ column }) => {
+      return (
+        <div className="flex w-full justify-center">
+          <Button
+            variant={"ghost"}
+            className="inline-flex items-center justify-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Product ID
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDownIcon className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUpIcon className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      );
     },
     cell: ({ row }) => {
       return <div className="text-center">{row.getValue("id")}</div>;
@@ -639,8 +685,25 @@ export const transactionColumns = (
 
   {
     accessorKey: "id",
-    header: () => {
-      return <div className="text-center min-w-28">Transaction ID</div>;
+    header: ({ column }) => {
+      return (
+        <div className="flex w-full justify-center">
+          <Button
+            variant={"ghost"}
+            className="inline-flex items-center justify-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Transaction ID
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDownIcon className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUpIcon className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      );
     },
     cell: ({ row }) => {
       return <div className="text-center">{row.getValue("id")}</div>;
@@ -735,7 +798,7 @@ export const transactionColumns = (
 
       return (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal />
@@ -744,7 +807,12 @@ export const transactionColumns = (
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-            <DropdownMenuItem onClick={() => onDelete(transaction)}>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(transaction);
+              }}
+            >
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -787,8 +855,25 @@ export const categoryColumns = (
 
   {
     accessorKey: "id",
-    header: () => {
-      return <div className="text-center min-w-28">Category ID</div>;
+    header: ({ column }) => {
+      return (
+        <div className="flex w-full justify-center">
+          <Button
+            variant={"ghost"}
+            className="inline-flex items-center justify-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Category ID
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDownIcon className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUpIcon className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      );
     },
     cell: ({ row }) => {
       return <div className="text-center">{row.getValue("id")}</div>;

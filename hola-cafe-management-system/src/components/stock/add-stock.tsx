@@ -50,18 +50,21 @@ const AddStockForm = ({
     quantity: "",
     cost_price: "",
     expiration_date: null,
+    date_shelved: null,
     supplier: "",
     is_stocked_by: id,
     image: "",
+    status: "In Stock",
   };
 
   const fields = [
-    { label: "Name", key: "name" },
-    { label: "Description", key: "description" },
+    { label: "Name", key: "name", minLength: 3, maxLength: 255 },
+    { label: "Description", key: "description", minLength: 3, maxLength: 255 },
     { label: "Cost Price", key: "cost_price", type: "number" },
     { label: "Quantity", key: "quantity", type: "number" },
     { label: "Date Shelved", key: "date_shelved", type: "date" },
     { label: "Expiration Date", key: "expiration_date", type: "date" },
+    { label: "Status", key: "status", readOnly: true },
     { label: "Supplier", key: "supplier", type: "select" },
   ];
 
@@ -92,7 +95,7 @@ const AddStockForm = ({
         ...prevErrors,
         [key]: "",
       }));
-      
+
       if (key === "supplier") {
         const selectedSupplier = (supplier ?? []).find(
           (supplier: { id: number }) => supplier.id === Number(value)
@@ -100,26 +103,60 @@ const AddStockForm = ({
       }
     };
 
-    const validateForm = () => {
-      const newErrors: { [key: string]: string } = {};
-      fields.forEach((field) => {
-        const value = formData[field.key];
-        if (
-          field.key !== "expiration_date" &&
-          (!value || (typeof value === "string" && !value.trim()))
-        ) {
-          newErrors[field.key] = `${field.label} is required`;
-        }
-      });
-  
-      // Special validation for numeric fields
-      if (formData.price && isNaN(Number(formData.price))) {
-        newErrors.price = "Price must be a number";
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    fields.forEach((field) => {
+      const value = formData[field.key];
+
+      if (
+        field.key !== "expiration_date" &&
+        field.key !== "date_shelved" &&
+        (!value || (typeof value === "string" && !value.trim()))
+      ) {
+        newErrors[field.key] = `${field.label} is required`;
+        return;
       }
-  
-      setErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
-    };
+
+      if (typeof value === "string") {
+        if (field.minLength && value.trim().length < field.minLength) {
+          newErrors[
+            field.key
+          ] = `${field.label} must be at least ${field.minLength} characters`;
+        }
+        if (field.maxLength && value.trim().length > field.maxLength) {
+          newErrors[
+            field.key
+          ] = `${field.label} must be at most ${field.maxLength} characters`;
+        }
+      }
+
+      if (field.type === "number" && value) {
+        const numericValue = parseFloat(value.toString());
+        if (isNaN(numericValue)) {
+          newErrors[field.key] = `${field.label} must be a valid number`;
+        }
+
+        if (field.key === "cost_price" && numericValue <= 0) {
+          newErrors[field.key] = `${field.label} must be greater than 0`;
+        }
+
+        if (field.key === "quantity" && numericValue <= 0) {
+          newErrors[field.key] = `${field.label} must be greater than 0`;
+        }
+      }
+
+      if (field.type === "date" && value) {
+        const dateValue = new Date(value);
+        if (isNaN(dateValue.getTime())) {
+          newErrors[field.key] = `${field.label} must be a valid date`;
+        }
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
@@ -164,7 +201,14 @@ const AddStockForm = ({
           {fields.map((field) => (
             <div key={field.key} className="grid grid-cols-1 gap-2">
               <Label htmlFor={field.key}>{field.label}</Label>
-              {field.type === "select" ? (
+              {field.key === "status" ? (
+                <Input
+                  id={field.key}
+                  value={formData[field.key] || ""}
+                  readOnly
+                  className="bg-gray-100 text-gray-700 cursor-not-allowed"
+                />
+              ) : field.type === "select" ? (
                 <Select
                   onValueChange={handleChange(field.key)}
                   value={formData[field.key]?.toString() || ""}
