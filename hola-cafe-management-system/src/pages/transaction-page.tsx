@@ -23,7 +23,7 @@ const TransactionPage = () => {
         {},
         token!
       )) as Transaction[];
-      setTransaction(transaction);
+      setTransaction(transaction.reverse());
       console.log(transaction);
     } catch (error) {
       console.error("Failed to fetch transaction", error);

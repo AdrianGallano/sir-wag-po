@@ -27,6 +27,7 @@ import dataFetch from "@/services/data-service";
 import { toast } from "sonner";
 import { CheckCircle, CircleCheck, Image, ImagePlus, X } from "lucide-react";
 import ImageManager from "../image/image-manager";
+import { set } from "date-fns";
 
 interface AddStockFormProps {
   isOpen: boolean;
@@ -87,6 +88,11 @@ const AddStockForm = ({
       const value = typeof e === "string" ? e : e.target.value;
       setFormData({ ...formData, [key]: value });
 
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [key]: "",
+      }));
+      
       if (key === "supplier") {
         const selectedSupplier = (supplier ?? []).find(
           (supplier: { id: number }) => supplier.id === Number(value)
@@ -94,20 +100,26 @@ const AddStockForm = ({
       }
     };
 
-  const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
-    fields.forEach((field) => {
-      const value = formData[field.key];
-      if (
-        field.key !== "expiration_date" &&
-        (!value || (typeof value === "string" && !value.trim()))
-      ) {
-        newErrors[field.key] = `${field.label} is required`;
+    const validateForm = () => {
+      const newErrors: { [key: string]: string } = {};
+      fields.forEach((field) => {
+        const value = formData[field.key];
+        if (
+          field.key !== "expiration_date" &&
+          (!value || (typeof value === "string" && !value.trim()))
+        ) {
+          newErrors[field.key] = `${field.label} is required`;
+        }
+      });
+  
+      // Special validation for numeric fields
+      if (formData.price && isNaN(Number(formData.price))) {
+        newErrors.price = "Price must be a number";
       }
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;

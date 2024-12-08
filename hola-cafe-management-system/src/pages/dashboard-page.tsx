@@ -53,11 +53,7 @@ const DashboardPage = () => {
   const fetchUserLogs = async () => {
   try {
     const newLogs = await dataFetch("api/user-log/", "GET", {}, token!);
-    setUserLogs((prevLogs) =>
-      [...newLogs, ...prevLogs].sort(
-        (a: UserLog, b: UserLog) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      )
-    );
+    setUserLogs(newLogs.reverse());
   } catch (error) {
     console.error("Failed to fetch user logs", error);
   }

@@ -30,7 +30,7 @@ const ProductPage = () => {
         {},
         token!
       )) as Product[];
-      setProducts(products);
+      setProducts(products.reverse());
     } catch (error) {
       console.error("Failed to fetch products", error);
     }

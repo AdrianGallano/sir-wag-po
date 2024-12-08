@@ -82,6 +82,11 @@ const AddProductForm = ({
       const value = typeof e === "string" ? e : e.target.value;
       setFormData({ ...formData, [key]: value });
 
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [key]: "",
+      }));
+
       if (key === "category") {
         const selectedCategory = (categories ?? []).find(
           (category) => category.id === Number(value)
@@ -94,7 +99,26 @@ const AddProductForm = ({
       }
     };
 
+    const validateForm = () => {
+      const newErrors: { [key: string]: string } = {};
+      fields.forEach((field) => {
+        const value = formData[field.key];
+        if (!value || (typeof value === "string" && !value.trim())) {
+          newErrors[field.key] = `${field.label} is required`;
+        }
+      });
+  
+      // Special validation for numeric fields
+      if (formData.price && isNaN(Number(formData.price))) {
+        newErrors.price = "Price must be a number";
+      }
+  
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
+
   const handleSubmit = async () => {
+    if (!validateForm()) return;
     const newErrors: { [key: string]: string } = {};
 
     if (Object.keys(newErrors).length > 0) {

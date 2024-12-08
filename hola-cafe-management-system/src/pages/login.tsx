@@ -83,14 +83,7 @@ const Login = () => {
                     >
                       Password
                     </label>{" "}
-                    <div className="flex justify-start items-center mt-3">
-                      <a
-                        href="/forgot-password"
-                        className="mr-auto inline-block text-sm "
-                      >
-                        Forgot your password?
-                      </a>
-                    </div>
+                    
                   </div>
 
                   <Button
