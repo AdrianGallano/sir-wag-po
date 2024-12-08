@@ -14,13 +14,15 @@ import AddStockForm from "@/components/stock/add-stock";
 import StockTable from "@/components/stock/stock-table";
 import EditStock from "@/components/stock/edit-stock";
 import DeletePopup from "@/components/stock/delete-stock";
-import ServiceCrew from "@/models/service_crew";
 import { useNavigate } from "react-router-dom";
+import { useStock } from "@/context/stockContext";
+import { useStockNotifications } from "@/hooks/useStockNotifications";
 
 const InventoryPage = () => {
   const { token } = useAuth();
-  const [stock, setStock] = useState<Stock[]>([]);
+  // const [stock, setStock] = useState<Stock[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const { stock, fetchStocks, setStock } = useStock();
 
   const [isStockPopupOpen, setIsStockPopupOpen] = useState<boolean>(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
@@ -28,20 +30,7 @@ const InventoryPage = () => {
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
   const navigate = useNavigate();
 
-  const fetchStocks = async () => {
-    try {
-      const stocks = (await dataFetch(
-        "api/image/is-stocked-by/supplier/stock/",
-        "GET",
-        {},
-        token!
-      )) as Stock[];
-      setStock(stocks.reverse());
-      console.log("Stock:", stocks);
-    } catch (error) {
-      console.error("Failed to fetch stocks", error);
-    }
-  };
+  useStockNotifications(1);
 
   const exportStocks = async () => {
     try {
@@ -99,14 +88,13 @@ const InventoryPage = () => {
     fetchStocks();
   };
 
-  
   useEffect(() => {
-      if(!token) {
-        navigate("login");
-      }
-      fetchSupplier();
-      fetchStocks();
-    }, [token, navigate]);
+    if (!token) {
+      navigate("login");
+    }
+    fetchSupplier();
+    fetchStocks();
+  }, [token, navigate]);
 
   const handleEdit = (stock: Stock) => {
     setSelectedStock(stock);
@@ -123,12 +111,7 @@ const InventoryPage = () => {
   return (
     <main className="h-screen w-full p-3.5">
       <div className="flex justify-between w-full items-center">
-        <StockStatus
-          totalStock={52}
-          recentStock="Granola Bar"
-          expirationDate="December 2, 2024"
-          stockLevel={75}
-        />
+        <StockStatus />
         <div className="self-start">
           <Button
             className="bg-white hover:bg-gray-100 border border-gray-300"

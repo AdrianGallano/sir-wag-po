@@ -64,7 +64,7 @@ const AddStockForm = ({
     { label: "Quantity", key: "quantity", type: "number" },
     { label: "Date Shelved", key: "date_shelved", type: "date" },
     { label: "Expiration Date", key: "expiration_date", type: "date" },
-    { label: "Status", key: "status", readOnly: true },
+    // { label: "Status", key: "status", readOnly: true },
     { label: "Supplier", key: "supplier", type: "select" },
   ];
 
@@ -261,13 +261,12 @@ const AddStockForm = ({
             <div className="text-center  w-full h-full ">
               {selectedImageURL ? (
                 <div className="rounded-md flex justify-center items-center aspect-square overflow-hidden">
-                <img
-                  src={selectedImageURL}
-                  alt="Selected"
-                  className="object-cover w-full h-full"
-                />
-              </div>
-              
+                  <img
+                    src={selectedImageURL}
+                    alt="Selected"
+                    className="object-cover w-full h-full"
+                  />
+                </div>
               ) : (
                 <ImagePlus className="mx-auto h-12 w-12" />
               )}

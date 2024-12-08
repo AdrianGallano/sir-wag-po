@@ -13,6 +13,7 @@ import { PackagePlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Navigate, useNavigate } from "react-router-dom";
+import { useStockNotifications } from "@/hooks/useStockNotifications";
 
 const ProductPage = () => {
   const { token } = useAuth();
@@ -23,6 +24,8 @@ const ProductPage = () => {
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const Navigate = useNavigate();
+
+  useStockNotifications(1);
 
   const fetchProducts = async () => {
     try {
@@ -105,7 +108,7 @@ const ProductPage = () => {
   };
 
   useEffect(() => {
-    if(!token) {
+    if (!token) {
       Navigate("login");
     }
     fetchCategories();
@@ -115,12 +118,7 @@ const ProductPage = () => {
   return (
     <main className="h-screen w-full p-3.5">
       <div className="flex justify-between w-full items-center">
-        <StockStatus
-          totalStock={52}
-          recentStock="Granola Bar"
-          expirationDate="December 2, 2024"
-          stockLevel={75}
-        />
+        <StockStatus />
         <div className="self-start">
           <Button
             onClick={() => setIsAddProductOpen(true)}
