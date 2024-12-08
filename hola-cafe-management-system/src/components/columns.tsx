@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Supplier } from "@/models/supplier";
 import { dateFormatter, toTitleCase } from "@/utils/formatter";
 import { Image } from "@/models/image";
-import placeholder from "./../assets/images/placeholder.png";
+import placeholder from "../assets/images/hola_logo.jpg"
 import {
   ArrowDownIcon,
   ArrowUpDown,
