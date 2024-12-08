@@ -3,3 +3,6 @@ from .models import UserLog
 
 
 admin.site.register(UserLog)
+
+
+

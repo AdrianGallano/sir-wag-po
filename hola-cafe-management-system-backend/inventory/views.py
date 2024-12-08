@@ -155,7 +155,7 @@ class StockViewSet(viewsets.ModelViewSet):
     filterset_fields = [
         "name",
         "description",
-        "cost_price",
+        "unit_price",
         "quantity",
         "supplier",
         "date_shelved",
@@ -169,7 +169,7 @@ class StockViewSet(viewsets.ModelViewSet):
     search_fields = [
         "name",
         "description",
-        "cost_price",
+        "unit_price",
         "quantity",
         "supplier",
         "date_shelved",

@@ -6,4 +6,10 @@ admin.site.register(Category)
 admin.site.register(Stock)
 admin.site.register(Supplier)
 admin.site.register(Image)
-admin.site.register(Product)
+
+
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ["name", "created_at", "updated_at"]
+
+admin.site.register(Product, ProductAdmin)

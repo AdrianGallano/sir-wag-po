@@ -121,3 +121,6 @@ class UserUserLogViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = UserLog.objects.all().select_related()
     serializer_class = UserUserLogSerializer
+
+    ordering_fields = "__all__"
+    
