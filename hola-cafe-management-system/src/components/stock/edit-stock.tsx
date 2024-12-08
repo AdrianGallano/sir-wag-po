@@ -48,7 +48,7 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
   const initialData = {
     name: stock.name || "",
     description: stock.description || "",
-    cost_price: stock.cost_price || "",
+    unit_price: stock.unit_price || "",
     quantity: stock.quantity || "",
     expiration_date: stock.expiration_date || null,
     supplier: stock.supplier.id,
@@ -59,7 +59,7 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
   const fields = [
     { label: "Name", key: "name" },
     { label: "Description", key: "description" },
-    { label: "Cost Price", key: "cost_price", type: "number" },
+    { label: "Unit price", key: "unit_price", type: "number" },
     { label: "Quantity", key: "quantity", type: "number" },
     { label: "Expiration Date", key: "expiration_date", type: "date" },
     { label: "Supplier", key: "supplier", type: "select" },

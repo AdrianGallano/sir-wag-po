@@ -15,6 +15,7 @@ import StockTable from "@/components/stock/stock-table";
 import EditStock from "@/components/stock/edit-stock";
 import DeletePopup from "@/components/stock/delete-stock";
 import ServiceCrew from "@/models/service_crew";
+import { useNavigate } from "react-router-dom";
 
 const InventoryPage = () => {
   const { token } = useAuth();
@@ -25,6 +26,7 @@ const InventoryPage = () => {
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
+  const navigate = useNavigate();
 
   const fetchStocks = async () => {
     try {
@@ -97,10 +99,14 @@ const InventoryPage = () => {
     fetchStocks();
   };
 
+  
   useEffect(() => {
-    fetchSupplier();
-    fetchStocks();
-  }, []);
+      if(!token) {
+        navigate("login");
+      }
+      fetchSupplier();
+      fetchStocks();
+    }, [token, navigate]);
 
   const handleEdit = (stock: Stock) => {
     setSelectedStock(stock);

@@ -8,7 +8,7 @@ export interface Stock {
   name: string;
   description: string;
   quantity: string;
-  cost_price: string;
+  unit_price: string;
   created_at: string;
   updated_at: string;
   expiration_date: string;

@@ -8,6 +8,7 @@ import TransactionPopup from '@/components/pos/popup';
 import { Toaster } from 'sonner';
 import { toast } from 'sonner';
 import { CircleCheck, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const PosPage = () => {
   const [menus, setMenus] = useState([]);
@@ -17,8 +18,12 @@ const PosPage = () => {
   const { token, id } = useAuth();
   const [service_crew] = useState(id);
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!token) {
+      navigate('/login');
+    }
     fetchMenus();
     fetchCart();
   }, []);

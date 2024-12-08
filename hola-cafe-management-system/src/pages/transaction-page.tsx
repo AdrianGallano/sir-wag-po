@@ -6,6 +6,7 @@ import { useAuth } from "@/context/authContext";
 import Transaction from "@/models/transaction";
 import dataFetch from "@/services/data-service";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
 
 const TransactionPage = () => {
@@ -14,6 +15,7 @@ const TransactionPage = () => {
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
+    const navigate = useNavigate();
 
   const fetchTransactions = async () => {
     try {
@@ -81,6 +83,9 @@ const TransactionPage = () => {
   const columns = transactionColumns(handleDelete, handleMassDelete);
 
   useEffect(() => {
+    if (!token) {
+      navigate("login");
+    }
     fetchTransactions();
   }, []);
 

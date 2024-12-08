@@ -48,7 +48,7 @@ const AddStockForm = ({
     name: "",
     description: "",
     quantity: "",
-    cost_price: "",
+    unit_price: "",
     expiration_date: null,
     date_shelved: null,
     supplier: "",
@@ -60,7 +60,7 @@ const AddStockForm = ({
   const fields = [
     { label: "Name", key: "name", minLength: 3, maxLength: 255 },
     { label: "Description", key: "description", minLength: 3, maxLength: 255 },
-    { label: "Cost Price", key: "cost_price", type: "number" },
+    { label: "Unit price", key: "unit_price", type: "number" },
     { label: "Quantity", key: "quantity", type: "number" },
     { label: "Date Shelved", key: "date_shelved", type: "date" },
     { label: "Expiration Date", key: "expiration_date", type: "date" },
@@ -137,7 +137,7 @@ const AddStockForm = ({
           newErrors[field.key] = `${field.label} must be a valid number`;
         }
 
-        if (field.key === "cost_price" && numericValue <= 0) {
+        if (field.key === "unit_price" && numericValue <= 0) {
           newErrors[field.key] = `${field.label} must be greater than 0`;
         }
 
@@ -260,13 +260,14 @@ const AddStockForm = ({
           >
             <div className="text-center  w-full h-full ">
               {selectedImageURL ? (
-                <div className="rounded-md flex justify-center items-center aspect-square">
-                  <img
-                    src={selectedImageURL}
-                    alt="Selected"
-                    className=" object-contain object-center w-full h-auto min-h-40 max-h-fit rounded-md"
-                  />
-                </div>
+                <div className="rounded-md flex justify-center items-center aspect-square overflow-hidden">
+                <img
+                  src={selectedImageURL}
+                  alt="Selected"
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              
               ) : (
                 <ImagePlus className="mx-auto h-12 w-12" />
               )}

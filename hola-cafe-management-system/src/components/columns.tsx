@@ -141,7 +141,7 @@ export const stocksColumns = (
   },
 
   {
-    accessorKey: "cost_price",
+    accessorKey: "unit_price",
     header: ({ column }) => {
       return (
         <div className="flex w-full justify-center">
@@ -163,7 +163,7 @@ export const stocksColumns = (
       );
     },
     cell: ({ row }) => {
-      const price = parseFloat(row.getValue("cost_price"));
+      const price = parseFloat(row.getValue("unit_price"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "PHP",
