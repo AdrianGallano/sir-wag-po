@@ -180,7 +180,7 @@ REST_FRAMEWORK = {
         "user": "500/day",
         "upload_image": "200/day",
         "general_image": "500/day",
-        "general_request": "20000/day",
+        "general_request": "20000/sec",
     },
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",

@@ -4,4 +4,5 @@ def query_by_date(obj, obj_serializer, date_range):
     )
     serialized_objects = obj_serializer(obs, many=True)
 
+    
     return serialized_objects.data

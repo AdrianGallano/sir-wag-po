@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 # DATE TIME
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time, timezone
 from dateutil.relativedelta import relativedelta
 
 # SWAGGER
@@ -201,6 +201,8 @@ def get_revenue_by_this_day(request):
     end_datetime = datetime.combine(start_date, time.max) 
     
     date_range = [start_datetime, end_datetime]
+    print(start_datetime)
+    print(end_datetime)
     
     transactions = query_by_date(
         Transaction, RevenueAnalyticsSerializer, date_range=date_range

@@ -35,7 +35,7 @@ const AnalyticsPage = () => {
                     </div>
                 </div>
                 <TabsContent value="Daily">
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-4 gap-4 mb-4">
                         {" "}
                         {/* first analytics 5 cards block  */}
                         <StockAnalyticsCard date_range="Daily" />
@@ -55,7 +55,7 @@ const AnalyticsPage = () => {
                     </div>
                 </TabsContent>
                 <TabsContent value="Weekly">
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-4 gap-4 mb-4">
                         {" "}
                         {/* first analytics 5 cards block  */}
                         <StockAnalyticsCard date_range="Weekly" />
@@ -75,7 +75,7 @@ const AnalyticsPage = () => {
                     </div>
                 </TabsContent>
                 <TabsContent value="Monthly">
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-4 gap-4 mb-4">
                         {" "}
                         {/* first analytics 5 cards block  */}
                         <StockAnalyticsCard date_range="Monthly" />
@@ -95,7 +95,7 @@ const AnalyticsPage = () => {
                     </div>
                 </TabsContent>
                 <TabsContent value="Yearly">
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-4 gap-4 mb-4">
                         {" "}
                         {/* first analytics 5 cards block  */}
                         <StockAnalyticsCard date_range="Yearly" />

@@ -69,7 +69,6 @@ const RevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
         switch (date_range) {
             case "Daily":
                 await fetchRevenue("day");
-                console.log(revenueData);
                 break;
             case "Weekly":
                 await fetchRevenue("week");
