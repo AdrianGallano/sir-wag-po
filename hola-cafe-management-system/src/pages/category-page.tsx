@@ -12,6 +12,7 @@ import AddCategoryForm from "@/components/category/add-category";
 import EditCategory from "@/components/category/edit-category";
 import DeleteCategory from "@/components/category/delete-category";
 import { useNavigate } from "react-router-dom";
+import { useStockNotifications } from "@/hooks/useStockNotifications";
 
 const CategoryPage = () => {
   const { token } = useAuth();
@@ -23,6 +24,7 @@ const CategoryPage = () => {
     null
   );
   const navigate = useNavigate();
+  useStockNotifications(1);
 
   const fetchCategories = async () => {
     try {
@@ -76,12 +78,7 @@ const CategoryPage = () => {
   return (
     <main className="h-screen w-full p-3.5">
       <div className="flex justify-between w-full items-center">
-        <StockStatus
-          totalStock={52}
-          recentStock="Granola Bar"
-          expirationDate="December 2, 2024"
-          stockLevel={75}
-        />
+        <StockStatus />
         <div className="self-start">
           <Button
             onClick={() => setIsAddProductOpen(true)}

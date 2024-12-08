@@ -13,6 +13,7 @@ import AddSupplierForm from "@/components/supplier/add-supplier";
 import EditSupplier from "@/components/supplier/edit-supplier";
 import DeleteSupplier from "@/components/supplier/delete-supplier";
 import { useNavigate } from "react-router-dom";
+import { useStockNotifications } from "@/hooks/useStockNotifications";
 
 const SupplierPage = () => {
   const { token } = useAuth();
@@ -26,6 +27,8 @@ const SupplierPage = () => {
     null
   );
   const navigate = useNavigate();
+
+  useStockNotifications(1);
 
   const fetchSuppliers = async () => {
     try {
@@ -100,12 +103,7 @@ const SupplierPage = () => {
   return (
     <main className="h-screen w-full p-3.5">
       <div className="flex justify-between w-full items-center">
-        <StockStatus
-          totalStock={52}
-          recentStock="Granola Bar"
-          expirationDate="December 2, 2024"
-          stockLevel={75}
-        />
+        <StockStatus />
         <div className="self-start">
           <Button
             className="bg-white hover:bg-gray-100 border border-gray-300"

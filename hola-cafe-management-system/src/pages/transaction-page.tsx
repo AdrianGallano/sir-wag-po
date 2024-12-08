@@ -3,6 +3,7 @@ import StockStatus from "@/components/stock/stock-status";
 import Deletetransaction from "@/components/transaction/delete-transaction";
 import TransactionTable from "@/components/transaction/transactiontable";
 import { useAuth } from "@/context/authContext";
+import { useStockNotifications } from "@/hooks/useStockNotifications";
 import Transaction from "@/models/transaction";
 import dataFetch from "@/services/data-service";
 import { useEffect, useState } from "react";
@@ -15,7 +16,8 @@ const TransactionPage = () => {
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  useStockNotifications(1);
 
   const fetchTransactions = async () => {
     try {
@@ -92,12 +94,7 @@ const TransactionPage = () => {
   return (
     <main className="h-screen w-full p-3.5">
       <div className="flex justify-between w-full items-center">
-        <StockStatus
-          totalStock={52}
-          recentStock="Granola Bar"
-          expirationDate="December 2, 2024"
-          stockLevel={75}
-        />
+        <StockStatus />
       </div>
       <div className="w-full">
         <TransactionTable
