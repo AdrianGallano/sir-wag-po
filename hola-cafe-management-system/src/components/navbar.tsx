@@ -8,7 +8,7 @@ import {
   Tag,
   Truck,
   Warehouse,
-  LayoutDashboard
+  LayoutDashboard,
 } from "lucide-react";
 import {
   Tooltip,
@@ -18,10 +18,13 @@ import {
 } from "./ui/tooltip";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/authContext";
+import { useStock } from "@/context/stockContext";
+import StockNotificationDropdown from "./stock/stock-notification-dropdown";
 
 const Navbar = () => {
   const { logout } = useAuth();
   const location = useLocation();
+  const { stock } = useStock();
 
   const handleLogout = () => {
     logout();
@@ -30,10 +33,19 @@ const Navbar = () => {
   return (
     <aside className="fixed inset-y-0 left-1 top-1 bottom-1 z-10 hidden w-14 flex-col border-r bg-custom-char  rounded-full sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-4">
-        <a className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-custom-sunnyGold text-lg font-semibold text-custom-charcoalOlive md:h-8 md:w-8 md:text-base">
+        <StockNotificationDropdown
+          stocks={stock}
+          trigger={
+            <a className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-custom-sunnyGold text-lg font-semibold text-custom-charcoalOlive md:h-8 md:w-8 md:text-base cursor-pointer">
+              <Coffee className="h-4 w-4 transition-all group-hover:scale-110" />
+              <span className="sr-only">Hola Cafe</span>
+            </a>
+          }
+        />
+        {/* <a className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-custom-sunnyGold text-lg font-semibold text-custom-charcoalOlive md:h-8 md:w-8 md:text-base">
           <Coffee className="h-4 w-4 transition-all group-hover:scale-110 " />
           <span className="sr-only">Hola Cafe</span>
-        </a>
+        </a> */}
 
         <TooltipProvider>
           <Tooltip>

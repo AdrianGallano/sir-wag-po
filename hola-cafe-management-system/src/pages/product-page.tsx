@@ -18,8 +18,7 @@ import { useStock } from "@/context/stockContext";
 
 const ProductPage = () => {
   const { token } = useAuth();
-  const { stock } = useStock();
-  useStockNotifications(1);
+
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
@@ -166,18 +165,6 @@ const ProductPage = () => {
           onUpdate={onUpdate}
         />
       )}
-
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          classNames: {
-            error: "bg-red-400 bg-white border-none",
-            success: "text-green-400 bg-white border-none",
-            warning: "text-yellow-400 bg-white border-none",
-            info: "bg-blue-400 bg-white border-none",
-          },
-        }}
-      />
     </main>
   );
 };

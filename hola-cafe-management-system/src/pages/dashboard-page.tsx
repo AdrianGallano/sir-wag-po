@@ -27,8 +27,8 @@ const DashboardPage = () => {
     - Shows the immediate data of the application
     */
   const { token } = useAuth();
-  useStockNotifications(1);
-  const { stock, setStock, fetchStocks } = useStock();
+
+  // const { stock, setStock, fetchStocks } = useStock();
   const [userlogs, setUserLogs] = useState<UserLog[]>([]);
 
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
@@ -49,7 +49,7 @@ const DashboardPage = () => {
     if (!token) {
       navigate("/login");
     }
-    fetchStocks();
+    // fetchStocks();
     fetchUserLogs();
   }, []);
 
@@ -78,18 +78,6 @@ const DashboardPage = () => {
           <UserLogTable userlogs={userlogs} />
         </div>
       </div>
-
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          classNames: {
-            error: "bg-red-400 bg-white border-none",
-            success: "text-green-400 bg-white border-none",
-            warning: "text-yellow-400 bg-white border-none",
-            info: "bg-blue-400 bg-white border-none",
-          },
-        }}
-      />
     </main>
   );
 };
