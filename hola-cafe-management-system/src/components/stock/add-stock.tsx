@@ -86,77 +86,111 @@ const AddStockForm = ({
   };
 
   const handleChange =
-    (key: string) =>
-    (e: string | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const value = typeof e === "string" ? e : e.target.value;
-      setFormData({ ...formData, [key]: value });
+  (key: string) =>
+  (e: string | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const value = typeof e === "string" ? e : e.target.value;
 
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [key]: "",
-      }));
-
-      if (key === "supplier") {
-        const selectedSupplier = (supplier ?? []).find(
-          (supplier: { id: number }) => supplier.id === Number(value)
-        );
+    if (key === "quantity") {
+      const numericValue = parseFloat(value);
+      if (!isNaN(numericValue) && numericValue >= 0) {
+        setFormData({ ...formData, [key]: numericValue });
       }
-    };
-
-  const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
-
-    fields.forEach((field) => {
-      const value = formData[field.key];
-
-      if (
-        field.key !== "expiration_date" &&
-        field.key !== "date_shelved" &&
-        (!value || (typeof value === "string" && !value.trim()))
-      ) {
-        newErrors[field.key] = `${field.label} is required`;
-        return;
+      if (numericValue < 0) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [key]: "Quantity cannot be negative.",
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [key]: "",
+        }));
       }
-
-      if (typeof value === "string") {
-        if (field.minLength && value.trim().length < field.minLength) {
-          newErrors[
-            field.key
-          ] = `${field.label} must be at least ${field.minLength} characters`;
-        }
-        if (field.maxLength && value.trim().length > field.maxLength) {
-          newErrors[
-            field.key
-          ] = `${field.label} must be at most ${field.maxLength} characters`;
-        }
+      return;
+    }
+    if (key === "unit_price") {
+      const numericValue = parseFloat(value);
+      if (!isNaN(numericValue) && numericValue >= 0) {
+        setFormData({ ...formData, [key]: numericValue });
       }
-
-      if (field.type === "number" && value) {
-        const numericValue = parseFloat(value.toString());
-        if (isNaN(numericValue)) {
-          newErrors[field.key] = `${field.label} must be a valid number`;
-        }
-
-        if (field.key === "unit_price" && numericValue <= 0) {
-          newErrors[field.key] = `${field.label} must be greater than 0`;
-        }
-
-        if (field.key === "quantity" && numericValue <= 0) {
-          newErrors[field.key] = `${field.label} must be greater than 0`;
-        }
+      if (numericValue < 0) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [key]: "Unit price cannot be negative.",
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [key]: "",
+        }));
       }
+      return;
+    }
 
-      if (field.type === "date" && value) {
-        const dateValue = new Date(value);
-        if (isNaN(dateValue.getTime())) {
-          newErrors[field.key] = `${field.label} must be a valid date`;
-        }
-      }
-    });
+    setFormData({ ...formData, [key]: value });
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [key]: "",
+    }));
   };
+
+// Validation function
+const validateForm = () => {
+  const newErrors: { [key: string]: string } = {};
+
+  fields.forEach((field) => {
+    const value = formData[field.key];
+
+    if (
+      field.key !== "expiration_date" &&
+      field.key !== "date_shelved" &&
+      (!value || (typeof value === "string" && !value.trim()))
+    ) {
+      newErrors[field.key] = `${field.label} is required`;
+      return;
+    }
+
+    if (typeof value === "string") {
+      if (field.minLength && value.trim().length < field.minLength) {
+        newErrors[
+          field.key
+        ] = `${field.label} must be at least ${field.minLength} characters`;
+      }
+      if (field.maxLength && value.trim().length > field.maxLength) {
+        newErrors[
+          field.key
+        ] = `${field.label} must be at most ${field.maxLength} characters`;
+      }
+    }
+
+    if (field.type === "number" && value) {
+      const numericValue = parseFloat(value.toString());
+      if (isNaN(numericValue)) {
+        newErrors[field.key] = `${field.label} must be a valid number`;
+      }
+
+      if (field.key === "unit_price" && numericValue <= 0) {
+        newErrors[field.key] = `${field.label} must be greater than 0`;
+      }
+
+      if (field.key === "quantity" && numericValue < 0) {
+        newErrors[field.key] = `${field.label} cannot be negative`;
+      }
+    }
+
+    if (field.type === "date" && value) {
+      const dateValue = new Date(value);
+      if (isNaN(dateValue.getTime())) {
+        newErrors[field.key] = `${field.label} must be a valid date`;
+      }
+    }
+  });
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
