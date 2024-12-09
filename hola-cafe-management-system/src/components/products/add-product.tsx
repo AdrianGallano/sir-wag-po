@@ -77,27 +77,47 @@ const AddProductForm = ({
   };
 
   const handleChange =
-    (key: string) =>
-    (e: string | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const value = typeof e === "string" ? e : e.target.value;
-      setFormData({ ...formData, [key]: value });
+  (key: string) =>
+  (e: string | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const value = typeof e === "string" ? e : e.target.value;
 
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [key]: "",
-      }));
+    // Clear previous error for the field
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [key]: "",
+    }));
 
-      if (key === "category") {
-        const selectedCategory = (categories ?? []).find(
-          (category) => category.id === Number(value)
-        );
-        if (selectedCategory) {
-          console.log(
-            `Category Selected: ID = ${selectedCategory.id}, Label = ${selectedCategory.name}`
-          );
-        }
+    // Special handling for price
+    if (key === "price") {
+      const numericValue = parseFloat(value);
+
+      if (isNaN(numericValue) || numericValue < 0) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [key]: "Price cannot be negative.",
+        }));
+      } else {
+        setFormData({ ...formData, [key]: numericValue });
       }
-    };
+
+      return;
+    }
+
+    // Update other fields
+    setFormData({ ...formData, [key]: value });
+
+    // Log category selection for debugging
+    if (key === "category") {
+      const selectedCategory = (categories ?? []).find(
+        (category) => category.id === Number(value)
+      );
+      if (selectedCategory) {
+        console.log(
+          `Category Selected: ID = ${selectedCategory.id}, Label = ${selectedCategory.name}`
+        );
+      }
+    }
+  };
 
     const validateForm = () => {
       const newErrors: { [key: string]: string } = {};
@@ -111,6 +131,10 @@ const AddProductForm = ({
       // Special validation for numeric fields
       if (formData.price && isNaN(Number(formData.price))) {
         newErrors.price = "Price must be a number";
+      }
+
+      if (formData.price && (isNaN(Number(formData.price)) || Number(formData.price) < 0)) {
+        newErrors.price = "Price must be a non-negative number";
       }
   
       setErrors(newErrors);
