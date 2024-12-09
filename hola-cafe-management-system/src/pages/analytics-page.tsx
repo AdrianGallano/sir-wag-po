@@ -18,7 +18,7 @@ const AnalyticsPage = () => {
   return (
     <Tabs defaultValue="Daily">
       <main className="flex flex-col gap-4 p-4 sm:px-6 sm:py-0">
-        <h3 className="text-2xl font-semibold tracking-tight">Overview</h3>
+        <h3 className="text-2xl font-semibold tracking-tight">Analytics</h3>
         <div className="flex justify-between">
           <div className="flex gap-4">
             {/* right side */}
@@ -48,7 +48,7 @@ const AnalyticsPage = () => {
             <div className="col-span-2">
               <BigExpensesAnalyticsCard date_range="Daily" />
             </div>
-            w
+            
           </div>
         </TabsContent>
         <TabsContent value="Weekly">

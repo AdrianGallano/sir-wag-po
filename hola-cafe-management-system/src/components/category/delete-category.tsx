@@ -47,7 +47,7 @@ const DeleteCategory: React.FC<DeleteCategoryProps> = ({
         });
         onUpdate();
       } catch (error) {
-        toast.error("Failed to delete category", {
+        toast.error("Failed to delete category, remove all the products with that category first", {
           icon: <X className="text-red-500" />,
           className: "bg-white text-red-500 ",
         });
