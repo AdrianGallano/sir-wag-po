@@ -20,7 +20,6 @@ const PosPage = () => {
   const [service_crew] = useState(id);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  useStockNotifications(1);
 
   useEffect(() => {
     if (!token) {

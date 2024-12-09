@@ -20,7 +20,6 @@ import { useStockNotifications } from "@/hooks/useStockNotifications";
 
 const InventoryPage = () => {
   const { token } = useAuth();
-  // const [stock, setStock] = useState<Stock[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const { stock, fetchStocks, setStock } = useStock();
 
@@ -29,8 +28,6 @@ const InventoryPage = () => {
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
   const navigate = useNavigate();
-
-  useStockNotifications(1);
 
   const exportStocks = async () => {
     try {
@@ -159,18 +156,6 @@ const InventoryPage = () => {
           onUpdate={onUpdate}
         />
       )}
-
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          classNames: {
-            error: "bg-red-400 bg-white border-none",
-            success: "text-green-400 bg-white border-none",
-            warning: "text-yellow-400 bg-white border-none",
-            info: "bg-blue-400 bg-white border-none",
-          },
-        }}
-      />
     </main>
   );
 };

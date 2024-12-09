@@ -10,7 +10,6 @@ import { useStockNotifications } from "@/hooks/useStockNotifications";
 import { Toaster } from "sonner";
 
 const AnalyticsPage = () => {
-  useStockNotifications(1);
   /* 
     General Analytics Collection
     - Shows the general analytics of the application
@@ -109,18 +108,6 @@ const AnalyticsPage = () => {
           </div>
         </TabsContent>
       </main>
-
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          classNames: {
-            error: "bg-red-400 bg-white border-none",
-            success: "text-green-400 bg-white border-none",
-            warning: "text-yellow-400 bg-white border-none",
-            info: "bg-blue-400 bg-white border-none",
-          },
-        }}
-      />
     </Tabs>
   );
 };

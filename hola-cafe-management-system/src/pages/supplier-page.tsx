@@ -28,8 +28,6 @@ const SupplierPage = () => {
   );
   const navigate = useNavigate();
 
-  useStockNotifications(1);
-
   const fetchSuppliers = async () => {
     try {
       const suppliers = (await dataFetch(
@@ -149,18 +147,6 @@ const SupplierPage = () => {
           onUpdate={fetchSuppliers}
         />
       )}
-
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          classNames: {
-            error: "bg-red-400 bg-white border-none",
-            success: "text-green-400 bg-white border-none",
-            warning: "text-yellow-400 bg-white border-none",
-            info: "bg-blue-400 bg-white border-none",
-          },
-        }}
-      />
     </main>
   );
 };

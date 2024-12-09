@@ -1,30 +1,43 @@
 import { useEffect, useRef } from "react";
 import { useStock } from "@/context/stockContext";
-import {
-  checkLowStockLevels,
-  checkOutOfStockLevels,
-} from "@/components/stock/stock-notification";
 
 export const useStockNotifications = (checkIntervalMinutes = 60) => {
   const { stock } = useStock();
   const intervalRef = useRef<number>();
-  const hasCheckedRef = useRef(false);
+  const previousStockRef = useRef<string>("");
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
-    if (!hasCheckedRef.current && stock.length > 0) {
-      checkLowStockLevels(stock);
-      checkOutOfStockLevels(stock);
-      hasCheckedRef.current = true;
+    const currentStockString = JSON.stringify(stock);
+
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
 
+    // Only update the previous stock reference when stock changes
+    if (previousStockRef.current !== currentStockString && stock.length > 0) {
+      previousStockRef.current = currentStockString;
+    }
+
+    // Clear existing interval if any
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    // Set up new interval - but don't show notifications
     intervalRef.current = window.setInterval(() => {
-      checkLowStockLevels(stock);
-      checkOutOfStockLevels(stock);
+      // Removed notification checks
+      // Just keep track of stock changes
     }, checkIntervalMinutes * 60 * 1000);
 
+    // Cleanup
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
+      }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
       }
     };
   }, [stock, checkIntervalMinutes]);
