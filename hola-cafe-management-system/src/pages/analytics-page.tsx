@@ -7,13 +7,14 @@ import { SideAnalytics } from "@/components/analytics/side-analytics";
 import BigRevenueAnalyticsCard from "@/components/analytics/big-revenue-analytics";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useStockNotifications } from "@/hooks/useStockNotifications";
+import { Toaster } from "sonner";
 
 const AnalyticsPage = () => {
+  useStockNotifications(1);
   /* 
     General Analytics Collection
     - Shows the general analytics of the application
     */
-  useStockNotifications(1);
 
   return (
     <Tabs defaultValue="Daily">
@@ -48,7 +49,6 @@ const AnalyticsPage = () => {
             <div className="col-span-2">
               <BigExpensesAnalyticsCard date_range="Daily" />
             </div>
-            
           </div>
         </TabsContent>
         <TabsContent value="Weekly">
@@ -109,6 +109,18 @@ const AnalyticsPage = () => {
           </div>
         </TabsContent>
       </main>
+
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          classNames: {
+            error: "bg-red-400 bg-white border-none",
+            success: "text-green-400 bg-white border-none",
+            warning: "text-yellow-400 bg-white border-none",
+            info: "bg-blue-400 bg-white border-none",
+          },
+        }}
+      />
     </Tabs>
   );
 };

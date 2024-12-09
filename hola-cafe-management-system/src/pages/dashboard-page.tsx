@@ -11,6 +11,7 @@ import UserLogTable from "@/components/stock/user-logs";
 import { useNavigate } from "react-router-dom";
 import { useStockNotifications } from "@/hooks/useStockNotifications";
 import { useStock } from "@/context/stockContext";
+import { Toaster } from "sonner";
 
 interface UserLog {
   id: string;
@@ -26,29 +27,14 @@ const DashboardPage = () => {
     - Shows the immediate data of the application
     */
   const { token } = useAuth();
-  const { stock, setStock } = useStock();
+  useStockNotifications(1);
+  const { stock, setStock, fetchStocks } = useStock();
   const [userlogs, setUserLogs] = useState<UserLog[]>([]);
 
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
   const navigate = useNavigate();
-
-  useStockNotifications(1);
-
-  const fetchStocks = async () => {
-    try {
-      const stocks = (await dataFetch(
-        "api/image/is-stocked-by/supplier/stock/",
-        "GET",
-        {},
-        token!
-      )) as Stock[];
-      setStock(stocks);
-    } catch (error) {
-      console.error("Failed to fetch stocks", error);
-    }
-  };
 
   const fetchUserLogs = async () => {
     try {
@@ -92,6 +78,18 @@ const DashboardPage = () => {
           <UserLogTable userlogs={userlogs} />
         </div>
       </div>
+
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          classNames: {
+            error: "bg-red-400 bg-white border-none",
+            success: "text-green-400 bg-white border-none",
+            warning: "text-yellow-400 bg-white border-none",
+            info: "bg-blue-400 bg-white border-none",
+          },
+        }}
+      />
     </main>
   );
 };

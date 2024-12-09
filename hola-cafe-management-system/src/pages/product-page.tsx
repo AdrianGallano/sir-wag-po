@@ -11,12 +11,15 @@ import Product from "@/models/product";
 import dataFetch from "@/services/data-service";
 import { PackagePlus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useStockNotifications } from "@/hooks/useStockNotifications";
+import { useStock } from "@/context/stockContext";
 
 const ProductPage = () => {
   const { token } = useAuth();
+  const { stock } = useStock();
+  useStockNotifications(1);
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
@@ -24,8 +27,6 @@ const ProductPage = () => {
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const Navigate = useNavigate();
-
-  useStockNotifications(1);
 
   const fetchProducts = async () => {
     try {
@@ -165,6 +166,18 @@ const ProductPage = () => {
           onUpdate={onUpdate}
         />
       )}
+
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          classNames: {
+            error: "bg-red-400 bg-white border-none",
+            success: "text-green-400 bg-white border-none",
+            warning: "text-yellow-400 bg-white border-none",
+            info: "bg-blue-400 bg-white border-none",
+          },
+        }}
+      />
     </main>
   );
 };
