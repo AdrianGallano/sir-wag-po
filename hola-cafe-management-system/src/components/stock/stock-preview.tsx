@@ -114,7 +114,7 @@
 
     const getStockStatus = (quantity: number): string => {
       if (quantity === 0) return "Out of Stock";
-      if (quantity <= 50) return "Low Stock";
+      if (quantity <= 20) return "Low Stock";
       return "In Stock";
     };
     
