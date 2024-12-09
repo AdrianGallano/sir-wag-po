@@ -1,4 +1,5 @@
 import { Stock } from "@/models/stock";
+import { TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
 
 export const checkLowStockLevels = (stocks: Stock[]) => {
@@ -30,7 +31,7 @@ export const checkLowStockLevels = (stocks: Stock[]) => {
         </ul>
       </div>,
       {
-        duration: 6000,
+        duration: 3500,
       }
     );
   }
@@ -43,16 +44,18 @@ export const checkOutOfStockLevels = (stocks: Stock[]) => {
 
   if (outOfStock.length > 0) {
     if (outOfStock.length === 1) {
-      toast.warning(
+      toast(
         `Out stock alert: ${outOfStock[0].name} (${outOfStock[0].quantity} remaining)`,
         {
-          duration: 4000,
+          duration: 3500,
+          className: "text-red-500 bg-white",
+          icon: <TriangleAlert className="h-5 w-5 fill-red-500 text-white" />,
         }
       );
       return;
     }
 
-    toast.warning(
+    toast(
       <div>
         <p className="font-semibold">Multiple items are running low:</p>
         <ul className="mt-2 list-disc list-inside">
@@ -64,7 +67,11 @@ export const checkOutOfStockLevels = (stocks: Stock[]) => {
         </ul>
       </div>,
       {
-        duration: 6000,
+        duration: 3500,
+        className: "text-red-500 bg-white",
+        icon: (
+          <TriangleAlert className="h-[22px] w-[22px] fill-red-500 text-white" />
+        ),
       }
     );
   }
