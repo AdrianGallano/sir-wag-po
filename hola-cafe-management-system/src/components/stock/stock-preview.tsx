@@ -49,8 +49,8 @@
     const [updatedStocks, setUpdatedStocks] = useState<Stock[]>(stocks);
 
     const handleQuantityChange = (change: number) => {
-      setQuantity((prev) => Math.max(1, prev + change)); // Ensure quantity is at least 1
-    };
+      setQuantity((prev) => Math.max(0, prev + change)); // Prevent quantity from going below 0
+    };    
 
     const modifyStockQuantity = async (newQuantity: number, supplierId: number, stockName: string, stockId: number) => {
       try {
@@ -201,16 +201,18 @@
                             </p>
                           </div>
                           <div className="flex items-center justify-between mb-4">
-                          <button
-                            className="px-2 py-1 text-lg font-bold bg-transparent hover:border-gray-400 rounded border border-gray-300"
-                            onClick={() => {
-                              handleQuantityChange(-1);
-                              modifyStockQuantity(Number(stock.quantity) - 1, stock.supplier.id, stock.name, stock.id);
-                            }}
-                          >
-                            -
-                          </button>
-
+                            <button
+                              className="px-2 py-1 text-lg font-bold bg-transparent hover:border-gray-400 rounded border border-gray-300"
+                              onClick={() => {
+                                if (Number(stock.quantity) > 0) {
+                                  handleQuantityChange(-1);
+                                  modifyStockQuantity(Number(stock.quantity) - 1, stock.supplier.id, stock.name, stock.id);
+                                }
+                              }}
+                              disabled={Number(stock.quantity) <= 0} // Disable button if quantity is 0
+                            >
+                              -
+                            </button>
                             <div className="px-4 py-1 bg-transparent rounded-md border border-gray-300">
                               <span className="text-lg font-semibold">{Number(stock.quantity).toFixed(2)}</span>
                             </div>
