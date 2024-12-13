@@ -43,7 +43,6 @@ class ImageViewSet(viewsets.ModelViewSet):
     ordering_fields = "__all__"
     host_address = os.getenv("WEB_HOST")
 
-
     def upload(self, request):
         uploaded_images = []
 
@@ -114,4 +113,14 @@ class UserUserLogViewSet(viewsets.ModelViewSet):
     serializer_class = UserUserLogSerializer
 
     ordering_fields = "__all__"
-    
+
+
+# add labels in the charts 5-10
+# transaction logs 5-10
+# Remove analytics and move to the dashboard 5
+# best selling and least selling product (rankings) 1hr
+
+# excel layout rwvise 2hrs
+# user restriction 1hr
+# expired date/ automatic delete / reduce delete 1hr
+# traking of process of paglabas and pagpasok ng stock 2hrs

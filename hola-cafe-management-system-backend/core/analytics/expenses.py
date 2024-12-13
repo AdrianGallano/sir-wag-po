@@ -13,7 +13,17 @@ from drf_yasg import openapi
 # CUSTOM
 from inventory.models import Stock
 from ..serializers import ExpensesAnalyticsSerializer
-from .general import query_by_date
+from .general import query_by_date, compute_greater_datetime, compute_least_datetime
+
+
+def query_expenses(date_range):
+    stocks = query_by_date(Stock, ExpensesAnalyticsSerializer, date_range=date_range)
+
+    expenses = 0
+    for stock in stocks:
+        expenses += float(stock["total_cost_price"])
+
+    return expenses, stocks
 
 
 @swagger_auto_schema(
@@ -38,14 +48,17 @@ from .general import query_by_date
 )
 @api_view(["GET"])
 def get_expenses(request):
-    date_range = [request.GET["end_date"], request.GET["start_date"]]
-    stocks = query_by_date(Stock, ExpensesAnalyticsSerializer, date_range=date_range)
+    try:
+        greater_date = request.GET.get("end_date")
+        greater_datetime = compute_greater_datetime(greater_date=greater_date)
 
-    expenses = 0
-    for stock in stocks:
-        expenses += float(stock["total_cost_price"])
+        least_datetime = request.GET.get("start_date")
+        least_datetime = compute_least_datetime(least_date=least_datetime)
 
-    return Response({"expenses": expenses, "data": stocks})
+        expenses, stocks = query_expenses([least_datetime, greater_datetime])
+        return Response({"expenses": expenses, "data": stocks})
+    except ValueError:
+        return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
 
 
 @swagger_auto_schema(
@@ -62,29 +75,17 @@ def get_expenses(request):
 )
 @api_view(["GET"])
 def get_expense_by_this_month(request):
-    start_date = request.GET.get("start_date")
+    try:
+        greater_date = request.GET.get("start_date")
+        greater_datetime = compute_greater_datetime(greater_date=greater_date)
 
-    if not start_date:
-        start_date = datetime.now().date()
-    else:
-        try:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-        except ValueError:
-            return Response(
-                {"error": "Invalid date format. Use YYYY-MM-DD."}, status=400
-            )
+        least_datetime = greater_datetime.date() - relativedelta(months=1)
+        least_datetime = compute_least_datetime(least_date=least_datetime)
 
-    start_date = datetime.combine(start_date, datetime.max.time())
-    end_datetime = start_date - relativedelta(months=1)
-    date_range = [start_date, end_datetime]
-
-    stocks = query_by_date(Stock, ExpensesAnalyticsSerializer, date_range=date_range)
-
-    expenses = 0
-    for stock in stocks:
-        expenses += float(stock["total_cost_price"])
-
-    return Response({"expenses": expenses, "data": stocks})
+        expenses, stocks = query_expenses([least_datetime, greater_datetime])
+        return Response({"expenses": expenses, "data": stocks})
+    except ValueError:
+        return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
 
 
 @swagger_auto_schema(
@@ -101,29 +102,18 @@ def get_expense_by_this_month(request):
 )
 @api_view(["GET"])
 def get_expense_by_this_year(request):
-    start_date = request.GET.get("start_date")
+    try:
+        greater_date = request.GET.get("start_date")
+        greater_datetime = compute_greater_datetime(greater_date=greater_date)
 
-    if not start_date:
-        start_date = datetime.now().date()
-    else:
-        try:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-        except ValueError:
-            return Response(
-                {"error": "Invalid date format. Use YYYY-MM-DD."}, status=400
-            )
+        least_datetime = greater_datetime.date() - relativedelta(years=1)
+        least_datetime = compute_least_datetime(least_date=least_datetime)
 
-    start_date = datetime.combine(start_date, datetime.max.time())
-    end_datetime = start_date - relativedelta(years=1)
-    date_range = [start_date, end_datetime]
+        expenses, stocks = query_expenses([least_datetime, greater_datetime])
+        return Response({"expenses": expenses, "data": stocks})
+    except ValueError:
+        return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
 
-    stocks = query_by_date(Stock, ExpensesAnalyticsSerializer, date_range=date_range)
-
-    expenses = 0
-    for stock in stocks:
-        expenses += float(stock["total_cost_price"])
-
-    return Response({"expenses": expenses, "data": stocks})
 
 @swagger_auto_schema(
     method="get",
@@ -139,29 +129,18 @@ def get_expense_by_this_year(request):
 )
 @api_view(["GET"])
 def get_expense_by_this_week(request):
-    start_date = request.GET.get("start_date")
+    try:
+        greater_date = request.GET.get("start_date")
+        greater_datetime = compute_greater_datetime(greater_date=greater_date)
 
-    if not start_date:
-        start_date = datetime.now().date()
-    else:
-        try:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-        except ValueError:
-            return Response(
-                {"error": "Invalid date format. Use YYYY-MM-DD."}, status=400
-            )
+        least_datetime = greater_datetime.date() - relativedelta(weeks=1)
+        least_datetime = compute_least_datetime(least_date=least_datetime)
 
-    start_date = datetime.combine(start_date, datetime.max.time())
-    end_datetime = start_date - relativedelta(weeks=1)
-    date_range = [start_date, end_datetime]
+        expenses, stocks = query_expenses([least_datetime, greater_datetime])
+        return Response({"expenses": expenses, "data": stocks})
+    except ValueError:
+        return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
 
-    stocks = query_by_date(Stock, ExpensesAnalyticsSerializer, date_range=date_range)
-
-    expenses = 0
-    for stock in stocks:
-        expenses += float(stock["total_cost_price"])
-
-    return Response({"expenses": expenses, "data": stocks})
 
 @swagger_auto_schema(
     method="get",
@@ -177,26 +156,14 @@ def get_expense_by_this_week(request):
 )
 @api_view(["GET"])
 def get_expense_by_this_day(request):
-    start_date = request.GET.get("start_date")
+    try:
+        greater_date = request.GET.get("start_date")
+        greater_datetime = compute_greater_datetime(greater_date=greater_date)
 
-    if not start_date:
-        start_date = datetime.now().date()
-    else:
-        try:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-        except ValueError:
-            return Response(
-                {"error": "Invalid date format. Use YYYY-MM-DD."}, status=400
-            )
-    start_datetime = datetime.combine(start_date, time.min)  # 00:00:00
-    end_datetime = datetime.combine(start_date, time.max)
+        least_datetime = greater_datetime.date() # since i'm computing the same day just put the same date (but with diffrent time)
+        least_datetime = compute_least_datetime(least_date=least_datetime)
 
-    date_range = [start_datetime, end_datetime]
-
-    stocks = query_by_date(Stock, ExpensesAnalyticsSerializer, date_range=date_range)
-
-    expenses = 0
-    for stock in stocks:
-        expenses += float(stock["total_cost_price"])
-
-    return Response({"expenses": expenses, "data": stocks})
+        expenses, stocks = query_expenses([least_datetime, greater_datetime])
+        return Response({"expenses": expenses, "data": stocks})
+    except ValueError:
+        return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)

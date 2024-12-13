@@ -3,19 +3,31 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 # DATE TIME
-from datetime import datetime, timedelta, time, timezone
+from datetime import datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
+
 
 # SWAGGER
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 # CUSTOM
-from inventory.models import Product, Stock
-from inventory.serializers import ProductSerializer, StockSerializer
 from ..serializers import RevenueAnalyticsSerializer
 from pos.models import Transaction
-from .general import query_by_date
+from .general import query_by_date, compute_greater_datetime, compute_least_datetime
+
+
+def query_price_sold(date_range):
+    transactions = query_by_date(
+        Transaction, RevenueAnalyticsSerializer, date_range=date_range
+    )
+
+    revenue = 0
+    for transaction in transactions:
+        revenue += float(transaction["price_sold"])
+
+    return revenue, transactions
+
 
 @swagger_auto_schema(
     method="get",
@@ -39,16 +51,19 @@ from .general import query_by_date
 )
 @api_view(["GET"])
 def get_revenue(request):
-    date_range = [request.GET["end_date"], request.GET["start_date"]]
-    transactions = query_by_date(
-        Transaction, RevenueAnalyticsSerializer, date_range=date_range
-    )
+    try:
+        greater_date = request.GET.get("end_date")
+        greater_datetime = compute_greater_datetime(greater_date=greater_date)
 
-    revenue = 0
-    for transaction in transactions:
-        revenue += float(transaction["price_sold"])
+        least_datetime = request.GET.get("start_date")
+        least_datetime = compute_least_datetime(least_date=least_datetime)
 
-    return Response({"revenue": revenue, "data": transactions})
+        revenue, transactions = query_price_sold([least_datetime, greater_datetime])
+        return Response({"revenue": revenue, "data": transactions})
+    except ValueError:
+        return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
+
+
 
 @swagger_auto_schema(
     method="get",
@@ -64,31 +79,18 @@ def get_revenue(request):
 )
 @api_view(["GET"])
 def get_revenue_by_this_month(request):
-    start_date = request.GET.get("start_date")
+    try:
+        greater_date = request.GET.get("start_date")
+        greater_datetime = compute_greater_datetime(greater_date=greater_date)
 
-    if not start_date:
-        start_date = datetime.now().date()
-    else:
-        try:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-        except ValueError:
-            return Response(
-                {"error": "Invalid date format. Use YYYY-MM-DD."}, status=400
-            )
+        least_datetime = greater_datetime.date() - relativedelta(months=1)
+        least_datetime = compute_least_datetime(least_date=least_datetime)
 
-    start_date = datetime.combine(start_date, datetime.max.time())
-    end_datetime = start_date - relativedelta(months=1)
-    date_range = [start_date, end_datetime]
+        revenue, transactions = query_price_sold([least_datetime, greater_datetime])
+        return Response({"revenue": revenue, "data": transactions})
+    except ValueError:
+        return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
 
-    transactions = query_by_date(
-        Transaction, RevenueAnalyticsSerializer, date_range=date_range
-    )
-
-    revenue = 0
-    for transaction in transactions:
-        revenue += float(transaction["price_sold"])
-
-    return Response({"revenue": revenue, "data": transactions})
 
 
 @swagger_auto_schema(
@@ -105,31 +107,19 @@ def get_revenue_by_this_month(request):
 )
 @api_view(["GET"])
 def get_revenue_by_this_year(request):
-    start_date = request.GET.get("start_date")
+    try:
+        greater_date = request.GET.get("start_date")
+        greater_datetime = compute_greater_datetime(greater_date=greater_date)
 
-    if not start_date:
-        start_date = datetime.now().date()
-    else:
-        try:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-        except ValueError:
-            return Response(
-                {"error": "Invalid date format. Use YYYY-MM-DD."}, status=400
-            )
+        least_datetime = greater_datetime.date() - relativedelta(years=1)
+        least_datetime = compute_least_datetime(least_date=least_datetime)
 
-    start_date = datetime.combine(start_date, datetime.max.time())
-    end_datetime = start_date - relativedelta(years=1)
-    date_range = [start_date, end_datetime]
+        revenue, transactions = query_price_sold([least_datetime, greater_datetime])
+        return Response({"revenue": revenue, "data": transactions})
+    except ValueError:
+        return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
 
-    transactions = query_by_date(
-        Transaction, RevenueAnalyticsSerializer, date_range=date_range
-    )
 
-    revenue = 0
-    for transaction in transactions:
-        revenue += float(transaction["price_sold"])
-
-    return Response({"revenue": revenue, "data": transactions})
 
 @swagger_auto_schema(
     method="get",
@@ -145,31 +135,18 @@ def get_revenue_by_this_year(request):
 )
 @api_view(["GET"])
 def get_revenue_by_this_week(request):
-    start_date = request.GET.get("start_date")
+    try:
+        greater_date = request.GET.get("start_date")
+        greater_datetime = compute_greater_datetime(greater_date=greater_date)
 
-    if not start_date:
-        start_date = datetime.now().date()
-    else:
-        try:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-        except ValueError:
-            return Response(
-                {"error": "Invalid date format. Use YYYY-MM-DD."}, status=400
-            )
+        least_datetime = greater_datetime.date() - relativedelta(weeks=1)
+        least_datetime = compute_least_datetime(least_date=least_datetime)
 
-    start_date = datetime.combine(start_date, datetime.max.time())
-    end_datetime = start_date - relativedelta(weeks=1)
-    date_range = [start_date, end_datetime]
+        revenue, transactions = query_price_sold([least_datetime, greater_datetime])
+        return Response({"revenue": revenue, "data": transactions})
+    except ValueError:
+        return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
 
-    transactions = query_by_date(
-        Transaction, RevenueAnalyticsSerializer, date_range=date_range
-    )
-
-    revenue = 0
-    for transaction in transactions:
-        revenue += float(transaction["price_sold"])
-
-    return Response({"revenue": revenue, "data": transactions})
 
 
 @swagger_auto_schema(
@@ -186,38 +163,14 @@ def get_revenue_by_this_week(request):
 )
 @api_view(["GET"])
 def get_revenue_by_this_day(request):
-    start_date = request.GET.get("start_date")
+    try:
+        greater_date = request.GET.get("start_date")
+        greater_datetime = compute_greater_datetime(greater_date=greater_date)
 
-    if not start_date:
-        start_date = datetime.now().date()
-    else:
-        try:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-        except ValueError:
-            return Response(
-                {"error": "Invalid date format. Use YYYY-MM-DD."}, status=400
-            )
-    start_datetime = datetime.combine(start_date, time.min)  # 00:00:00
-    end_datetime = datetime.combine(start_date, time.max) 
-    
-    date_range = [start_datetime, end_datetime]
-    print(start_datetime)
-    print(end_datetime)
-    
-    transactions = query_by_date(
-        Transaction, RevenueAnalyticsSerializer, date_range=date_range
-    )
+        least_datetime = greater_datetime.date() # since i'm computing the same day just put the same date (but with diffrent time)
+        least_datetime = compute_least_datetime(least_date=least_datetime)
 
-    revenue = 0
-    for transaction in transactions:
-        revenue += float(transaction["price_sold"])
-
-    return Response({"revenue": revenue, "data": transactions})
-
-
-# ADD RECEIPT
-# ADD RECEIPT
-# ADD RECEIPT
-# ADD RECEIPT
-# ADD RECEIPT
-# ADD RECEIPT
+        revenue, transactions = query_price_sold([least_datetime, greater_datetime])
+        return Response({"revenue": revenue, "data": transactions})
+    except ValueError:
+        return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
