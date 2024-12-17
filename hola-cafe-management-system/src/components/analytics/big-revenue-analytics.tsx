@@ -1,6 +1,13 @@
 "use client";
 
-import { Area, AreaChart, CartesianGrid, XAxis, Tooltip } from "recharts";
+import {
+    Area,
+    AreaChart,
+    CartesianGrid,
+    XAxis,
+    Tooltip,
+    YAxis,
+} from "recharts";
 import { TrendingUp } from "lucide-react";
 import {
     Card,
@@ -23,19 +30,19 @@ import { useAuth } from "@/context/authContext";
 const chartConfig = {
     price_sold: {
         label: "Revenue from Sales=",
-        color: "hsl(var(--chart-2))", 
+        color: "hsl(var(--chart-2))",
     },
 } satisfies ChartConfig;
 
 interface RevenueData {
-    price_sold: number;  // Represents the amount of revenue from a single sale
-    sold_at: string;     // Date when the sale occurred
+    price_sold: number; // Represents the amount of revenue from a single sale
+    sold_at: string; // Date when the sale occurred
     payment_method: string; // Payment method used (e.g., "Credit Card", "Cash", etc.)
 }
 
 interface Revenue {
-    revenue: number;  // Total revenue for the selected time range
-    data: RevenueData[];  // Array of individual revenue data entries
+    revenue: number; // Total revenue for the selected time range
+    data: RevenueData[]; // Array of individual revenue data entries
 }
 
 const BigRevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
@@ -57,11 +64,11 @@ const BigRevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
             // Format the revenue data (e.g., converting the date from string to a more readable format)
             const formattedData = response.data.map((rev: RevenueData) => ({
                 ...rev,
-                sold_at: new Date(rev.sold_at).toLocaleDateString('en-US', {
-                    weekday: 'short', // Short weekday (e.g., "Mon")
-                    month: 'short',   // Short month (e.g., "Dec")
-                    day: '2-digit',   // 2-digit day
-                    year: 'numeric',  // Full year (e.g., "2024")
+                sold_at: new Date(rev.sold_at).toLocaleDateString("en-US", {
+                    weekday: "short", // Short weekday (e.g., "Mon")
+                    month: "short", // Short month (e.g., "Dec")
+                    day: "2-digit", // 2-digit day
+                    year: "numeric", // Full year (e.g., "2024")
                 }),
             }));
             setRevenueData(formattedData);
@@ -115,6 +122,16 @@ const BigRevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
                             tickLine={false}
                             axisLine={false}
                             tickMargin={8}
+                        />
+                        <YAxis
+                            dataKey="price_sold"
+                            domain={[
+                                0,
+                                (dataMax: number) => Math.ceil(dataMax) + 5000,
+                            ]} 
+                            tickLine={false}
+                            axisLine={false}
+                            padding={{ top: 20, bottom: 20 }}
                         />
                         <Tooltip
                             content={<ChartTooltipContent />}

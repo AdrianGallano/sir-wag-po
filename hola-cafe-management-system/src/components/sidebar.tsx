@@ -33,14 +33,6 @@ const Sidebar = () => {
               <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
               <span className="sr-only">Acme Inc</span>
             </Link>
-
-            <Link
-              to="/analytics"
-              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              <LineChart className="h-5 w-5" />
-              <span className="sr-only">Analytics</span>
-            </Link>
             <Link
               to="/inventory"
               className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"

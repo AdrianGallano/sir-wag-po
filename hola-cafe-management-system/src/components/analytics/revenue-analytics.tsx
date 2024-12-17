@@ -53,10 +53,11 @@ const RevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
 
             setRevenue(response);
             setRevenueData(response.data);
-
-            (revenueData as RevenueData[]).forEach((rev) => {
-                rev.sold_at = new Date(rev.sold_at).toLocaleDateString();
-            });
+            if (revenueData) {
+                (revenueData as RevenueData[]).forEach((rev) => {
+                    rev.sold_at = new Date(rev.sold_at).toLocaleDateString();
+                });
+            }
         } catch (error) {
             console.error("Failed to fetch revenue", error);
         }
@@ -97,7 +98,8 @@ const RevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
                     </div>
                 </CardHeader>
                 <CardContent className="text-xl font-semibold py-0">
-                    ₱{Number(revenue?.revenue).toFixed(2)}
+                    ₱
+                    {revenue?.revenue != null ? revenue?.revenue.toFixed(2) : 0}
                 </CardContent>
             </div>
             <div className="h-24 w-24 flex">

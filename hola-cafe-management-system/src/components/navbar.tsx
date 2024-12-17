@@ -85,25 +85,6 @@ const Navbar = () => {
           </Tooltip>
         </TooltipProvider>
 
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                to="/analytics"
-                className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
-                  location.pathname === "/analytics"
-                    ? "bg-custom-sunnyGold text-custom-charcoalOlive "
-                    : "bg-transparent text-muted-foreground hover:text-white"
-                }`}
-              >
-                <LineChart className="h-4 w-4 transition-all group-hover:scale-110 " />
-                <span className="sr-only">Analytics</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Analytics</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
         <div className="my-6 flex flex-col gap-1.5 ">
           <TooltipProvider>
             <Tooltip>
