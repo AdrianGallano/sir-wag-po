@@ -226,7 +226,7 @@ class ProductOrderViewSet(viewsets.ModelViewSet):
 
 class ProductServiceCrewCartViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = Cart.objects.all().select_related("service_crew", "product").filter()
+    queryset = Cart.objects.all().select_related("service_crew", "product")
     serializer_class = ProductServiceCrewCartSerializer
 
     def list(self, request, *args, **kwargs):
