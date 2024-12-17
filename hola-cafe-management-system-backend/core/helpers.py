@@ -24,3 +24,11 @@ def deletionBasedUserLog(user, object_model, data):
         description=f"{user.username} deleted a {object_model}",
         object_data=data,
     )
+
+
+def transactionBasedUserLog(user, object_model, data):
+    UserLog.objects.create(
+        user=user,
+        description=f"{user.username} expended a {object_model}",
+        object_data=data,
+    )

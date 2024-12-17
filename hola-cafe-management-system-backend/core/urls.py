@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from core.analytics import expenses, revenue
+from core.analytics import expenses, ranking, revenue
 
 urlpatterns = [
     path("user-log/", views.UserLogViewSet.as_view({"get": "list", "post": "create"})),
@@ -29,4 +29,10 @@ urlpatterns = [
     path("analytics/month/revenue/", revenue.get_revenue_by_this_month),
     path("analytics/year/revenue/", revenue.get_revenue_by_this_year),
     path("analytics/day/revenue/", revenue.get_revenue_by_this_day),
+    path("analytics/rankings/", ranking.get_rankings),
+    path("analytics/week/rankings/", ranking.get_ranking_by_this_week),
+    path("analytics/month/rankings/", ranking.get_ranking_by_this_month),
+    path("analytics/year/rankings/", ranking.get_ranking_by_this_year),
+    path("analytics/day/rankings/", ranking.get_ranking_by_this_day),
+
 ]

@@ -4,7 +4,7 @@ from rest_framework import serializers
 # CUSTOM
 from djoser.serializers import UserSerializer
 from .models import UserLog, Image
-from pos.models import Transaction
+from pos.models import Transaction, ProductOrder
 from inventory.models import Stock
 
 
@@ -51,9 +51,17 @@ class ExpensesAnalyticsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Stock
-        fields = ["name", "unit_price", "quantity", "bought_at", "total_cost_price"]  
+        fields = ["name", "unit_price", "quantity", "bought_at", "total_cost_price"]
 
     def get_total_cost_price(self, obj):
         unit_price = float(obj.unit_price) if obj.unit_price else 0
         quantity = float(obj.quantity) if obj.quantity else 0
         return unit_price * quantity
+
+
+class RankingAnalyticsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductOrder
+        depth = 3
+        fields = "__all__"

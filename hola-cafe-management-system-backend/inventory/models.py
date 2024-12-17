@@ -50,12 +50,40 @@ class Stock(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
     status = models.CharField(max_length=255, null=True)
-    
+
     def __str__(self):
         return self.name
 
     class Meta:
         indexes = [models.Index(fields=["name"])]
+
+
+class StockCart(models.Model):
+    service_crew = models.ForeignKey(User, on_delete=models.CASCADE)
+    stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+    
+    def __str__(self):
+        return self.stock.name
+
+
+class StockTransaction(models.Model):
+    service_crew = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
+
+
+class StockUsed(models.Model):
+    stock_transaction = models.ForeignKey(StockTransaction, on_delete=models.CASCADE)
+    stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+    
+    def __str__(self):
+        return self.stock.name
 
 
 class Product(models.Model):

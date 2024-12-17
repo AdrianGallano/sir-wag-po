@@ -19,6 +19,36 @@ urlpatterns = [
         ),
     ),
     path(
+        "stocks-used/",
+        views.StockUsedViewSet.as_view({"get": "list", "post": "create"}),
+    ),
+    path(
+        "stocks-used/<int:pk>/",
+        views.StockUsedViewSet.as_view(
+            {"get": "retrieve", "put": "update", "delete": "destroy"}
+        ),
+    ),
+    path(
+        "stock-carts/",
+        views.StockCartViewSet.as_view({"get": "list", "post": "create"}),
+    ),
+    path(
+        "stock-carts/<int:pk>/",
+        views.StockCartViewSet.as_view(
+            {"get": "retrieve", "put": "update", "delete": "destroy"}
+        ),
+    ),
+    path(
+        "stock-transactions/",
+        views.StockTransactionViewSet.as_view({"get": "list", "post": "create"}),
+    ),
+    path(
+        "stock-transactions/<int:pk>/",
+        views.StockTransactionViewSet.as_view(
+            {"get": "retrieve", "put": "update", "delete": "destroy"}
+        ),
+    ),
+    path(
         "suppliers/", views.SupplierViewSet.as_view({"get": "list", "post": "create"})
     ),
     path(
@@ -57,6 +87,32 @@ urlpatterns = [
         "image/category/product/<int:pk>",
         views.ProductCategoryImageViewSet.as_view({"get": "retrieve"}),
     ),
+    # Start here
+    path(
+        "stock-used/stock-transactions/",
+        views.StockUsedDepthViewSet.as_view({"get": "list"}),
+    ),
+    path(
+        "stock-used/stock-transactions/<int:pk>/",
+        views.StockUsedDepthViewSet.as_view({"get": "retrieve"}),
+    ),
+    path(
+        "stock-transactions/stock-cart/",
+        views.StockCartDepthViewSet.as_view({"get": "list"}),
+    ),
+    path(
+        "stock-transactions/stock-cart<int:pk>/",
+        views.StockCartDepthViewSet.as_view({"get": "retrieve"}),
+    ),
+    path(
+        "stock-transaction/stock-used/",
+        views.StockTransactionDepthViewSet.as_view({"get": "list"}),
+    ),
+    path(
+        "stock-transaction/stock-used/<int:pk>/",
+        views.StockTransactionDepthViewSet.as_view({"get": "retrieve"}),
+    ),
+    # Start here
     path("excel/stock/", views.StockExcelViewSet.as_view({"get": "list"})),
     path("excel/product/", views.ProductExcelViewSet.as_view({"get": "list"})),
     path("excel/supplier/", views.SupplierExcelViewSet.as_view({"get": "list"})),
