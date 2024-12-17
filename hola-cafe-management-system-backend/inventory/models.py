@@ -47,6 +47,7 @@ class Stock(models.Model):
     date_shelved = models.DateTimeField(null=True)
     expiration_date = models.DateTimeField(null=True)
     is_stocked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    is_expired = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
     status = models.CharField(max_length=255, null=True)
