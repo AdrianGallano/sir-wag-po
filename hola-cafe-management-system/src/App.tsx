@@ -16,6 +16,7 @@ import ProductPage from "./pages/product-page";
 import TransactionPage from "./pages/transaction-page";
 import CategoryPage from "./pages/category-page";
 import DashboardPage from "./pages/dashboard-page";
+import StockPosPage from "./pages/stock-pos-page";
 
 function App(): ReactNode {
   return (
@@ -33,6 +34,7 @@ function App(): ReactNode {
           <Route path="product" element={<ProductPage />} />
           <Route path="transaction" element={<TransactionPage />} />
           <Route path="categories" element={<CategoryPage />} />
+          <Route path="stockpos" element={<StockPosPage />} />
         </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />

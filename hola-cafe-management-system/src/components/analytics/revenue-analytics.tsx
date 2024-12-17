@@ -97,7 +97,7 @@ const RevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
                     </div>
                 </CardHeader>
                 <CardContent className="text-xl font-semibold py-0">
-                    ₱{revenue?.revenue}
+                    ₱{Number(revenue?.revenue).toFixed(2)}
                 </CardContent>
             </div>
             <div className="h-24 w-24 flex">
