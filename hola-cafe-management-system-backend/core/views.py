@@ -118,10 +118,6 @@ class UserUserLogViewSet(viewsets.ModelViewSet):
 
 # excel layout revise 2hrs
 # expired date/ automatic delete / reduce delete 1hr
-
 # user restriction 1hr
 
 
-# Remove analytics and move to the dashboard 5
-# add labels in the charts 5-10
-# transaction logs 5-10
