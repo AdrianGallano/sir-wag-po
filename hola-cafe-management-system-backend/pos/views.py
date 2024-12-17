@@ -230,8 +230,9 @@ class ProductServiceCrewCartViewSet(viewsets.ModelViewSet):
     serializer_class = ProductServiceCrewCartSerializer
 
     def list(self, request, *args, **kwargs):
-        cart_obj = Cart.objects.all().filter(service_crew=request.user)
-        cart_obj = CartSerializer(cart_obj, many=True)
+        
+        cart_obj = self.queryset.filter(service_crew=request.user)
+        cart_obj = ProductServiceCrewCartSerializer(cart_obj, many=True)
         return Response(cart_obj.data)
     
 
