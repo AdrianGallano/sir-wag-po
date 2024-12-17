@@ -60,7 +60,7 @@ class CartViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         cart_obj = Cart.objects.all().filter(service_crew=request.user)
         cart_obj = CartSerializer(cart_obj, many=True)
-        return cart_obj
+        return Response(cart_obj.data)
     
     def create(self, request, *args, **kwargs):
         cart_obj = super().create(request, *args, **kwargs)

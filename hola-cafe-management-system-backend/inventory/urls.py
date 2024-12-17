@@ -45,7 +45,7 @@ urlpatterns = [
     path(
         "stock-transactions/<int:pk>/",
         views.StockTransactionViewSet.as_view(
-            {"get": "retrieve", "put": "update", "delete": "destroy"}
+            {"get": "retrieve"}
         ),
     ),
     path(

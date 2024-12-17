@@ -410,6 +410,8 @@ class StockTransactionViewSet(viewsets.ModelViewSet):
 
         return Response(serialized_stocks_used.data, status=201)
 
+    
+    # DONT EVEN THINK ABOUT USING THIS
     def update(self, request, *args, **kwargs):
         stock_transaction = super().update(request, *args, **kwargs)
         old_stock_transaction_id = kwargs["pk"]
@@ -424,6 +426,7 @@ class StockTransactionViewSet(viewsets.ModelViewSet):
 
         return stock_transaction
 
+    # DONT EVEN THINK ABOUT USING THIS
     def destroy(self, request, *args, **kwargs):
         old_stock_transaction_id = kwargs["pk"]
         old_stock_transaction_obj = StockTransaction.objects.get(id=old_stock_transaction_id)
