@@ -53,7 +53,7 @@ const StockPosPage = () => {
         console.error("Token not found");
         return;
       }
-      const endPoint = `/api/product/service-crew/cart`;
+      const endPoint = `/api/stock-transactions/stock-cart/`;
       const method = "GET";
 
       const response = await dataFetch(endPoint, method, {}, token);
@@ -64,7 +64,18 @@ const StockPosPage = () => {
     }
   };
 
-  const addToCart = async (productId: number, quantity: number) => {
+  const addToCart = async (stockId: number, quantity: number) => {
+    const cartItem = cart.find((stock: any) => stock.stock?.id === stockId) as { stock: { id: number }, quantity: number } | undefined;
+    const stockItem = stocks.find((stock: { id: number; quantity: number }) => stock.id === stockId) as { id: number; quantity: number } | undefined;
+    console.log("Stock item:", stockItem);
+    console.log("Cart item:", cartItem);
+    if (cartItem && cartItem.quantity + quantity > stockItem!.quantity) {
+      toast.error("Insufficient stock quantity", {
+        icon: <X className="text-red-500" />,
+        className: "bg-white text-red-500 ",
+      });
+      return;
+    }
     try {
       if (!token) {
         console.error("Token not found");
@@ -72,26 +83,26 @@ const StockPosPage = () => {
       }
 
       // Fetch the current cart data
-      const endPoint = `/api/carts/?service_crew=${id}`;
+      const endPoint = `/api/stock-carts/`;
       const method = "GET";
       const response = await dataFetch(endPoint, method, {}, token);
 
-      // Find if the product already exists in the cart
+      // Find if the stock already exists in the cart
       const existingCartItem = response.find(
-        (item: any) => item.product === productId
+        (item: any) => item.stock === stockId
       );
 
       if (existingCartItem) {
-        // If the product exists, update its quantity
+        // If the stock exists, update its quantity
         const updatedQuantity = existingCartItem.quantity + quantity;
 
         // Update the cart
-        const updateEndPoint = `/api/carts/${existingCartItem.id}/`;
+        const updateEndPoint = `/api/stock-carts/${existingCartItem.id}/`;
         const updateMethod = "PUT";
         const updatePayload = {
           quantity: updatedQuantity,
           service_crew: id,
-          product: productId,
+          stock: stockId,
         };
         console.log(updateEndPoint, updateMethod, updatePayload);
 
@@ -101,7 +112,7 @@ const StockPosPage = () => {
           updatePayload,
           token
         );
-        toast("Product successfully added to the cart", {
+        toast("stock successfully added to the cart", {
           duration: 2000,
           icon: <CircleCheck className="fill-green-500 text-white" />,
           className: "bg-white text-custom-charcoalOlive",
@@ -117,15 +128,15 @@ const StockPosPage = () => {
           )
         );
       } else {
-        // If the product doesn't exist, add a new item to the cart
+        // If the stock doesn't exist, add a new item to the cart
         const newCartItem = {
           service_crew: id,
-          product: productId,
+          stock: stockId,
           quantity,
         };
 
         // Send a request to add the new cart item
-        const createEndPoint = "/api/carts/";
+        const createEndPoint = "/api/stock-carts/";
         const createMethod = "POST";
         const createPayload = newCartItem;
 
@@ -135,7 +146,7 @@ const StockPosPage = () => {
           createPayload,
           token
         );
-        toast("Product successfully added to the cart", {
+        toast("stock successfully added to the cart", {
           duration: 2000,
           icon: <CircleCheck className="fill-green-500 text-white" />,
           className: "bg-white text-custom-charcoalOlive",
@@ -146,17 +157,15 @@ const StockPosPage = () => {
       }
       fetchCart();
     } catch (error) {
-      toast.error("Failed to add product to the cart", {
+      toast.error("Failed to add stock to the cart", {
         icon: <X className="text-red-500" />,
         className: "bg-white text-red-500 ",
       });
-      console.error("Error adding product to cart:", error);
+      console.error("Error adding stock to cart:", error);
     }
   };
 
   const createTransaction = async (payload: {
-    total_price: string;
-    payment_method: string;
     service_crew: number;
   }) => {
     try {
@@ -164,7 +173,7 @@ const StockPosPage = () => {
         console.error("Token not found");
         return;
       }
-      const endPoint = "/api/transactions/";
+      const endPoint = "/api/stock-transactions/";
       const response = await dataFetch(endPoint, "POST", payload, token);
       console.log("Transaction created successfully", response);
       toast("Transaction completed", {
@@ -174,6 +183,7 @@ const StockPosPage = () => {
       });
       setIsTransactionPopupOpen(false);
       fetchCart(); // Refresh cart after transaction
+      fetchStocks();
     } catch (error) {
       toast.error("Failed to create transaction", {
         icon: <X className="text-red-500" />,
@@ -195,9 +205,9 @@ const StockPosPage = () => {
     if (!cart || cart.length === 0) return 0;
     return cart
       .reduce((total, item) => {
-        const productPrice = parseFloat(item.product.price);
+        const stockPrice = parseFloat(item.stock.price);
         const quantity = item.quantity;
-        return total + productPrice * quantity;
+        return total + stockPrice * quantity;
       }, 0)
       .toFixed(2); // Keep 2 decimal places for currency format
   };
@@ -236,7 +246,7 @@ const StockPosPage = () => {
 
       {/* Transaction Panel */}
       <PosTransaction
-        cartProducts={cart}
+        cartStocks={cart}
         openTransactionPopup={openTransactionPopup}
         refreshCart={fetchCart}
       />
@@ -247,7 +257,7 @@ const StockPosPage = () => {
           onClose={closeTransactionPopup}
           onSubmitTransaction={createTransaction}
           totalPrice={calculateTotalPrice()}
-          products={cart}
+          stocks={cart}
           serviceCrewId={service_crew}
           open={true}
         />

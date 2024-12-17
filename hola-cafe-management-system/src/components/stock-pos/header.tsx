@@ -28,7 +28,7 @@ const PosHeader: React.FC<StockPosHeaderProps> = ({ onFilterChange, onSearchChan
       {/* Search Section */}
       <div className="flex justify-end mb-6">
         <Input
-          placeholder="Filter products..."
+          placeholder="Filter stocks..."
           value={searchTerm}
           onChange={handleSearchChange}
           className="max-w-sm rounded-full"

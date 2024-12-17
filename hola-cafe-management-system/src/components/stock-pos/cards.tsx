@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PlaceHolder from '../../assets/images/hola_logo.jpg';
 import { Button } from '../ui/button';
 import { Stock } from '@/models/stock';
+import dataFetch from '@/services/data-service';
+import { useAuth } from '@/context/authContext';
 
 interface StockPosCardsProps {
   stocks: Stock;
@@ -10,6 +12,8 @@ interface StockPosCardsProps {
 
 const PosCards: React.FC<StockPosCardsProps> = ({ stocks, addToCart }) => {
   const [quantity, setQuantity] = useState(0); // Initialize selected quantity
+  const [cart, setCart] = useState<any[]>([]); // Initialize cart state
+  const { token } = useAuth();
 
   const getStockStatus = (quantity: number): string => {
     if (quantity === 0) return 'Out of Stock';
@@ -29,10 +33,39 @@ const PosCards: React.FC<StockPosCardsProps> = ({ stocks, addToCart }) => {
     }
   };
 
+  const handleQuantityInput = (value: string) => {
+    const inputValue = parseInt(value || '0', 10);
+    if (!isNaN(inputValue) && inputValue >= 0 && inputValue <= Number(stocks.quantity)) {
+      setQuantity(inputValue);
+    }
+  };
+
   const handleAddToCart = () => {
     addToCart(stocks.id, quantity);
     setQuantity(0); // Reset quantity after adding to cart
   };
+
+  // const fetchCart = async () => {
+  //   try {
+  //     if (!token) {
+  //       console.error("Token not found");
+  //       return;
+  //     }
+  //     const endPoint = `/api/stock-transactions/stock-cart/`;
+  //     const method = "GET";
+
+  //     const response = await dataFetch(endPoint, method, {}, token);
+  //     setCart(response);
+  //     console.log("Fetched cart:", response);
+  //   } catch (error) {
+  //     console.error("Error fetching cart:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchCart();
+  // }
+  // , []);
 
   return (
     <div className="flex flex-col border p-4 rounded-lg shadow-lg h-full bg-white hover:shadow-xl transition-all">
@@ -71,15 +104,15 @@ const PosCards: React.FC<StockPosCardsProps> = ({ stocks, addToCart }) => {
           </div>
         </div>
       </div>
+      <span className="text-md flex justify-end text-black">{`${stocks.quantity} stocks left`}</span>
 
       <div className="text-xl font-bold text-black mb-3">{`₱ ${stocks.unit_price}`}</div>
 
       <div className="flex items-center justify-between mb-4">
-        {/* Decrease quantity button */}
         <button
           className="px-2 py-1 text-lg font-bold bg-transparent hover:border-gray-400 rounded border border-gray-300"
           onClick={handleDecrease}
-          disabled={quantity <= 0}
+          disabled={quantity === 0}
         >
           -
         </button>
@@ -88,10 +121,14 @@ const PosCards: React.FC<StockPosCardsProps> = ({ stocks, addToCart }) => {
             type="text"
             className="w-16 text-center text-lg font-semibold border-none outline-none"
             value={quantity}
-            readOnly
+            onChange={(e) => handleQuantityInput(e.target.value)}
+            onBlur={(e) => {
+              if (!e.target.value || parseInt(e.target.value, 10) <= 0) {
+                setQuantity(0);
+              }
+            }}
           />
         </div>
-        {/* Increase quantity button */}
         <button
           className="px-2 py-1 text-lg font-bold bg-transparent hover:border-gray-400 rounded border border-gray-300"
           onClick={handleIncrease}
@@ -108,7 +145,7 @@ const PosCards: React.FC<StockPosCardsProps> = ({ stocks, addToCart }) => {
         onClick={handleAddToCart}
         disabled={quantity === 0} // Disable if no quantity is selected
       >
-        Add to Cart
+        Add to Batch
       </Button>
     </div>
   );

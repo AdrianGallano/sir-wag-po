@@ -9,6 +9,7 @@ import {
   Truck,
   Warehouse,
   LayoutDashboard,
+  LaptopMinimal,
 } from "lucide-react";
 import {
   Tooltip,
@@ -86,6 +87,25 @@ const Navbar = () => {
         </TooltipProvider>
 
         <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/stockpos"
+                  className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
+                    location.pathname === "/stockpos"
+                      ? "bg-custom-sunnyGold text-custom-charcoalOlive "
+                      : "bg-transparent text-muted-foreground hover:text-white"
+                  }`}
+                >
+                  <LaptopMinimal className="h-4 w-4 transition-all group-hover:scale-110 " />
+                  <span className="sr-only">Stock Manager</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Stock Manager</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+        <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
@@ -121,24 +141,6 @@ const Navbar = () => {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Inventory</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to="/stockpos"
-                  className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
-                    location.pathname === "/stockpos"
-                      ? "bg-custom-sunnyGold text-custom-charcoalOlive "
-                      : "bg-transparent text-muted-foreground hover:text-white"
-                  }`}
-                >
-                  <Warehouse className="h-4 w-4 transition-all group-hover:scale-110 " />
-                  <span className="sr-only">Stock Manager</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Stock Manager</TooltipContent>
             </Tooltip>
           </TooltipProvider>
 

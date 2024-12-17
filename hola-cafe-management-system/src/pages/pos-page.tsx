@@ -72,7 +72,7 @@ const PosPage = () => {
       }
 
       // Fetch the current cart data
-      const endPoint = `/api/carts/?service_crew=${id}`;
+      const endPoint = `/api/carts/`;
       const method = "GET";
       const response = await dataFetch(endPoint, method, {}, token);
 

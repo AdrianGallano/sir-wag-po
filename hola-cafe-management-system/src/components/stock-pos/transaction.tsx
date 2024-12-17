@@ -3,42 +3,46 @@ import { Button } from "../ui/button";
 import dataFetch from "@/services/data-service";
 import { useAuth } from "@/context/authContext";
 
-interface CartProduct {
+interface CartStocks {
   id: string;
   name: string;
   quantity: number;
-  price: number;
-  product: {
+  unit_price: number;
+  stock: {
     id: number;
     name: string;
-    price: number;
+    unit_price: number;
+    quantity: number;
   };
 }
 
 interface StockPosTransactionProps {
-  cartProducts: CartProduct[];
+  cartStocks: CartStocks[];
   openTransactionPopup: () => void;
   refreshCart: () => void;
 }
 
 const PosTransaction: React.FC<StockPosTransactionProps> = ({
-  cartProducts,
+  cartStocks,
   openTransactionPopup,
   refreshCart,
 }) => {
   const { token, id } = useAuth();
+  console.log("cartStocksssss", cartStocks);
 
   // Function to handle quantity change
-  const handleQuantityChange = async (cartId: string, currentQuantity: number, change: number, productId: number) => {
+  const handleQuantityChange = async (cartId: string, currentQuantity: number, change: number, stockId: number) => {
     const newQuantity = currentQuantity + change;
 
     // Prevent quantity from being set below 1
     if (newQuantity < 1) return;
+    const stockItem = cartStocks.find(stock => stock.id === cartId);
+    if (stockItem && newQuantity > stockItem.stock.quantity) return;
 
     const payload = {
       quantity: newQuantity,
       service_crew: id,
-      product: productId, // Single product ID instead of array
+      stock: stockId, // Single stock ID instead of array
     };
 
     try {
@@ -47,7 +51,7 @@ const PosTransaction: React.FC<StockPosTransactionProps> = ({
         return;
       }
 
-      const endPoint = `/api/carts/${cartId}/`;
+      const endPoint = `/api/stock-carts/${cartId}/`;
       const method = "PUT";
 
       await dataFetch(endPoint, method, payload, token);
@@ -59,9 +63,9 @@ const PosTransaction: React.FC<StockPosTransactionProps> = ({
     }
   };
 
-  // Calculate total price
-  const totalPrice = cartProducts.reduce(
-    (acc, product) => acc + product?.product.price * product.quantity,
+  // Calculate total unit_price
+  const totalunit_price = cartStocks.reduce(
+    (acc, product) => acc + product?.stock.unit_price * product.quantity,
     0
   );
 
@@ -72,7 +76,7 @@ const PosTransaction: React.FC<StockPosTransactionProps> = ({
         console.error("User not authenticated");
         return;
       }
-      const endPoint = `/api/carts/${cartId}/`; // Deleting cart item by ID
+      const endPoint = `/api/stock-carts/${cartId}/`; // Deleting cart item by ID
       const method = "DELETE";
       await dataFetch(endPoint, method, {}, token);
       console.log(`Item with ID ${cartId} deleted`);
@@ -85,58 +89,54 @@ const PosTransaction: React.FC<StockPosTransactionProps> = ({
   return (
     <div className="w-1/4 border-l pt-12 pb-24 pl-4 pr-4 fixed top-0 right-0 h-full bg-white shadow-lg z-10">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl text-gray-700 font-semibold underline">Transaction</h2>
+        <h2 className="text-2xl text-gray-700 font-semibold underline">Stock Batch</h2>
       </div>
 
       <div className="border rounded-lg p-4 h-full flex flex-col">
         {/* Cart Products */}
         <div className="mb-4 overflow-y-auto max-h-[60vh] flex-grow">
-          {cartProducts.length === 0 ? (
+          {cartStocks.length === 0 ? (
             <p className="text-gray-500 text-center">No items in the cart</p>
           ) : (
             <ul className="space-y-2">
-              {cartProducts.map((product) => (
+              {cartStocks.map((stock) => (
                 <li
-                  key={product.id}
+                  key={stock.id}
                   className="flex flex-col bg-white p-2 rounded shadow-sm border"
                 >
                   <div className="flex justify-between items-center mb-2">
                     <div className="flex-1">
-                      <p className="font-medium text-gray-800">{product?.product.name}</p>
-                      <p className="text-sm text-gray-500">
-                        ₱{Number(product?.product.price).toFixed(2)} each
-                      </p>
+                      <p className="font-medium text-gray-800">{stock?.stock.name}</p>
+                      
                     </div>
-                    <p className="font-semibold text-gray-700">
-                      ₱{Number(product?.product.price * product.quantity).toFixed(2)}
-                    </p>
+                    
                   </div>
                   {/* Quantity Changer */}
                   <div className="flex items-center justify-between mb-4">
                     <button
                       className="px-2 py-1 text-lg font-bold bg-transparent hover:border-gray-400 rounded border border-gray-300"
                       onClick={() =>
-                        handleQuantityChange(product.id, product.quantity, -1, product.product.id)
+                        handleQuantityChange(stock.id, stock.quantity, -1, stock.stock.id)
                       }
                     >
                       -
                     </button>
                     <div className="px-4 py-1 bg-transparent rounded-md border border-gray-300">
                       <span className="text-lg font-semibold">
-                        {product.quantity}
+                        {stock.quantity}
                       </span>
                     </div>
                     <button
                       className="px-2 py-1 text-lg font-bold bg-transparent hover:border-gray-400 rounded border border-gray-300"
                       onClick={() =>
-                        handleQuantityChange(product.id, product.quantity, 1, product.product.id)
+                        handleQuantityChange(stock.id, stock.quantity, 1, stock.stock.id)
                       }
                     >
                       +
                     </button>
                   </div>
                   <button
-                    onClick={() => handleDeleteItem(product.id)}
+                    onClick={() => handleDeleteItem(stock.id)}
                     className="text-red-500 self-end"
                   >
                     Delete
@@ -152,24 +152,18 @@ const PosTransaction: React.FC<StockPosTransactionProps> = ({
           <div className="flex justify-between items-center mb-2">
             <p className="text-gray-600">Total Quantity:</p>
             <p className="font-semibold text-gray-800">
-              {cartProducts.reduce((acc, product) => acc + product.quantity, 0)}
-            </p>
-          </div>
-          <div className="flex justify-between items-center mb-4">
-            <p className="text-gray-600">Total Price:</p>
-            <p className="font-bold text-xl text-gray-900">
-              ₱{Number(totalPrice.toFixed(2)) || 0}
+              {cartStocks.reduce((acc, stock) => acc + stock.quantity, 0)}
             </p>
           </div>
         </div>
 
         {/* Open Transaction Popup Button */}
-        {cartProducts.length > 0 && (
+        {cartStocks.length > 0 && (
           <Button
             onClick={openTransactionPopup}
             className="w-full h-12 text-white rounded-full hover:bg-custom-charcoalOlive bg-custom-char"
           >
-            Proceed to Transaction
+            Continue expending 
           </Button>
         )}
       </div>
