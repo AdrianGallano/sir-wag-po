@@ -580,38 +580,38 @@ export const productColumns = (
     },
   },
 
-  {
-    accessorKey: "created_at",
-    header: ({ column }) => (
-      <div className="flex min-w-28 justify-center">
-        <Button
-          variant={"ghost"}
-          className="inline-flex justify-center text-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date Shelved
-          {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon className="ml-2 h-4 w-4" />
-          ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon className="ml-2 h-4 w-4" />
-          ) : (
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          )}
-        </Button>
-      </div>
-    ),
-    cell: ({ row }) => {
-      const date: string = row.getValue("created_at");
-      return (
-        <div className="capitalize text-center">{dateFormatter(date)}</div>
-      );
-    },
-    // filterFn: (row, id, value) => {
-    //   const rowDate = new Date(row.getValue(id));
-    //   const [startDate, endDate] = value;
-    //   return rowDate >= startDate && rowDate <= endDate;
-    // },
-  },
+  // {
+  //   accessorKey: "created_at",
+  //   header: ({ column }) => (
+  //     <div className="flex min-w-28 justify-center">
+  //       <Button
+  //         variant={"ghost"}
+  //         className="inline-flex justify-center text-center"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Date Shelved
+  //         {column.getIsSorted() === "desc" ? (
+  //           <ArrowDownIcon className="ml-2 h-4 w-4" />
+  //         ) : column.getIsSorted() === "asc" ? (
+  //           <ArrowUpIcon className="ml-2 h-4 w-4" />
+  //         ) : (
+  //           <ArrowUpDown className="ml-2 h-4 w-4" />
+  //         )}
+  //       </Button>
+  //     </div>
+  //   ),
+  //   cell: ({ row }) => {
+  //     const date: string = row.getValue("created_at");
+  //     return (
+  //       <div className="capitalize text-center">{dateFormatter(date)}</div>
+  //     );
+  //   },
+  //   // filterFn: (row, id, value) => {
+  //   //   const rowDate = new Date(row.getValue(id));
+  //   //   const [startDate, endDate] = value;
+  //   //   return rowDate >= startDate && rowDate <= endDate;
+  //   // },
+  // },
 
   {
     accessorKey: "category",

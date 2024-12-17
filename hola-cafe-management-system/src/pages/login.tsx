@@ -29,7 +29,7 @@ const Login = () => {
 
   return (
     <>
-      <main className="flex flex-wrap min-h-screen w-full content-center justify-center  py-10 ]">
+      <main className="flex flex-wrap min-h-screen w-full content-center justify-center  py-10 ">
         <div className="grid md:grid-cols-2 grid-cols-1 max-w-md md:max-w-5xl p-3">
           <div className="hidden md:flex flex-wrap content-center justify-center rounded-lg  h-[35rem] ">
             <img

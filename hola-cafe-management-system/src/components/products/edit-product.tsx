@@ -102,6 +102,7 @@ const EditProduct = ({
     const finalData = {
       ...formData,
       category: formData.category || undefined,
+      image: formData.image.id
     };
 
     try {

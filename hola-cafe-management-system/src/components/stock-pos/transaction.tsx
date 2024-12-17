@@ -15,13 +15,13 @@ interface CartProduct {
   };
 }
 
-interface PosTransactionProps {
+interface StockPosTransactionProps {
   cartProducts: CartProduct[];
   openTransactionPopup: () => void;
   refreshCart: () => void;
 }
 
-const PosTransaction: React.FC<PosTransactionProps> = ({
+const PosTransaction: React.FC<StockPosTransactionProps> = ({
   cartProducts,
   openTransactionPopup,
   refreshCart,
