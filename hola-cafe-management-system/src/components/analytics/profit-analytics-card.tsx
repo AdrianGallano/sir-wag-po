@@ -120,7 +120,7 @@ const ProfitAnalyticsCard = ({ date_range }: { date_range: string }) => {
     let totalRevenue = revenue?.revenue ? revenue?.revenue : 0;
     let totalExpenses = expenses?.expenses ? expenses?.expenses : 0;
 
-    return totalRevenue - totalExpenses;
+    return (totalRevenue - totalExpenses).toFixed(2);
   }
 
   return (
@@ -138,7 +138,7 @@ const ProfitAnalyticsCard = ({ date_range }: { date_range: string }) => {
         </CardContent>
       </div>
       <div className="h-24 w-24 flex justify-center items-center">
-        {computeProfit() > 0 ? <Smile color="green" /> : <Frown color="red" />}
+        {Number(computeProfit()) > 0 ? <Smile color="green" /> : <Frown color="red" />}
       </div>
     </Card>
   );

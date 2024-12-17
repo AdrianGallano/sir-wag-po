@@ -50,7 +50,24 @@ const PosCards: React.FC<PosCardsProps> = ({ product, addToCart }) => {
           -
         </button>
         <div className="px-4 py-1 bg-transparent rounded-md border border-gray-300">
-          <span className="text-lg font-semibold">{quantity}</span>
+          <input
+            type="text" // Changed to "text" for more control over input behavior
+            className="w-16 text-center text-lg font-semibold border-none outline-none"
+            value={quantity}
+            onChange={(e) => {
+              const inputValue = e.target.value;
+              // Allow clearing or editing the input
+              if (inputValue === "" || /^[0-9]+$/.test(inputValue)) {
+                handleQuantityChange(parseInt(inputValue || '0', 10) - quantity);
+              }
+            }}
+            onBlur={(e) => {
+              // Reset to 1 if the input is empty or invalid on blur
+              if (e.target.value === "" || Number(e.target.value) <= 0) {
+                handleQuantityChange(1 - quantity);
+              }
+            }}
+          />
         </div>
         <button
           className="px-2 py-1 text-lg font-bold bg-transparent hover:border-gray-400 rounded border border-gray-300"
@@ -59,6 +76,7 @@ const PosCards: React.FC<PosCardsProps> = ({ product, addToCart }) => {
           +
         </button>
       </div>
+
 
       <div className="flex-grow"></div>
 

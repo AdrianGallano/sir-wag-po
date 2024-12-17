@@ -1,20 +1,20 @@
-import PosHeader from "@/components/pos/header";
-import PosMenus from "@/components/pos/menus";
-import PosTransaction from "@/components/pos/transaction";
 import { useAuth } from "@/context/authContext";
 import dataFetch from "@/services/data-service";
 import { useEffect, useState } from "react";
-import TransactionPopup from "@/components/pos/popup";
 import { Toaster } from "sonner";
 import { toast } from "sonner";
 import { CircleCheck, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useStockNotifications } from "@/hooks/useStockNotifications";
+import PosHeader from "@/components/stock-pos/header";
+import PosMenus from "@/components/stock-pos/menus";
+import PosTransaction from "@/components/stock-pos/transaction";
+import TransactionPopup from "@/components/stock-pos/popup";
 
-const PosPage = () => {
-  const [menus, setMenus] = useState([]);
+const StockPosPage = () => {
+  const [stocks, setStocks] = useState([]);
   const [cart, setCart] = useState<any[]>([]);
-  const [filteredMenus, setFilteredMenus] = useState([]);
+  const [filteredStocks, setFilteredStocks] = useState([]);
   const [isTransactionPopupOpen, setIsTransactionPopupOpen] = useState(false); // Popup state
   const { token, id } = useAuth();
   const [service_crew] = useState(id);
@@ -25,23 +25,23 @@ const PosPage = () => {
     if (!token) {
       navigate("/login");
     }
-    fetchMenus();
+    fetchStocks();
     fetchCart();
   }, []);
 
-  const fetchMenus = async () => {
+  const fetchStocks = async () => {
     try {
       if (!token) {
         console.error("Token not found");
         return;
       }
-      const endPoint = "/api/image/category/product/";
+      const endPoint = "api/image/is-stocked-by/supplier/stock/";
       const method = "GET";
 
       const response = await dataFetch(endPoint, method, {}, token);
-      setMenus(response);
+      setStocks(response);
       console.log("Fetched menus:", response);
-      setFilteredMenus(response);
+      setFilteredStocks(response);
     } catch (error) {
       console.error(error);
     }
@@ -204,22 +204,22 @@ const PosPage = () => {
 
   const handleFilterChange = (categoryName: string) => {
     if (categoryName === "all") {
-      setFilteredMenus(menus);
+      setFilteredStocks(stocks);
     } else {
-      const filtered = menus.filter(
+      const filtered = stocks.filter(
         (menu: { category: { name: string } }) =>
           menu.category.name === categoryName
       );
-      setFilteredMenus(filtered);
+      setFilteredStocks(filtered);
     }
   };
 
   const handleSearchChange = (term: string) => {
     setSearchTerm(term);
-    const filtered = menus.filter((menu: { name: string }) =>
+    const filtered = stocks.filter((menu: { name: string }) =>
       menu.name.toLowerCase().includes(term.toLowerCase())
     );
-    setFilteredMenus(filtered);
+    setFilteredStocks(filtered);
   };
 
   return (
@@ -231,7 +231,7 @@ const PosPage = () => {
           onFilterChange={handleFilterChange}
           onSearchChange={handleSearchChange}
         />
-        <PosMenus menus={filteredMenus} addToCart={addToCart} />
+        <PosMenus stocks={filteredStocks} addToCart={addToCart} />
       </div>
 
       {/* Transaction Panel */}
@@ -256,4 +256,4 @@ const PosPage = () => {
   );
 };
 
-export default PosPage;
+export default StockPosPage;
