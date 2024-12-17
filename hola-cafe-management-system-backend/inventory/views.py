@@ -2,6 +2,7 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework import viewsets
+from rest_framework.response import Response
 
 # DRF EXCEL
 from drf_excel.mixins import XLSXFileMixin
@@ -12,9 +13,19 @@ from core.helpers import (
     creationBasedUserLog,
     modificationBasedUserLog,
     deletionBasedUserLog,
+    transactionBasedUserLog
 )
+
 # from core.throttles import GeneralRequestThrottle
-from .models import Category, Stock, Supplier, Product
+from .models import (
+    Category,
+    Stock,
+    Supplier,
+    Product,
+    StockCart,
+    StockUsed,
+    StockTransaction,
+)
 from .serializers import (
     CategorySerializer,
     SupplierSerializer,
@@ -24,6 +35,12 @@ from .serializers import (
     StockSerializer,
     StockSupplierIsStockedByImageSerializer,
     ProductCategoryImageSerializer,
+    StockCartSerializer,
+    StockUsedSerializer,
+    StockTransactionSerializer,
+    StockCartDepthSerializer,
+    StockTransactionDepthSerializer,
+    StockUsedDepthSerializer
 )
 from core.excel_style import COLUMN_HEADER, BODY, COLUMN_BODY_STYLES
 
@@ -255,6 +272,169 @@ class ProductViewSet(viewsets.ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
 
+class StockCartViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = StockCart.objects.all()
+    serializer_class = StockCartSerializer
+    filterset_fields = [
+        "service_crew",
+        "stock",
+        "quantity",
+        "created_at",
+        "updated_at",
+    ]
+    search_fields = [
+        "service_crew",
+        "stock",
+        "quantity",
+        "created_at",
+        "updated_at",
+    ]
+
+    ordering_fields = "__all__"
+
+    def create(self, request, *args, **kwargs):
+        stock_obj = super().create(request, *args, **kwargs)
+        creationBasedUserLog(request.user, "stock cart", stock_obj.data)
+
+        return stock_obj
+
+    def update(self, request, *args, **kwargs):
+        stock_obj = super().update(request, *args, **kwargs)
+        old_stock_id = kwargs["pk"]
+        old_stock_obj = Stock.objects.get(id=old_stock_id)
+        serlialized_old_stock_obj = StockCartSerializer(old_stock_obj)
+        modificationBasedUserLog(
+            request.user, "stock cart", serlialized_old_stock_obj.data, stock_obj.data
+        )
+
+        return stock_obj
+
+    def destroy(self, request, *args, **kwargs):
+        old_stock_id = kwargs["pk"]
+        old_stock_obj = Stock.objects.get(id=old_stock_id)
+        serlialized_old_stock_obj = StockCartSerializer(old_stock_obj)
+        deletionBasedUserLog(request.user, "stock cart", serlialized_old_stock_obj.data)
+
+        return super().destroy(request, *args, **kwargs)
+
+
+class StockUsedViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = StockUsed.objects.all()
+    serializer_class = StockUsedSerializer
+    filterset_fields = [
+        "stock_transaction",
+        "stock",
+        "quantity",
+        "created_at",
+        "updated_at",
+    ]
+    search_fields = [
+        "stock_transaction",
+        "stock",
+        "quantity",
+        "created_at",
+        "updated_at",
+    ]
+
+    ordering_fields = "__all__"
+
+    def create(self, request, *args, **kwargs):
+        stock_obj = super().create(request, *args, **kwargs)
+        creationBasedUserLog(request.user, "stock used", stock_obj.data)
+
+        return stock_obj
+
+    def update(self, request, *args, **kwargs):
+        stock_obj = super().update(request, *args, **kwargs)
+        old_stock_id = kwargs["pk"]
+        old_stock_obj = Stock.objects.get(id=old_stock_id)
+        serlialized_old_stock_obj = StockCartSerializer(old_stock_obj)
+        modificationBasedUserLog(
+            request.user, "stock used", serlialized_old_stock_obj.data, stock_obj.data
+        )
+
+        return stock_obj
+
+    def destroy(self, request, *args, **kwargs):
+        old_stock_id = kwargs["pk"]
+        old_stock_obj = Stock.objects.get(id=old_stock_id)
+        serlialized_old_stock_obj = StockCartSerializer(old_stock_obj)
+        deletionBasedUserLog(request.user, "stock used", serlialized_old_stock_obj.data)
+
+        return super().destroy(request, *args, **kwargs)
+
+
+class StockTransactionViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = StockTransaction.objects.all()
+    serializer_class = StockTransactionSerializer
+    filterset_fields = [
+        "service_crew",
+        "created_at",
+        "updated_at",
+    ]
+    search_fields = [
+        "service_crew",
+        "created_at",
+        "updated_at",
+    ]
+
+    ordering_fields = "__all__"
+
+    def create(self, request, *args, **kwargs):
+
+        stock_transaction = super().create(request, *args, **kwargs)
+        stock_transaction_instance = StockTransaction.objects.get(pk=stock_transaction.data["id"])
+        cart_items = StockCart.objects.filter(service_crew=stock_transaction_instance.service_crew)
+
+        for cart_item in cart_items:
+            StockUsed.objects.create(
+                stock_transaction=stock_transaction_instance,
+                stock=cart_item.stock,
+                quantity=cart_item.quantity,
+            )
+
+            cart_item.delete()
+
+        stocks_used = StockUsed.objects.filter(stock_transaction=stock_transaction_instance)
+        serialized_stocks_used = StockUsedSerializer(stocks_used, many=True)
+
+        stock_transaction_obj = {
+            "stock_transaction": stock_transaction.data,
+            "stocks_used": serialized_stocks_used.data,
+        }
+
+        transactionBasedUserLog(request.user, "stock", stock_transaction_obj)
+
+        return Response(serialized_stocks_used.data, status=201)
+
+    def update(self, request, *args, **kwargs):
+        stock_transaction = super().update(request, *args, **kwargs)
+        old_stock_transaction_id = kwargs["pk"]
+        old_stock_transaction_obj = StockUsed.objects.get(id=old_stock_transaction_id)
+        serlialized_old_stock_transaction_obj = StockTransactionSerializer(old_stock_transaction_obj)
+        modificationBasedUserLog(
+            request.user,
+            "stock transaction",
+            serlialized_old_stock_transaction_obj.data,
+            stock_transaction.data,
+        )
+
+        return stock_transaction
+
+    def destroy(self, request, *args, **kwargs):
+        old_stock_transaction_id = kwargs["pk"]
+        old_stock_transaction_obj = StockTransaction.objects.get(id=old_stock_transaction_id)
+        serlialized_old_stock_transaction_obj = StockTransactionSerializer(old_stock_transaction_obj)
+        deletionBasedUserLog(
+            request.user, "stock transaction", serlialized_old_stock_transaction_obj.data
+        )
+
+        return super().destroy(request, *args, **kwargs)
+
+
 # |
 # | WITH IMAGE VIEWSETS
 # |
@@ -288,6 +468,20 @@ class ProductCategoryImageViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all().select_related("image", "category")
     serializer_class = ProductCategoryImageSerializer
 
+class StockCartDepthViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = StockCart.objects.all()
+    serializer_class = StockCartDepthSerializer
+
+class StockUsedDepthViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = StockUsed.objects.all()
+    serializer_class = StockUsedDepthSerializer
+
+class StockTransactionDepthViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = StockTransaction.objects.all().prefetch_related("service_crew", "stockused_set")
+    serializer_class = StockTransactionDepthSerializer
 
 # |
 # | EXCEL VIEWSETS

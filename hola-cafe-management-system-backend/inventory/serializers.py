@@ -1,5 +1,13 @@
 from rest_framework import serializers
-from .models import Category, Stock, Supplier, Product
+from .models import (
+    Category,
+    Stock,
+    Supplier,
+    Product,
+    StockCart,
+    StockUsed,
+    StockTransaction,
+)
 from djoser.serializers import UserSerializer
 from core.serializers import ImageSerializer
 
@@ -27,6 +35,24 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
+        fields = "__all__"
+
+
+class StockCartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StockCart
+        fields = "__all__"
+
+
+class StockUsedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StockUsed
+        fields = "__all__"
+
+
+class StockTransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StockTransaction
         fields = "__all__"
 
 
@@ -63,3 +89,32 @@ class ProductCategoryImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = "__all__"
+
+
+class StockCartDepthSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StockCart
+        fields = "__all__"
+        depth = 2
+
+class StockUsedDepthSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StockUsed
+        fields = "__all__"
+        depth = 2
+
+
+class StockTransactionDepthSerializer(serializers.ModelSerializer):
+    
+    stock_used = StockUsedSerializer(source="stockused_set", many=True)
+    
+    class Meta:
+        model = StockTransaction
+        fields = [
+            "id",
+            "service_crew",
+            "created_at",
+            "updated_at",
+            "stock_used",
+        ]
+        depth = 2
