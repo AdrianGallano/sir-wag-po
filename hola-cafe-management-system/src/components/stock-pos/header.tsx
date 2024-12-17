@@ -23,10 +23,7 @@ const PosHeader: React.FC<StockPosHeaderProps> = ({ onFilterChange, onSearchChan
         Hola Café's Stock Manager
       </div>
 
-      {/* Filter Section */}
-      <div className="mb-6">
-        <PosFilter onFilter={onFilterChange} />
-      </div>
+
 
       {/* Search Section */}
       <div className="flex justify-end mb-6">
