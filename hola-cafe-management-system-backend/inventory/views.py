@@ -302,7 +302,7 @@ class StockCartViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         stock_obj = super().update(request, *args, **kwargs)
         old_stock_id = kwargs["pk"]
-        old_stock_obj = Stock.objects.get(id=old_stock_id)
+        old_stock_obj = StockCart.objects.get(id=old_stock_id)
         serlialized_old_stock_obj = StockCartSerializer(old_stock_obj)
         modificationBasedUserLog(
             request.user, "stock cart", serlialized_old_stock_obj.data, stock_obj.data
@@ -312,7 +312,7 @@ class StockCartViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         old_stock_id = kwargs["pk"]
-        old_stock_obj = Stock.objects.get(id=old_stock_id)
+        old_stock_obj = StockCart.objects.get(id=old_stock_id)
         serlialized_old_stock_obj = StockCartSerializer(old_stock_obj)
         deletionBasedUserLog(request.user, "stock cart", serlialized_old_stock_obj.data)
 
@@ -349,8 +349,8 @@ class StockUsedViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         stock_obj = super().update(request, *args, **kwargs)
         old_stock_id = kwargs["pk"]
-        old_stock_obj = Stock.objects.get(id=old_stock_id)
-        serlialized_old_stock_obj = StockCartSerializer(old_stock_obj)
+        old_stock_obj = StockUsed.objects.get(id=old_stock_id)
+        serlialized_old_stock_obj = StockUsedSerializer(old_stock_obj)
         modificationBasedUserLog(
             request.user, "stock used", serlialized_old_stock_obj.data, stock_obj.data
         )
@@ -359,8 +359,8 @@ class StockUsedViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         old_stock_id = kwargs["pk"]
-        old_stock_obj = Stock.objects.get(id=old_stock_id)
-        serlialized_old_stock_obj = StockCartSerializer(old_stock_obj)
+        old_stock_obj = StockUsed.objects.get(id=old_stock_id)
+        serlialized_old_stock_obj = StockUsedSerializer(old_stock_obj)
         deletionBasedUserLog(request.user, "stock used", serlialized_old_stock_obj.data)
 
         return super().destroy(request, *args, **kwargs)
@@ -390,12 +390,32 @@ class StockTransactionViewSet(viewsets.ModelViewSet):
         cart_items = StockCart.objects.filter(service_crew=stock_transaction_instance.service_crew)
 
         for cart_item in cart_items:
+            try:
+                stock = Stock.objects.get(id=cart_item.stock.id)
+
+                if stock.quantity < cart_item.quantity:
+                    return Response(
+                        {"error": f"stock with id {cart_item.stock.id} does not have enough quantity"},
+                        400,
+                    )
+                
+                stock.quantity -= cart_item.quantity
+                stock.save()
+                
+            except Stock.DoesNotExist:
+                return Response(
+                    {"error": f"stock with id {cart_item.stock.id} does not exist"}, 400
+                )
+            except Exception as e:
+                return Response({"error": f"an error occured: {e}"}, 400)
+            
             StockUsed.objects.create(
                 stock_transaction=stock_transaction_instance,
                 stock=cart_item.stock,
                 quantity=cart_item.quantity,
             )
 
+            
             cart_item.delete()
 
         stocks_used = StockUsed.objects.filter(stock_transaction=stock_transaction_instance)
