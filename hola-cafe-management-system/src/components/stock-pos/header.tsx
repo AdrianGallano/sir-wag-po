@@ -20,18 +20,15 @@ const PosHeader: React.FC<StockPosHeaderProps> = ({ onFilterChange, onSearchChan
     <div className="mr-[26%]">
       {/* Header */}
       <div className="text-gray-700 text-lg font-semibold mb-4 underline">
-        Hola Café's Stock Manager
+        Hola Café's Stock Expenditure
       </div>
 
-      {/* Filter Section */}
-      <div className="mb-6">
-        <PosFilter onFilter={onFilterChange} />
-      </div>
+
 
       {/* Search Section */}
       <div className="flex justify-end mb-6">
         <Input
-          placeholder="Filter products..."
+          placeholder="Filter stocks..."
           value={searchTerm}
           onChange={handleSearchChange}
           className="max-w-sm rounded-full"

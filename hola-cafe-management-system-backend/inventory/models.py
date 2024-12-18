@@ -97,8 +97,8 @@ class Product(models.Model):
     description = models.TextField(null=True)
     price = models.DecimalField(default=0, max_digits=10, decimal_places=2, null=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    created_at = models.DateTimeField(auto_now_add=False, null=True)
-    updated_at = models.DateTimeField(auto_now=False, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
