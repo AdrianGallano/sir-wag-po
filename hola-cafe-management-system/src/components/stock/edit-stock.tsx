@@ -121,7 +121,9 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
       category: formData.category || undefined,
       supplier: formData.supplier || undefined,
       image: selectedImageId || undefined,
-      expiration_date: formData.expiration_date || null,
+      expiration_date: formData.expiration_date
+        ? new Date(formData.expiration_date).toISOString()
+        : null,
     };
 
     try {
@@ -260,13 +262,12 @@ const EditStock = ({ isOpen, onClose, stock, onChanges }: EditStockProps) => {
             <div className="text-center  w-full h-full ">
               {selectedImageURL ? (
                 <div className="rounded-md flex justify-center items-center aspect-square overflow-hidden">
-                <img
-                  src={selectedImageURL}
-                  alt="Selected"
-                  className="object-cover w-full h-full"
-                />
-              </div>
-              
+                  <img
+                    src={selectedImageURL}
+                    alt="Selected"
+                    className="object-cover w-full h-full"
+                  />
+                </div>
               ) : (
                 <ImagePlus className="mx-auto h-12 w-12" />
               )}

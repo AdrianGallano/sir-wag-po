@@ -6,32 +6,41 @@ const StockStatus = () => {
 
   const totalStock = stock.length;
   const recentStock = stock[0]?.name || "No stocks";
-  const soonestExpiration = stock.reduce((earliest, current) => {
-    if (!earliest || new Date(current.expiration_date) < new Date(earliest)) {
-      return current.expiration_date;
-    }
-    return earliest;
-  }, "");
 
-  const stockCounts = stock.reduce(
-    (acc, item) => {
-      const quantity = Number(item.quantity);
-      if (quantity === 0) {
-        acc.outOfStock++;
-      } else if (quantity <= 20) {
-        acc.lowStock++;
-      } else {
-        acc.inStock++;
-      }
-      return acc;
-    },
-    { inStock: 0, lowStock: 0, outOfStock: 0 }
-  );
+  const soonestExpiration = stock
+    .filter(
+      (item) =>
+        item.expiration_date && new Date(item.expiration_date) > new Date()
+    )
+    .reduce((closest, current) => {
+      const currentExpiration = new Date(current.expiration_date);
+      const closestExpiration = new Date(closest);
+      return !closest || currentExpiration < closestExpiration
+        ? current.expiration_date
+        : closest;
+    }, "");
+  const stockCounts = stock
+    .filter((item) => !item.is_expired)
+    .reduce(
+      (acc, item) => {
+        const quantity = Number(item.quantity);
+        if (quantity === 0) {
+          acc.outOfStock++;
+        } else if (quantity <= 20) {
+          acc.lowStock++;
+        } else {
+          acc.inStock++;
+        }
+        return acc;
+      },
+      { inStock: 0, lowStock: 0, outOfStock: 0 }
+    );
 
-  const total = totalStock || 1;
+  const total = stock.filter((item) => !item.is_expired).length || 1;
   const inStockPercentage = (stockCounts.inStock / total) * 100;
   const lowStockPercentage = (stockCounts.lowStock / total) * 100;
   const outOfStockPercentage = (stockCounts.outOfStock / total) * 100;
+  const expiredStocks = stock.filter((item) => item.is_expired).length;
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "No expiration date";
@@ -65,7 +74,7 @@ const StockStatus = () => {
 
         {stock.length != 0 && (
           <div className="relative ">
-            <div className="mb-2 flex h-2 overflow-hidden rounded-full w-1/2 text-xs gap-1">
+            <div className="mb-2 flex h-2 overflow-hidden rounded-full w-1/2 text-xs gap-[2px]">
               <div
                 className="bg-green-500 transition-all duration-500 ease-out rounded-full"
                 style={{ width: `${inStockPercentage}%` }}
@@ -77,6 +86,10 @@ const StockStatus = () => {
               <div
                 className="bg-red-500 transition-all duration-500 ease-out rounded-full"
                 style={{ width: `${outOfStockPercentage}%` }}
+              ></div>
+              <div
+                className="bg-gray-500 transition-all duration-500 ease-out rounded-full"
+                style={{ width: `${expiredStocks}%` }}
               ></div>
             </div>
             <div className="mb-2 flex items-center gap-3 text-xs">
@@ -97,6 +110,12 @@ const StockStatus = () => {
                 <p className="text-[12px] text-nowrap tracking-wide font-normal">
                   Out of Stock:{" "}
                   <span className="">{stockCounts.outOfStock}</span>
+                </p>
+              </div>
+              <div className="text-gray-600 flex items-center">
+                <span className="flex w-3 h-3 me-1.5 bg-gray-500 rounded-full"></span>{" "}
+                <p className="text-[12px] text-nowrap tracking-wide font-normal">
+                  Expired: <span className="">{expiredStocks}</span>
                 </p>
               </div>
             </div>
