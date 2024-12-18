@@ -20,7 +20,7 @@ const PosHeader: React.FC<StockPosHeaderProps> = ({ onFilterChange, onSearchChan
     <div className="mr-[26%]">
       {/* Header */}
       <div className="text-gray-700 text-lg font-semibold mb-4 underline">
-        Hola Café's Stock Manager
+        Hola Café's Stock Expenditure
       </div>
 
 

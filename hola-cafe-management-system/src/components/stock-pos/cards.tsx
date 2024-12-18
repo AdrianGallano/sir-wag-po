@@ -45,28 +45,6 @@ const PosCards: React.FC<StockPosCardsProps> = ({ stocks, addToCart }) => {
     setQuantity(0); // Reset quantity after adding to cart
   };
 
-  // const fetchCart = async () => {
-  //   try {
-  //     if (!token) {
-  //       console.error("Token not found");
-  //       return;
-  //     }
-  //     const endPoint = `/api/stock-transactions/stock-cart/`;
-  //     const method = "GET";
-
-  //     const response = await dataFetch(endPoint, method, {}, token);
-  //     setCart(response);
-  //     console.log("Fetched cart:", response);
-  //   } catch (error) {
-  //     console.error("Error fetching cart:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchCart();
-  // }
-  // , []);
-
   return (
     <div className="flex flex-col border p-4 rounded-lg shadow-lg h-full bg-white hover:shadow-xl transition-all">
       <img

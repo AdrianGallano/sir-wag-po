@@ -98,10 +98,10 @@ const Navbar = () => {
                   }`}
                 >
                   <LaptopMinimal className="h-4 w-4 transition-all group-hover:scale-110 " />
-                  <span className="sr-only">Stock Manager</span>
+                  <span className="sr-only">Stock Expenditure</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">Stock Manager</TooltipContent>
+              <TooltipContent side="right">Stock Expenditure</TooltipContent>
             </Tooltip>
           </TooltipProvider>
 

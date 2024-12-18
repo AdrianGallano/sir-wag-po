@@ -12,9 +12,9 @@ import PosTransaction from "@/components/stock-pos/transaction";
 import TransactionPopup from "@/components/stock-pos/popup";
 
 const StockPosPage = () => {
-  const [stocks, setStocks] = useState([]);
+  const [stocks, setStocks] = useState<any[]>([]);
   const [cart, setCart] = useState<any[]>([]);
-  const [filteredStocks, setFilteredStocks] = useState([]);
+  const [filteredStocks, setFilteredStocks] = useState<any[]>([]);
   const [isTransactionPopupOpen, setIsTransactionPopupOpen] = useState(false); // Popup state
   const { token, id } = useAuth();
   const [service_crew] = useState(id);
@@ -35,17 +35,32 @@ const StockPosPage = () => {
         console.error("Token not found");
         return;
       }
+  
       const endPoint = "api/image/is-stocked-by/supplier/stock/";
       const method = "GET";
-
+  
       const response = await dataFetch(endPoint, method, {}, token);
-      setStocks(response);
-      console.log("Fetched menus:", response);
-      setFilteredStocks(response);
+      
+      // Check if the response contains multiple stocks or a single stock
+      if (Array.isArray(response)) {
+        // Filter out expired stocks if the response is an array
+        const validStocks = response.filter(stock => !stock.is_expired);
+        setStocks(validStocks);
+        console.log("Fetched valid stocks:", validStocks);
+        setFilteredStocks(validStocks);
+      } else if (!response.stock.is_expired) {
+        // If the response is a single stock object and it's valid
+        setStocks([response]);
+        console.log("Fetched stock:", response);
+        setFilteredStocks([response]);
+      } else {
+        console.log("Stock is expired");
+      }
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   const fetchCart = async () => {
     try {

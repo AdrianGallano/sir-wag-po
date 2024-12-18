@@ -122,9 +122,17 @@ const PosTransaction: React.FC<StockPosTransactionProps> = ({
                       -
                     </button>
                     <div className="px-4 py-1 bg-transparent rounded-md border border-gray-300">
-                      <span className="text-lg font-semibold">
-                        {stock.quantity}
-                      </span>
+                    <input
+                      type="text"
+                      className="w-16 text-center text-lg font-semibold border-none outline-none"
+                      value={stock.quantity}
+                      onChange={(e) => handleQuantityChange(stock.id, stock.quantity, parseInt(e.target.value) - stock.quantity, stock.stock.id)}
+                      onBlur={(e) => {
+                        if (!e.target.value || parseInt(e.target.value, 10) <= 0) {
+                          handleQuantityChange(stock.id, stock.quantity, 0 - stock.quantity, stock.stock.id);
+                        }
+                      }}
+                    />
                     </div>
                     <button
                       className="px-2 py-1 text-lg font-bold bg-transparent hover:border-gray-400 rounded border border-gray-300"

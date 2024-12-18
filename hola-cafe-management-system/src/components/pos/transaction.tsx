@@ -122,9 +122,24 @@ const PosTransaction: React.FC<PosTransactionProps> = ({
                       -
                     </button>
                     <div className="px-4 py-1 bg-transparent rounded-md border border-gray-300">
-                      <span className="text-lg font-semibold">
-                        {product.quantity}
-                      </span>
+                    <input
+                      type="text" // Changed to "text" for more control over input behavior
+                      className="w-16 text-center text-lg font-semibold border-none outline-none"
+                      value={product.quantity}
+                      onChange={(e) => {
+                        const inputValue = e.target.value;
+                        // Allow clearing or editing the input
+                        if (inputValue === "" || /^[0-9]+$/.test(inputValue)) {
+                          handleQuantityChange(product.id, product.quantity, parseInt(inputValue || '0', 10) - product.quantity, product.product.id);
+                        }
+                      }}
+                      onBlur={(e) => {
+                        // Reset to 1 if the input is empty or invalid on blur
+                        if (e.target.value === "" || Number(e.target.value) <= 0) {
+                          handleQuantityChange(product.id, product.quantity, 1 - product.quantity, product.product.id);
+                        }
+                      }}
+                    />
                     </div>
                     <button
                       className="px-2 py-1 text-lg font-bold bg-transparent hover:border-gray-400 rounded border border-gray-300"
