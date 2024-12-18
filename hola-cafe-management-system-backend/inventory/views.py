@@ -521,7 +521,8 @@ class SupplierExcelViewSet(XLSXFileMixin, ReadOnlyModelViewSet):
     serializer_class = SupplierSerializer
     renderer_classes = (XLSXRenderer,)
     filename = "supplier_data.xlsx"
-
+    permission_classes = [IsAuthenticated]
+    
     column_header = COLUMN_HEADER
     body = BODY
     column_data_styles = COLUMN_BODY_STYLES
@@ -532,7 +533,8 @@ class ProductExcelViewSet(XLSXFileMixin, ReadOnlyModelViewSet):
     serializer_class = ProductCategoryImageSerializer
     renderer_classes = (XLSXRenderer,)
     filename = "product_data.xlsx"
-
+    permission_classes = [IsAuthenticated]
+    
     column_header = COLUMN_HEADER
     body = BODY
     column_data_styles = COLUMN_BODY_STYLES
@@ -543,7 +545,8 @@ class StockExcelViewSet(XLSXFileMixin, ReadOnlyModelViewSet):
     serializer_class = StockSupplierIsStockedByImageSerializer
     renderer_classes = (XLSXRenderer,)
     filename = "stock_data.xlsx"
-
+    permission_classes = [IsAuthenticated]
+    
     column_header = COLUMN_HEADER
     body = BODY
     column_data_styles = COLUMN_BODY_STYLES

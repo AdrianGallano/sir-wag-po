@@ -3,6 +3,14 @@ from . import views
 from core.analytics import expenses, ranking, revenue
 
 urlpatterns = [
+    path("user/manager/", views.ManagerViewSet.as_view({"get": "list", "post": "create"})),
+    path(
+        "user/manager/<int:pk>/",
+        views.ManagerViewSet.as_view(
+            { "delete": "destroy"}
+        ),
+    ),
+    path("user-log/", views.UserLogViewSet.as_view({"get": "list", "post": "create"})),
     path("user-log/", views.UserLogViewSet.as_view({"get": "list", "post": "create"})),
     path(
         "user-log/<int:pk>/",
@@ -34,5 +42,4 @@ urlpatterns = [
     path("analytics/month/rankings/", ranking.get_ranking_by_this_month),
     path("analytics/year/rankings/", ranking.get_ranking_by_this_year),
     path("analytics/day/rankings/", ranking.get_ranking_by_this_day),
-
 ]

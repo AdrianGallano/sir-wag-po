@@ -258,6 +258,7 @@ class TransactionExcelViewSet(XLSXFileMixin, ReadOnlyModelViewSet):
     serializer_class = ProductProductOrderTransactionSerializer
     renderer_classes = (XLSXRenderer,)
     filename = "transaction_data.xlsx"
+    permission_classes = [IsAuthenticated]
 
     column_header = COLUMN_HEADER
     body = BODY

@@ -1,6 +1,7 @@
 # DRF
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 # DATE TIME
 from dateutil.relativedelta import relativedelta
@@ -93,6 +94,7 @@ def get_ranked_items(date_range):
     responses={200: RankingAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_rankings(request):
     try:
         greater_date = request.GET.get("end_date")
@@ -129,6 +131,7 @@ def get_rankings(request):
     responses={200: RankingAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_ranking_by_this_month(request):
     try:
         greater_date = request.GET.get("start_date")
@@ -164,6 +167,7 @@ def get_ranking_by_this_month(request):
     responses={200: RankingAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_ranking_by_this_year(request):
     try:
         greater_date = request.GET.get("start_date")
@@ -199,6 +203,7 @@ def get_ranking_by_this_year(request):
     responses={200: RankingAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_ranking_by_this_week(request):
     try:
         greater_date = request.GET.get("start_date")
@@ -234,6 +239,7 @@ def get_ranking_by_this_week(request):
     responses={200: RankingAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_ranking_by_this_day(request):
     try:
         greater_date = request.GET.get("start_date")

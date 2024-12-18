@@ -1,6 +1,6 @@
 # DRF
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 # PILLOW
@@ -15,11 +15,31 @@ import os
 # CUSTOM
 from .models import UserLog, Image
 from .serializers import UserLogSerializer, UserUserLogSerializer, ImageSerializer
-
+from django.contrib.auth.models import Group
 
 # |
 # | SINGLE OBJECT VIEWSETS
 # |
+
+
+class ManagerViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def create(self, request):
+        user = request.user
+        user.groups.add(Group.objects.get(name="manager"))
+
+        return Response({"info": "user has been added as a manager"})
+
+    def destroy(self, request):
+        user = request.user
+        user.groups.remove(Group.objects.get(name="manager"))
+
+        return Response({"info": "user has been removed as a manager"})
+    
+    def list(self, request):
+        managers = Group.objects.get(name="manager").user_set.all()
+        return Response({"data": managers})
 
 
 class UserLogViewSet(viewsets.ModelViewSet):
@@ -113,6 +133,3 @@ class UserUserLogViewSet(viewsets.ModelViewSet):
     serializer_class = UserUserLogSerializer
 
     ordering_fields = "__all__"
-
-
-
