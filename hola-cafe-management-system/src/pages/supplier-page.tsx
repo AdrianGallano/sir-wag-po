@@ -104,10 +104,11 @@ const SupplierPage = () => {
         <StockStatus />
         <div className="self-start">
           <Button
-            className="bg-white hover:bg-gray-100 border border-gray-300"
+            size={"icon"}
+            className="bg-white text-black hover:bg-custom-char hover:text-white border border-gray-300 rounded-full"
             onClick={() => setIsSupplierPopupOpen(true)}
           >
-            <UserPlus2Icon className="text-black" />
+            <UserPlus2Icon className="w-5 h-5" />
           </Button>
         </div>
       </div>

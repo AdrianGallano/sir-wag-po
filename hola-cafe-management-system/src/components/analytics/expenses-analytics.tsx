@@ -52,13 +52,17 @@ const ExpensesAnalyticsCard = ({ date_range }: { date_range: string }) => {
             setExpensesData(response.data);
 
             // Map the expenses data to chart data
-            const chartData = (response.data as ExpenseData[]).map((exp) => ({
-                name: exp.name,
-                unit_price: exp.unit_price,
-                sold_at: new Date(exp.sold_at).toLocaleDateString(), // Format date
-            }));
 
-            setExpensesChartData(chartData); // Update chart data
+            if (expensesData) {
+                const chartData = (response.data as ExpenseData[]).map(
+                    (exp) => ({
+                        name: exp.name,
+                        unit_price: exp.unit_price,
+                        sold_at: new Date(exp.sold_at).toLocaleDateString(), // Format date
+                    })
+                );
+                setExpensesChartData(chartData); // Update chart data
+            }
         } catch (error) {
             console.error("Failed to fetch expenses", error);
         }
@@ -99,7 +103,10 @@ const ExpensesAnalyticsCard = ({ date_range }: { date_range: string }) => {
                     </div>
                 </CardHeader>
                 <CardContent className="text-xl font-semibold py-0">
-                    ₱{Number(expenses?.expenses).toFixed(2)}
+                    ₱
+                    {expenses?.expenses != null
+                        ? expenses?.expenses.toFixed(2)
+                        : 0}
                 </CardContent>
             </div>
             <div className="h-24 w-24 flex">

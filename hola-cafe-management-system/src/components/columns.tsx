@@ -23,6 +23,7 @@ import Product from "@/models/product";
 import { Category } from "@/models/category";
 import Transaction from "@/models/transaction";
 import ServiceCrew from "@/models/service_crew";
+import { sortingFns } from "@tanstack/react-table";
 
 export const stocksColumns = (
   onEdit: (stock: Stock) => void,
@@ -59,7 +60,7 @@ export const stocksColumns = (
   {
     accessorKey: "image",
     header: () => {
-      return <div className="text-center min-w-20">Stock Image</div>;
+      return <div className="text-center"> Image</div>;
     },
     cell: ({ row }) => {
       const image_obj = row.getValue("image");
@@ -80,20 +81,22 @@ export const stocksColumns = (
     accessorKey: "id",
     header: ({ column }) => {
       return (
-        <Button
-          variant={"ghost"}
-          className="inline-flex items-center justify-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Stock ID
-          {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon className="ml-2 h-4 w-4" />
-          ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon className="ml-2 h-4 w-4" />
-          ) : (
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          )}
-        </Button>
+        <div className="flex justify-center">
+          <Button
+            variant={"ghost"}
+            className="inline-flex items-center justify-center "
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            ID
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDownIcon className="ml-.5 h-4 w-4" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUpIcon className="ml-.5 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-.5 h-4 w-4" />
+            )}
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => {
@@ -104,7 +107,7 @@ export const stocksColumns = (
   {
     accessorKey: "name",
     header: () => {
-      return <div className="text-center min-w-28">Stock Name</div>;
+      return <div className="text-center"> Name</div>;
     },
     cell: ({ row }) => {
       const name: string = row.getValue("name");
@@ -118,20 +121,7 @@ export const stocksColumns = (
     header: ({ column }) => {
       return (
         <div className="flex w-full justify-center">
-          <Button
-            variant={"ghost"}
-            className="inline-flex"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Quantity
-            {column.getIsSorted() === "desc" ? (
-              <ArrowDownIcon className="ml-2 h-4 w-4" />
-            ) : column.getIsSorted() === "asc" ? (
-              <ArrowUpIcon className="ml-2 h-4 w-4" />
-            ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
-            )}
-          </Button>
+          <div>Quantity</div>
         </div>
       );
     },
@@ -145,20 +135,11 @@ export const stocksColumns = (
     header: ({ column }) => {
       return (
         <div className="flex w-full justify-center">
-          <Button
-            variant={"ghost"}
-            className="inline-flex"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          <div
+          // onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Unit Price
-            {column.getIsSorted() === "desc" ? (
-              <ArrowDownIcon className="ml-2 h-4 w-4" />
-            ) : column.getIsSorted() === "asc" ? (
-              <ArrowUpIcon className="ml-2 h-4 w-4" />
-            ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
-            )}
-          </Button>
+          </div>
         </div>
       );
     },
@@ -173,63 +154,15 @@ export const stocksColumns = (
     },
   },
 
-  {
-    accessorKey: "created_at",
-    header: ({ column }) => (
-      <div className="flex w-full justify-center">
-        <Button
-          variant={"ghost"}
-          className="inline-flex justify-center text-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date Shelved
-          {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon className="ml-2 h-4 w-4" />
-          ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon className="ml-2 h-4 w-4" />
-          ) : (
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          )}
-        </Button>
-      </div>
-    ),
-    cell: ({ row }) => {
-      const date: string = row.getValue("created_at");
-      return (
-        <div className="capitalize text-center">{dateFormatter(date)}</div>
-      );
-    },
-    filterFn: (row, id, value) => {
-      const rowDate = new Date(row.getValue(id));
-      const [startDate, endDate] = value;
-      return rowDate >= startDate && rowDate <= endDate;
-    },
-  },
-
   // {
-  //   accessorKey: "expiration_date",
-  //   header: ({ column }) => {
-  //     return (
-  //       <div className="flex w-full justify-center">
-  //         <Button
-  //           variant={"ghost"}
-  //           className="inline-flex"
-  //           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //         >
-  //           Expiration Date
-  //           {column.getIsSorted() === "desc" ? (
-  //             <ArrowDownIcon className="ml-2 h-4 w-4" />
-  //           ) : column.getIsSorted() === "asc" ? (
-  //             <ArrowUpIcon className="ml-2 h-4 w-4" />
-  //           ) : (
-  //             <ArrowUpDown className="ml-2 h-4 w-4" />
-  //           )}
-  //         </Button>
-  //       </div>
-  //     );
-  //   },
+  //   accessorKey: "created_at",
+  //   header: ({ column }) => (
+  //     <div className="flex w-full justify-center">
+  //       <div>Date Stored</div>
+  //     </div>
+  //   ),
   //   cell: ({ row }) => {
-  //     const date: string = row.getValue("expiration_date");
+  //     const date: string = row.getValue("created_at");
   //     return (
   //       <div className="capitalize text-center">{dateFormatter(date)}</div>
   //     );
@@ -240,6 +173,79 @@ export const stocksColumns = (
   //     return rowDate >= startDate && rowDate <= endDate;
   //   },
   // },
+
+  {
+    accessorKey: "expiration_date",
+    header: ({ column }) => {
+      return (
+        <div className="flex w-full justify-center">
+          <Button
+            variant={"ghost"}
+            className="inline-flex"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Expiration Date
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDownIcon className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUpIcon className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const date: string | null = row.getValue("expiration_date");
+      return (
+        <div className="capitalize text-center">
+          {date ? dateFormatter(date) : "N/A"}
+        </div>
+      );
+    },
+    sortingFn: (rowA, rowB, columnId) => {
+      const dateA = rowA.getValue(columnId);
+      const dateB = rowB.getValue(columnId);
+
+      // Ensure dateA and dateB are valid strings, numbers, or Date objects
+      const parsedDateA =
+        typeof dateA === "string" || typeof dateA === "number"
+          ? new Date(dateA)
+          : null;
+      const parsedDateB =
+        typeof dateB === "string" || typeof dateB === "number"
+          ? new Date(dateB)
+          : null;
+
+      // Check for invalid dates
+      const isDateAInvalid = !parsedDateA || isNaN(parsedDateA.getTime());
+      const isDateBInvalid = !parsedDateB || isNaN(parsedDateB.getTime());
+
+      // If both are invalid, keep the same order
+      if (isDateAInvalid && isDateBInvalid) return 0;
+
+      // If only dateA is invalid, move it to the bottom
+      if (isDateAInvalid) return 1;
+
+      // If only dateB is invalid, move it to the bottom
+      if (isDateBInvalid) return -1;
+
+      // Compare valid dates
+      return parsedDateA.getTime() - parsedDateB.getTime();
+    },
+    filterFn: (row, id, value) => {
+      const rowDate = new Date(row.getValue(id));
+      const [startDate, endDate] = value;
+
+      // Check if rowDate is valid
+      if (isNaN(rowDate.getTime())) {
+        return false;
+      }
+
+      return rowDate >= startDate && rowDate <= endDate;
+    },
+  },
 
   {
     accessorKey: "supplier",
@@ -264,10 +270,24 @@ export const stocksColumns = (
   },
 
   {
+    accessorKey: "is_expired",
+    header: () => <div className="text-center">Expired</div>,
+    cell: ({ row }) => {
+      const isExpired = row.getValue("is_expired");
+      console.log("is expired", isExpired);
+      return <div className="text-center">{isExpired ? "Yes" : "No"}</div>;
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
+
+  {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
       const quantity = parseFloat(row.getValue("quantity"));
+      const isExpired = row.getValue("is_expired");
+      console.log("Expired?", isExpired);
       let status = "In Stock";
       let bgColor = "bg-green-500";
 
@@ -279,11 +299,14 @@ export const stocksColumns = (
         bgColor = "bg-yellow-500";
       }
 
+      if (isExpired) {
+        status = "Expired";
+        bgColor = "bg-gray-500";
+      }
+
       return (
         <div className="flex items-center space-x-2">
-          {/* Colored progress indicator */}
           <div className={`rounded-full w-[50px] h-2 ${bgColor}`} />
-          {/* Accessible and visible status */}
           <span className="text-sm font-medium sr-only">{status}</span>
         </div>
       );

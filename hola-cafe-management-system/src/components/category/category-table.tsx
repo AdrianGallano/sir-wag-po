@@ -29,6 +29,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Tag, Trash, Trash2 } from "lucide-react";
 import { Input } from "../ui/input";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface ProductTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -51,6 +61,7 @@ const CategoryTable = ({
   );
   const [rowSelection, setRowSelection] = useState({});
   const [isVisible, setIsVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const table = useReactTable({
     data,
@@ -94,7 +105,7 @@ const CategoryTable = ({
     <div className="relative">
       <div className="flex w-full justify-end item-center my-2.5 gap-2">
         <Input
-          placeholder="Filter categories..."
+          placeholder="Search category..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -104,7 +115,7 @@ const CategoryTable = ({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="rounded-full">
-              <span>Filter by type</span>
+              <span className="hidden sm:inline">Filter by type</span>
               <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
@@ -220,7 +231,7 @@ const CategoryTable = ({
       )}
 
       <div
-        className={`fixed bottom-10 left-[40%] w-full border border-gray-700 rounded-xl z-20 flex justify-center items-center max-w-md 
+        className={`fixed bottom-10 left-[40%] w-full bg-white border border-gray-700 rounded-xl z-20 flex justify-center items-center max-w-md 
           ${isVisible && "opacity-100 translate-y-0 animate-fadeinup"}`}
         style={{
           visibility: isVisible ? "visible" : "hidden",
@@ -232,11 +243,37 @@ const CategoryTable = ({
             {table.getSelectedRowModel().rows.length === 1 ? "item" : "items"}{" "}
             selected
           </p>
-          <Button variant="destructive" onClick={massDeletion}>
+          <Button variant="destructive" onClick={() => setIsOpen(true)}>
             <Trash2 className="w-5 h-5" />
           </Button>
         </div>
       </div>
+
+      <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-red-500">
+              Are you absolutely sure?
+            </DialogTitle>
+            <DialogDescription className="text-gray-800">
+              This action cannot be undone. Are you sure you want to permanently
+              delete these category from the servers?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant={"outline"} onClick={() => setIsOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              className="bg-custom-char hover:bg-custom-charcoalOlive"
+              type="submit"
+              onClick={massDeletion}
+            >
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

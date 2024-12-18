@@ -15,6 +15,7 @@ from core.helpers import (
     deletionBasedUserLog,
     transactionBasedUserLog
 )
+from .helpers import check_expired
 
 # from core.throttles import GeneralRequestThrottle
 from .models import (
@@ -196,6 +197,11 @@ class StockViewSet(viewsets.ModelViewSet):
 
     ordering_fields = "__all__"
 
+    def get_queryset(self):
+        check_expired()
+        queryset = Stock.objects.all()
+        return queryset
+    
     def create(self, request, *args, **kwargs):
         stock_obj = super().create(request, *args, **kwargs)
         creationBasedUserLog(request.user, "stock", stock_obj.data)
@@ -485,7 +491,6 @@ class StockSupplierIsStockedByImageViewSet(viewsets.ModelViewSet):
     queryset = Stock.objects.all().select_related("image", "supplier", "is_stocked_by")
     serializer_class = StockSupplierIsStockedByImageSerializer
 
-
 class ProductCategoryImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Product.objects.all().select_related("image", "category")
@@ -542,3 +547,4 @@ class StockExcelViewSet(XLSXFileMixin, ReadOnlyModelViewSet):
     column_header = COLUMN_HEADER
     body = BODY
     column_data_styles = COLUMN_BODY_STYLES
+

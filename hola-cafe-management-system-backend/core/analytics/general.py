@@ -22,14 +22,12 @@ def query_by_date_for_ranking(obj, obj_serializer, date_range):
     least_date, greater_date = date_range
 
     
-    print(date_range)
     
     obs = obj.objects.filter(
         transaction__created_at__gte=least_date, transaction__created_at__lte=greater_date
     ).order_by("created_at")
     serialized_objects = obj_serializer(obs, many=True)
 
-    print(serialized_objects)
     
     
     return serialized_objects.data

@@ -1,6 +1,6 @@
 "use client";
 
-import { Area, AreaChart, CartesianGrid, XAxis, Tooltip } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, Tooltip, YAxis } from "recharts";
 import { TrendingUp } from "lucide-react";
 import {
     Card,
@@ -109,6 +109,7 @@ const BigExpensesAnalyticsCard = ({ date_range }: { date_range: string }) => {
                         accessibilityLayer
                         data={expensesData}
                         margin={{ left: 12, right: 12 }}
+                        
                     >
                         <CartesianGrid vertical={false} />
                         <XAxis
@@ -116,6 +117,16 @@ const BigExpensesAnalyticsCard = ({ date_range }: { date_range: string }) => {
                             tickLine={false}
                             axisLine={false}
                             tickMargin={8}
+                        />
+                        <YAxis
+                            dataKey="total_cost_price"
+                            domain={[
+                                0,
+                                (dataMax: number) => Math.ceil(dataMax) + 500,
+                            ]} 
+                            tickLine={false}
+                            axisLine={false}
+                            padding={{ top: 20, bottom: 20 }}
                         />
                         <Tooltip
                             content={<ChartTooltipContent />}
