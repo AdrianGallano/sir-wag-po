@@ -10,140 +10,155 @@ import { useStockNotifications } from "@/hooks/useStockNotifications";
 import { Toaster } from "sonner";
 import BestSellingCard from "@/components/analytics/best-selling-card";
 import LeastSellingCard from "@/components/analytics/least-selling-card";
-import { AnalyticsTable } from "@/components/analytics/analytics-table";
+import { Button } from "@/components/ui/button";
+import DashboardPopup from "@/components/analytics/popup";
+import { useState } from "react";
+import { BookUser } from "lucide-react";
 
 const DashboardPage = () => {
     /* 
     General Analytics Collection
     - Shows the general analytics of the application
     */
-   
-   return (
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    return (
         <div>
-        <Tabs defaultValue="Daily">
-            <main className="flex flex-col gap-4 p-4 sm:px-6 sm:py-0">
-                <h3 className="text-2xl font-semibold tracking-tight">
-                    Dashboard
-                </h3>
-                <div className="flex justify-between">
-                    <div className="flex gap-4">
-                        {/* right side */}
-                        <TabsList>
-                            <TabsTrigger value="Daily">Daily</TabsTrigger>
-                            <TabsTrigger value="Weekly">Weekly</TabsTrigger>
-                            <TabsTrigger value="Monthly">Monthly</TabsTrigger>
-                            <TabsTrigger value="Yearly">Yearly</TabsTrigger>
-                        </TabsList>
-                        {/* <DateDropdown /> */}
-                    </div>
-                </div>
-                <TabsContent value="Daily">
-                    <div className="grid grid-cols-3 gap-4 mb-4">
-                        {" "}
-                        {/* first analytics 5 cards block  */}
-                        <ProfitAnalyticsCard date_range="Daily" />
-                        <ExpensesAnalyticsCard date_range="Daily" />
-                        <RevenueAnalyticsCard date_range="Daily" />
-                    </div>
-                    <div className="grid grid-cols-4 gap-4">
-                        {" "}
-                        {/* seconddd analytics 2 cards block  */}
-                        <div className="col-span-2">
-                            <BestSellingCard date_range="Daily" />
-                        </div>
-                        <div className="col-span-2">
-                            <LeastSellingCard date_range="Daily" />
-                        </div>
-                        
-                        <div className="col-span-2">
-                            <BigRevenueAnalyticsCard date_range="Daily" />
-                        </div>
-                        <div className="col-span-2">
-                            <BigExpensesAnalyticsCard date_range="Daily" />
+            <Tabs defaultValue="Daily">
+                <main className="flex flex-col gap-4 p-4 sm:px-6 sm:py-0">
+                    <h3 className="text-2xl mt-5 font-semibold tracking-tight">
+                        Dashboard
+                    </h3>
+                    <div className="flex justify-between">
+                        <div className="flex gap-4 ">
+                            {/* right side */}
+                            <TabsList>
+                                <TabsTrigger value="Daily">Daily</TabsTrigger>
+                                <TabsTrigger value="Weekly">Weekly</TabsTrigger>
+                                <TabsTrigger value="Monthly">
+                                    Monthly
+                                </TabsTrigger>
+                                <TabsTrigger value="Yearly">Yearly</TabsTrigger>
+                            </TabsList>
+
+                            {/* <DateDropdown /> */}
+                            <Button
+                                variant="outline"
+                                onClick={() => setIsDialogOpen(true)}
+                            >
+                                <BookUser />
+                            </Button>
                         </div>
                     </div>
-                </TabsContent>
-                <TabsContent value="Weekly">
-                    <div className="grid grid-cols-3 gap-4 mb-4">
-                        {" "}
-                        {/* first analytics 5 cards block  */}
-                        <ProfitAnalyticsCard date_range="Weekly" />
-                        <ExpensesAnalyticsCard date_range="Weekly" />
-                        <RevenueAnalyticsCard date_range="Weekly" />
-                    </div>
-                    <div className="grid grid-cols-4 gap-4">
-                        {" "}
-                        {/* seconddd analytics 2 cards block  */}
-                        <div className="col-span-2">
-                            <BestSellingCard date_range="Weekly" />
+                    <TabsContent value="Daily">
+                        <div className="grid grid-cols-3 gap-4 mb-4">
+                            {" "}
+                            {/* first analytics 5 cards block  */}
+                            <ProfitAnalyticsCard date_range="Daily" />
+                            <ExpensesAnalyticsCard date_range="Daily" />
+                            <RevenueAnalyticsCard date_range="Daily" />
                         </div>
-                        <div className="col-span-2">
-                            <LeastSellingCard date_range="Weekly" />
+                        <div className="grid grid-cols-4 gap-4">
+                            {" "}
+                            {/* seconddd analytics 2 cards block  */}
+                            <div className="col-span-2">
+                                <BestSellingCard date_range="Daily" />
+                            </div>
+                            <div className="col-span-2">
+                                <LeastSellingCard date_range="Daily" />
+                            </div>
+                            <div className="col-span-2">
+                                <BigRevenueAnalyticsCard date_range="Daily" />
+                            </div>
+                            <div className="col-span-2">
+                                <BigExpensesAnalyticsCard date_range="Daily" />
+                            </div>
                         </div>
-                        <div className="col-span-2">
-                            <BigRevenueAnalyticsCard date_range="Weekly" />
+                    </TabsContent>
+                    <TabsContent value="Weekly">
+                        <div className="grid grid-cols-3 gap-4 mb-4">
+                            {" "}
+                            {/* first analytics 5 cards block  */}
+                            <ProfitAnalyticsCard date_range="Weekly" />
+                            <ExpensesAnalyticsCard date_range="Weekly" />
+                            <RevenueAnalyticsCard date_range="Weekly" />
                         </div>
-                        <div className="col-span-2">
-                            <BigExpensesAnalyticsCard date_range="Weekly" />
+                        <div className="grid grid-cols-4 gap-4">
+                            {" "}
+                            {/* seconddd analytics 2 cards block  */}
+                            <div className="col-span-2">
+                                <BestSellingCard date_range="Weekly" />
+                            </div>
+                            <div className="col-span-2">
+                                <LeastSellingCard date_range="Weekly" />
+                            </div>
+                            <div className="col-span-2">
+                                <BigRevenueAnalyticsCard date_range="Weekly" />
+                            </div>
+                            <div className="col-span-2">
+                                <BigExpensesAnalyticsCard date_range="Weekly" />
+                            </div>
                         </div>
-                    </div>
-                </TabsContent>
-                <TabsContent value="Monthly">
-                    <div className="grid grid-cols-3 gap-4 mb-4">
-                        {" "}
-                        {/* first analytics 5 cards block  */}
-                        <ProfitAnalyticsCard date_range="Monthly" />
-                        <ExpensesAnalyticsCard date_range="Monthly" />
-                        <RevenueAnalyticsCard date_range="Monthly" />
-                    </div>
-                    <div className="grid grid-cols-4 gap-4">
-                        {" "}
-                        <div className="col-span-2">
-                            <BestSellingCard date_range="Monthly" />
+                    </TabsContent>
+                    <TabsContent value="Monthly">
+                        <div className="grid grid-cols-3 gap-4 mb-4">
+                            {" "}
+                            {/* first analytics 5 cards block  */}
+                            <ProfitAnalyticsCard date_range="Monthly" />
+                            <ExpensesAnalyticsCard date_range="Monthly" />
+                            <RevenueAnalyticsCard date_range="Monthly" />
                         </div>
-                        <div className="col-span-2">
-                            <LeastSellingCard date_range="Monthly" />
+                        <div className="grid grid-cols-4 gap-4">
+                            {" "}
+                            <div className="col-span-2">
+                                <BestSellingCard date_range="Monthly" />
+                            </div>
+                            <div className="col-span-2">
+                                <LeastSellingCard date_range="Monthly" />
+                            </div>
+                            {/* seconddd analytics 2 cards block  */}
+                            <div className="col-span-2">
+                                <BigRevenueAnalyticsCard date_range="Monthly" />
+                            </div>
+                            <div className="col-span-2">
+                                <BigExpensesAnalyticsCard date_range="Monthly" />
+                            </div>
                         </div>
-                        {/* seconddd analytics 2 cards block  */}
-                        <div className="col-span-2">
-                            <BigRevenueAnalyticsCard date_range="Monthly" />
+                    </TabsContent>
+                    <TabsContent value="Yearly">
+                        <div className="grid grid-cols-3 gap-4 mb-4">
+                            {" "}
+                            {/* first analytics 5 cards block  */}
+                            <ProfitAnalyticsCard date_range="Yearly" />
+                            <ExpensesAnalyticsCard date_range="Yearly" />
+                            <RevenueAnalyticsCard date_range="Yearly" />
                         </div>
-                        <div className="col-span-2">
-                            <BigExpensesAnalyticsCard date_range="Monthly" />
+                        <div className="grid grid-cols-4 gap-4">
+                            {" "}
+                            <div className="col-span-2">
+                                <BestSellingCard date_range="Yearly" />
+                            </div>
+                            <div className="col-span-2">
+                                <LeastSellingCard date_range="Yearly" />
+                            </div>
+                            {/* seconddd analytics 2 cards block  */}
+                            <div className="col-span-2">
+                                <BigRevenueAnalyticsCard date_range="Yearly" />
+                            </div>
+                            <div className="col-span-2">
+                                <BigExpensesAnalyticsCard date_range="Yearly" />
+                            </div>
                         </div>
-                    </div>
-                </TabsContent>
-                <TabsContent value="Yearly">
-                    <div className="grid grid-cols-3 gap-4 mb-4">
-                        {" "}
-                        {/* first analytics 5 cards block  */}
-                        <ProfitAnalyticsCard date_range="Yearly" />
-                        <ExpensesAnalyticsCard date_range="Yearly" />
-                        <RevenueAnalyticsCard date_range="Yearly" />
-                    </div>
-                    <div className="grid grid-cols-4 gap-4">
-                        {" "}
-                        <div className="col-span-2">
-                            <BestSellingCard date_range="Yearly" />
-                        </div>
-                        <div className="col-span-2">
-                            <LeastSellingCard date_range="Yearly" />
-                        </div>
-                        {/* seconddd analytics 2 cards block  */}
-                        <div className="col-span-2">
-                            <BigRevenueAnalyticsCard date_range="Yearly" />
-                        </div>
-                        <div className="col-span-2">
-                            <BigExpensesAnalyticsCard date_range="Yearly" />
-                        </div>
-                    </div>
-                </TabsContent>
-            </main>
-        </Tabs>
-    <div className="m-6 border border-gray-200 p-4 rounded-md bg-white">
-        <AnalyticsTable/>   
-    </div>
-    </div>
+                    </TabsContent>
+                </main>
+            </Tabs>
+            {
+                <DashboardPopup
+                    isOpen={isDialogOpen}
+                    onClose={() => setIsDialogOpen(false)}
+                />
+            }
+        </div>
     );
 };
 

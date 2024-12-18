@@ -127,7 +127,7 @@ const BigRevenueAnalyticsCard = ({ date_range }: { date_range: string }) => {
                             dataKey="price_sold"
                             domain={[
                                 0,
-                                (dataMax: number) => Math.ceil(dataMax) + 5000,
+                                (dataMax: number) => Math.ceil(dataMax) + 2000,
                             ]} 
                             tickLine={false}
                             axisLine={false}

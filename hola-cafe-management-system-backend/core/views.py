@@ -3,6 +3,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from djoser.serializers import UserSerializer
+from .pagination import UserLogPagination
 
 #
 import json
@@ -66,18 +67,17 @@ class ManagerViewSet(viewsets.ViewSet):
 
     def list(self, request):
         managers = Group.objects.get(name="manager").user_set.all()
-        
+
         serialized_managers = UserSerializer(managers, many=True)
-        
+
         return Response(serialized_managers.data)
-    
+
     def me(self, request):
         user = request.user
-        
+
         if user.groups.filter(name="manager").exists():
             return Response({"is_manager": True})
 
-        
         return Response({"is_manager": False})
 
 
@@ -170,5 +170,5 @@ class UserUserLogViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = UserLog.objects.all().select_related()
     serializer_class = UserUserLogSerializer
-
+    pagination_class = UserLogPagination
     ordering_fields = "__all__"
