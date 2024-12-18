@@ -49,7 +49,7 @@ def query_price_sold(date_range):
     responses={200: RevenueAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_revenue(request):
     try:
         greater_date = request.GET.get("end_date")
@@ -78,7 +78,7 @@ def get_revenue(request):
     responses={200: RevenueAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_revenue_by_this_month(request):
     try:
         greater_date = request.GET.get("start_date")
@@ -107,7 +107,7 @@ def get_revenue_by_this_month(request):
     responses={200: RevenueAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_revenue_by_this_year(request):
     try:
         greater_date = request.GET.get("start_date")
@@ -136,7 +136,7 @@ def get_revenue_by_this_year(request):
     responses={200: RevenueAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_revenue_by_this_week(request):
     try:
         greater_date = request.GET.get("start_date")

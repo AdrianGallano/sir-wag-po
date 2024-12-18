@@ -10,6 +10,12 @@ urlpatterns = [
             { "delete": "destroy"}
         ),
     ),
+    path(
+        "user/manager/me/",
+        views.ManagerViewSet.as_view(
+            { "get": "me"}
+        ),
+    ),
     path("user-log/", views.UserLogViewSet.as_view({"get": "list", "post": "create"})),
     path("user-log/", views.UserLogViewSet.as_view({"get": "list", "post": "create"})),
     path(

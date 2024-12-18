@@ -10,5 +10,7 @@ class IsManagerOrRestrictedAccess(BasePermission):
         """
         Return `True` if permission is granted, `False` otherwise.
         """
-        print(request.user.groups.all())
-        return True
+        
+        if request.user.is_staff or request.user.groups.filter(name="manager").exists():
+            return True
+        return False

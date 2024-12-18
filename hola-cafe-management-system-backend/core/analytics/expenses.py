@@ -15,6 +15,7 @@ from drf_yasg import openapi
 from inventory.models import Stock
 from ..serializers import ExpensesAnalyticsSerializer
 from .general import query_by_date, compute_greater_datetime, compute_least_datetime
+from HCIMS.permissions import IsManagerOrRestrictedAccess
 
 
 def query_expenses(date_range):
@@ -48,7 +49,7 @@ def query_expenses(date_range):
     responses={200: ExpensesAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_expenses(request):
     try:
         greater_date = request.GET.get("end_date")
@@ -76,7 +77,7 @@ def get_expenses(request):
     responses={200: ExpensesAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_expense_by_this_month(request):
     try:
         greater_date = request.GET.get("start_date")
@@ -104,7 +105,7 @@ def get_expense_by_this_month(request):
     responses={200: ExpensesAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_expense_by_this_year(request):
     try:
         greater_date = request.GET.get("start_date")
@@ -132,7 +133,7 @@ def get_expense_by_this_year(request):
     responses={200: ExpensesAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_expense_by_this_week(request):
     try:
         greater_date = request.GET.get("start_date")
@@ -160,13 +161,15 @@ def get_expense_by_this_week(request):
     responses={200: ExpensesAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_expense_by_this_day(request):
     try:
         greater_date = request.GET.get("start_date")
         greater_datetime = compute_greater_datetime(greater_date=greater_date)
 
-        least_datetime = greater_datetime.date() # since i'm computing the same day just put the same date (but with diffrent time)
+        least_datetime = (
+            greater_datetime.date()
+        )  # since i'm computing the same day just put the same date (but with diffrent time)
         least_datetime = compute_least_datetime(least_date=least_datetime)
 
         expenses, stocks = query_expenses([least_datetime, greater_datetime])

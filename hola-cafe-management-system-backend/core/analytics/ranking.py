@@ -18,7 +18,7 @@ from .general import (
     compute_greater_datetime,
     compute_least_datetime,
 )
-
+from HCIMS.permissions import IsManagerOrRestrictedAccess
 
 def get_ranked_items(date_range):
     product_orders = query_by_date_for_ranking(
@@ -94,7 +94,7 @@ def get_ranked_items(date_range):
     responses={200: RankingAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_rankings(request):
     try:
         greater_date = request.GET.get("end_date")
@@ -131,7 +131,7 @@ def get_rankings(request):
     responses={200: RankingAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_ranking_by_this_month(request):
     try:
         greater_date = request.GET.get("start_date")
@@ -167,7 +167,7 @@ def get_ranking_by_this_month(request):
     responses={200: RankingAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_ranking_by_this_year(request):
     try:
         greater_date = request.GET.get("start_date")
@@ -203,7 +203,7 @@ def get_ranking_by_this_year(request):
     responses={200: RankingAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_ranking_by_this_week(request):
     try:
         greater_date = request.GET.get("start_date")
@@ -239,7 +239,7 @@ def get_ranking_by_this_week(request):
     responses={200: RankingAnalyticsSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsManagerOrRestrictedAccess])
 def get_ranking_by_this_day(request):
     try:
         greater_date = request.GET.get("start_date")

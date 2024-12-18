@@ -2,19 +2,33 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
+from djoser.serializers import UserSerializer
+
+#
+import json
+
+# YASG
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 # PILLOW
 from PIL import Image as PilImage
 
 # DJANGO
 from uuid import uuid4
+from django.contrib.auth.models import User
 
 # OS
 import os
 
 # CUSTOM
 from .models import UserLog, Image
-from .serializers import UserLogSerializer, UserUserLogSerializer, ImageSerializer
+from .serializers import (
+    UserLogSerializer,
+    UserUserLogSerializer,
+    ImageSerializer,
+    ManagerCreateSerializer,
+)
 from django.contrib.auth.models import Group
 
 # |
@@ -25,21 +39,46 @@ from django.contrib.auth.models import Group
 class ManagerViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
+    @swagger_auto_schema(
+        request_body=ManagerCreateSerializer,
+        responses={
+            200: openapi.Response(
+                "Success",
+                examples={
+                    "application/json": {"info": "user has been added as a manager"}
+                },
+            ),
+            400: "Bad Request",
+        },
+    )
     def create(self, request):
-        user = request.user
+        user_id = request.data.get("user_id")
+        user = User.objects.get(id=user_id)
         user.groups.add(Group.objects.get(name="manager"))
 
         return Response({"info": "user has been added as a manager"})
 
-    def destroy(self, request):
-        user = request.user
+    def destroy(self, request, pk):
+        user = User.objects.get(id=pk)
         user.groups.remove(Group.objects.get(name="manager"))
 
         return Response({"info": "user has been removed as a manager"})
-    
+
     def list(self, request):
         managers = Group.objects.get(name="manager").user_set.all()
-        return Response({"data": managers})
+        
+        serialized_managers = UserSerializer(managers, many=True)
+        
+        return Response(serialized_managers.data)
+    
+    def me(self, request):
+        user = request.user
+        
+        if user.groups.filter(name="manager").exists():
+            return Response({"is_manager": True})
+
+        
+        return Response({"is_manager": False})
 
 
 class UserLogViewSet(viewsets.ModelViewSet):

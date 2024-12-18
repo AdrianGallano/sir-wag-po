@@ -7,6 +7,11 @@ from .models import UserLog, Image
 from pos.models import Transaction, ProductOrder
 from inventory.models import Stock
 
+class ManagerCreateSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+
+    class Meta:
+        fields = "__all__"
 
 class UserLogSerializer(serializers.ModelSerializer):
 
