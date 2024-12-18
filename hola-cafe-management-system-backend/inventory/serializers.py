@@ -101,12 +101,20 @@ class StockUsedDepthSerializer(serializers.ModelSerializer):
     class Meta:
         model = StockUsed
         fields = "__all__"
-        depth = 3
+        depth = 2
+
+
+class StockUsedOneDepthSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StockUsed
+        fields = "__all__"
+        depth = 1
 
 
 class StockTransactionDepthSerializer(serializers.ModelSerializer):
     
-    stock_used = StockUsedSerializer(source="stockused_set", many=True)
+    stock_used = StockUsedOneDepthSerializer(source="stockused_set", many=True)
+    service_crew = UserSerializer() 
     
     class Meta:
         model = StockTransaction
