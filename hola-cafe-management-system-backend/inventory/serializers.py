@@ -101,7 +101,7 @@ class StockUsedDepthSerializer(serializers.ModelSerializer):
     class Meta:
         model = StockUsed
         fields = "__all__"
-        depth = 2
+        depth = 3
 
 
 class StockTransactionDepthSerializer(serializers.ModelSerializer):

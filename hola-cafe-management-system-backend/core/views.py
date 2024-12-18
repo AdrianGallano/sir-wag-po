@@ -116,7 +116,3 @@ class UserUserLogViewSet(viewsets.ModelViewSet):
 
 
 
-# user restriction 1hr
-# excel layout revise 2hrs
-
-# transaction logs 5-10
