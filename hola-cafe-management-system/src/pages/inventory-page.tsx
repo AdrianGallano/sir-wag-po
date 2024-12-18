@@ -8,7 +8,12 @@ import { Toaster } from "@/components/ui/sonner";
 import { Category } from "@/models/category";
 import { Supplier } from "@/models/supplier";
 import { stocksColumns } from "@/components/columns";
-import { HousePlugIcon, HousePlus, PackagePlus } from "lucide-react";
+import {
+  CircleCheck,
+  HousePlugIcon,
+  HousePlus,
+  PackagePlus,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AddStockForm from "@/components/stock/add-stock";
 import StockTable from "@/components/stock/stock-table";
@@ -75,7 +80,11 @@ const InventoryPage = () => {
       setStock((prev) =>
         prev.filter((stock) => !stocks.some((c) => c.id === stock.id))
       );
-      toast.success("Stocks deleted successfully");
+      // toast.success("Stocks deleted successfully");
+      toast.success("Stock successfully deleted", {
+        duration: 2000,
+        icon: <CircleCheck className="fill-green-500 text-white" />,
+      });
     } catch (error) {
       toast.error("Failed to delete stocks");
     }
@@ -106,15 +115,16 @@ const InventoryPage = () => {
   const columns = stocksColumns(handleEdit, handleDelete, handleMassDelete);
 
   return (
-    <main className="h-screen w-full p-3.5">
+    <main className="h-screen w-full py-4 px-2.5">
       <div className="flex justify-between w-full items-center">
         <StockStatus />
         <div className="self-start">
           <Button
-            className="bg-white hover:bg-gray-100 border border-gray-300"
+            size={"icon"}
+            className="bg-white text-black hover:bg-custom-char hover:text-white border border-gray-300 rounded-full"
             onClick={() => setIsStockPopupOpen(true)}
           >
-            <HousePlus className="text-black" />
+            <HousePlus className=" w-5 h-5" />
           </Button>
         </div>
       </div>

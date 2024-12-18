@@ -9,6 +9,8 @@ import {
   Truck,
   Warehouse,
   LayoutDashboard,
+  Ticket,
+  FolderKanban,
 } from "lucide-react";
 import {
   Tooltip,
@@ -31,8 +33,8 @@ const Navbar = () => {
   };
 
   return (
-    <aside className="fixed inset-y-0 left-1 top-1 bottom-1 z-10 hidden w-14 flex-col border-r bg-custom-char  rounded-full sm:flex">
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-4">
+    <aside className="fixed inset-y-0 left-1 top-1 bottom-1 z-10  w-14 flex-col border-r bg-custom-char  rounded-full sm:block">
+      <nav className="flex flex-col items-center gap-4 px-2 py-4">
         <StockNotificationDropdown
           stocks={stock}
           trigger={
@@ -42,10 +44,6 @@ const Navbar = () => {
             </a>
           }
         />
-        {/* <a className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-custom-sunnyGold text-lg font-semibold text-custom-charcoalOlive md:h-8 md:w-8 md:text-base">
-          <Coffee className="h-4 w-4 transition-all group-hover:scale-110 " />
-          <span className="sr-only">Hola Cafe</span>
-        </a> */}
 
         <TooltipProvider>
           <Tooltip>
@@ -63,6 +61,25 @@ const Navbar = () => {
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right">Dashboard</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                to="/stockpos"
+                className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
+                  location.pathname === "/stockpos"
+                    ? "bg-custom-sunnyGold text-custom-charcoalOlive "
+                    : "bg-transparent text-muted-foreground hover:text-white"
+                }`}
+              >
+                <FolderKanban className="h-4 w-4 transition-all group-hover:scale-110 " />
+                <span className="sr-only">Stock Manager</span>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right">Stock Manager</TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
@@ -102,24 +119,6 @@ const Navbar = () => {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Inventory</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to="/stockpos"
-                  className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
-                    location.pathname === "/stockpos"
-                      ? "bg-custom-sunnyGold text-custom-charcoalOlive "
-                      : "bg-transparent text-muted-foreground hover:text-white"
-                  }`}
-                >
-                  <Warehouse className="h-4 w-4 transition-all group-hover:scale-110 " />
-                  <span className="sr-only">Stock Manager</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Stock Manager</TooltipContent>
             </Tooltip>
           </TooltipProvider>
 
@@ -191,7 +190,7 @@ const Navbar = () => {
                       : "bg-transparent text-muted-foreground hover:text-white"
                   }`}
                 >
-                  <Tag className="h-4 w-4 transition-all group-hover:scale-110 " />
+                  <Ticket className="h-4 w-4 transition-all group-hover:scale-110 " />
                   <span className="sr-only">Category</span>
                 </Link>
               </TooltipTrigger>

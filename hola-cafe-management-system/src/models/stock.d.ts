@@ -12,6 +12,7 @@ export interface Stock {
   created_at: string;
   updated_at: string;
   expiration_date: string;
+  is_expired: boolean;
   date_shelved: string;
   supplier: Supplier;
   status: string;
