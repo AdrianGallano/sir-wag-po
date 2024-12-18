@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/authContext";
 import { Category } from "@/models/category";
 import dataFetch from "@/services/data-service";
-import { Plus } from "lucide-react";
+import { Plus, TicketPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast, Toaster } from "sonner";
 import CategoryTable from "@/components/category/category-table";
@@ -81,9 +81,10 @@ const CategoryPage = () => {
         <div className="self-start">
           <Button
             onClick={() => setIsAddProductOpen(true)}
-            className="bg-white hover:bg-gray-100 border border-gray-300"
+            size={"icon"}
+            className="bg-white text-black hover:bg-custom-char hover:text-white border border-gray-300 rounded-full"
           >
-            <Plus className="text-black" />
+            <TicketPlus className="w-5 h-5" />
           </Button>
         </div>
       </div>

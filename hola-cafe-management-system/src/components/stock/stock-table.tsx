@@ -11,7 +11,16 @@ import {
   VisibilityState,
   getPaginationRowModel,
 } from "@tanstack/react-table";
-
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -66,6 +75,7 @@ const StockTable = ({
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
   const [rowSelection, setRowSelection] = useState({});
   const [isVisible, setIsVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const table = useReactTable({
     data,
@@ -87,10 +97,11 @@ const StockTable = ({
   });
 
   const massDeletion = () => {
-    const selectedRows = table.getSelectedRowModel().rows; // Only selected rows
+    const selectedRows = table.getSelectedRowModel().rows;
     const selectedStocks = selectedRows.map((row) => row.original);
     onMassDeletion(selectedStocks);
     setRowSelection({});
+    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -110,7 +121,7 @@ const StockTable = ({
       <div className="w-full flex items-center justify-between mt-2">
         <div className="flex w-full justify-end item-center my-2.5 gap-2">
           <Input
-            placeholder="Filter products..."
+            placeholder="Search products..."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
@@ -120,7 +131,7 @@ const StockTable = ({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="rounded-full">
-                <span>Filter by type</span>
+                <span className="hidden sm:inline">Filter by type</span>
                 <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
@@ -183,11 +194,21 @@ const StockTable = ({
                 data-state={row.getIsSelected() && "selected"}
                 className="cursor-pointer"
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                {row.getVisibleCells().map((cell) => {
+                  const isExpired = row.getValue("is_expired");
+                  console.log("Boolean", isExpired);
+                  return (
+                    <TableCell
+                      key={cell.id}
+                      className={isExpired ? "bg-red-200 text-white" : ""}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             ))}
         </TableBody>
@@ -246,7 +267,7 @@ const StockTable = ({
       )}
 
       <div
-        className={`fixed bottom-10 left-[40%] w-full border border-gray-700 rounded-xl z-20 flex justify-center items-center max-w-md 
+        className={`fixed bottom-10 left-[40%] w-full bg-white border border-gray-700 rounded-xl z-20 flex justify-center items-center max-w-md 
           ${isVisible && "opacity-100 translate-y-0 animate-fadeinup"}`}
         style={{
           visibility: isVisible ? "visible" : "hidden",
@@ -258,11 +279,42 @@ const StockTable = ({
             {table.getSelectedRowModel().rows.length === 1 ? "item" : "items"}{" "}
             selected
           </p>
-          <Button variant="destructive" onClick={massDeletion}>
+          <Button variant="destructive" onClick={() => setIsOpen(true)}>
             <Trash2 className="w-5 h-5" />
           </Button>
         </div>
       </div>
+
+      <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-red-500">
+              Are you absolutely sure?
+            </DialogTitle>
+            <DialogDescription className="text-gray-800">
+              This action cannot be undone. Are you sure you want to permanently
+              delete these stock/s from the servers?
+              <span className="block text-red-500  text-xs">
+                {/* note: the items that will be deleted will have an impact to the expenses */}
+                Note: The items that will be deleted will have an impact on the
+                expenses and other important details.
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant={"outline"} onClick={() => setIsOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              className="bg-custom-char hover:bg-custom-charcoalOlive"
+              type="submit"
+              onClick={massDeletion}
+            >
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {selectedStock && (
         <StockPreview

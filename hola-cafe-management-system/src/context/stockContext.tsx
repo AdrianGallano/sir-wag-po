@@ -37,6 +37,8 @@ export function StockProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  console.log(stock);
+
   useEffect(() => {
     if (token) {
       fetchStocks();
