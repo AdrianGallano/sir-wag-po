@@ -11,6 +11,10 @@ import {
   LayoutDashboard,
   Ticket,
   FolderKanban,
+  FileBox,
+  NotepadText,
+  Package2,
+  ShoppingBasket,
 } from "lucide-react";
 import {
   Tooltip,
@@ -114,7 +118,7 @@ const Navbar = () => {
                       : "bg-transparent text-muted-foreground hover:text-white"
                   }`}
                 >
-                  <Warehouse className="h-4 w-4 transition-all group-hover:scale-110 " />
+                  <Package2 className="h-4 w-4 transition-all group-hover:scale-110 " />
                   <span className="sr-only">Inventory</span>
                 </Link>
               </TooltipTrigger>
@@ -133,11 +137,30 @@ const Navbar = () => {
                       : "bg-transparent text-muted-foreground hover:text-white"
                   }`}
                 >
-                  <Package className="h-4 w-4 transition-all group-hover:scale-110 " />
+                  <ShoppingBasket className="h-4 w-4 transition-all group-hover:scale-110 " />
                   <span className="sr-only">Product</span>
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Product</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/stock-transaction"
+                  className={`group flex h-9 w-9 items-center justify-center rounded-full -colors  md:h-8 transition md:w-8 ${
+                    location.pathname === "/stock-transaction"
+                      ? "bg-custom-sunnyGold text-custom-charcoalOlive "
+                      : "bg-transparent text-muted-foreground hover:text-white"
+                  }`}
+                >
+                  <NotepadText className="h-4 w-4 transition-all group-hover:scale-110 " />
+                  <span className="sr-only">Stock Transaction</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Stock Transaction</TooltipContent>
             </Tooltip>
           </TooltipProvider>
 

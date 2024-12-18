@@ -9,7 +9,7 @@ import { useAuth } from "@/context/authContext";
 import { Category } from "@/models/category";
 import Product from "@/models/product";
 import dataFetch from "@/services/data-service";
-import { PackagePlus } from "lucide-react";
+import { DiamondPlusIcon, PackagePlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast, Toaster } from "sonner";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -125,7 +125,7 @@ const ProductPage = () => {
             size={"icon"}
             className="bg-white text-black hover:bg-custom-char hover:text-white border border-gray-300 rounded-full"
           >
-            <PackagePlus className="w-5 h-5" />
+            <DiamondPlusIcon className="w-5 h-5" />
           </Button>
         </div>
       </div>
