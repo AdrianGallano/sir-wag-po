@@ -27,7 +27,6 @@ import dataFetch from "@/services/data-service";
 import { toast } from "sonner";
 import { CheckCircle, CircleCheck, Image, ImagePlus, X } from "lucide-react";
 import ImageManager from "../image/image-manager";
-import { set } from "date-fns";
 
 interface AddStockFormProps {
   isOpen: boolean;

@@ -113,6 +113,8 @@ const TransactionPage = () => {
           onUpdate={fetchTransactions}
         />
       )}
+
+      <Toaster position="top-right" />
     </main>
   );
 };

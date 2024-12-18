@@ -46,10 +46,15 @@ const StockTransactionPreview = ({
           </div>
 
           <div className="mt-4">
-            <h4 className="text-md font-semibold text-gray-700 mb-2">
-              Stock Used:
-            </h4>
-            <ul className="space-y-2 border-b-2 pb-2">
+            <div className="w-full flex justify-between">
+              <h4 className="text-md font-semibold text-gray-700 mb-2">
+                Stock Used:
+              </h4>{" "}
+              <h4 className="text-sm font-semibold text-gray-400 mb-2">
+                Unit Price
+              </h4>
+            </div>
+            <ul className="space-y-2 pb-2">
               {transaction.stock_used.length > 0 ? (
                 transaction.stock_used.map((stock, index) => (
                   <li
@@ -71,20 +76,6 @@ const StockTransactionPreview = ({
                 <p>No stock used.</p>
               )}
             </ul>
-
-            <div className="flex justify-end my-2.5 text-gray-600 text-sm">
-              <p>
-                Total:{" "}
-                <span className="text-gray-800 font-medium">
-                  ₱{" "}
-                  {transaction.stock_used.reduce((total, stock) => {
-                    return (
-                      total + stock.quantity * Number(stock.stock.unit_price)
-                    );
-                  }, 0)}
-                </span>
-              </p>
-            </div>
           </div>
         </div>
       </DialogContent>

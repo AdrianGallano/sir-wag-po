@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 const Login = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { login, success, id } = useAuth();
+  const { login, isManager } = useAuth();
 
   const navigate = useNavigate();
 
@@ -23,7 +23,11 @@ const Login = () => {
 
     if (isSuccess) {
       toast.success("Login successful!", { duration: 1000 });
-      setTimeout(() => navigate("/dashboard"), 1000);
+      if (isManager) {
+        setTimeout(() => navigate("/dashboard"), 1000);
+      } else {
+        setTimeout(() => navigate("/pos"), 1000);
+      }
     } else {
       toast.error("Invalid credentials!", { duration: 1000 });
     }

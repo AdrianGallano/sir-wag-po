@@ -166,6 +166,8 @@ const ProductPage = () => {
           onUpdate={onUpdate}
         />
       )}
+
+      <Toaster position="top-right" />
     </main>
   );
 };
