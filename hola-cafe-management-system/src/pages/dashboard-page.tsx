@@ -10,14 +10,16 @@ import { useStockNotifications } from "@/hooks/useStockNotifications";
 import { Toaster } from "sonner";
 import BestSellingCard from "@/components/analytics/best-selling-card";
 import LeastSellingCard from "@/components/analytics/least-selling-card";
+import { AnalyticsTable } from "@/components/analytics/analytics-table";
 
 const DashboardPage = () => {
     /* 
     General Analytics Collection
     - Shows the general analytics of the application
     */
-
-    return (
+   
+   return (
+        <div>
         <Tabs defaultValue="Daily">
             <main className="flex flex-col gap-4 p-4 sm:px-6 sm:py-0">
                 <h3 className="text-2xl font-semibold tracking-tight">
@@ -138,6 +140,10 @@ const DashboardPage = () => {
                 </TabsContent>
             </main>
         </Tabs>
+    <div className="m-6 border border-gray-200 p-4 rounded-md bg-white">
+        <AnalyticsTable/>   
+    </div>
+    </div>
     );
 };
 
