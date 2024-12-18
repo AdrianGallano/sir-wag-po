@@ -148,6 +148,8 @@ const SupplierPage = () => {
           onUpdate={fetchSuppliers}
         />
       )}
+
+      <Toaster position="top-right" />
     </main>
   );
 };

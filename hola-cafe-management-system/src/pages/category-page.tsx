@@ -124,6 +124,8 @@ const CategoryPage = () => {
           onUpdate={fetchCategories}
         />
       )}
+
+      <Toaster position="top-right" />
     </main>
   );
 };

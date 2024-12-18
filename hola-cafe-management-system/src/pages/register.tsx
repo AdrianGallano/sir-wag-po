@@ -73,7 +73,7 @@ const Register = () => {
                         type="email"
                         name="float_email"
                         id="float_email"
-                        value={username}
+                        value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="block py-2.5 px-0 w-full text-sm text-custom-char bg-transparent border-0 border-b border-gray-300 appearance-none peer focus:outline-none focus:border-b-custom-charcoalOlive rounded-none focus:ring-0 focus-visible:ring-0  focus-visible:ring-ring focus-visible:ring-offset-0 "
                         placeholder=" "

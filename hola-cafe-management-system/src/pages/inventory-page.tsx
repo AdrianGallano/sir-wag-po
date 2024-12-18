@@ -166,6 +166,8 @@ const InventoryPage = () => {
           onUpdate={onUpdate}
         />
       )}
+
+      <Toaster position="top-right" />
     </main>
   );
 };

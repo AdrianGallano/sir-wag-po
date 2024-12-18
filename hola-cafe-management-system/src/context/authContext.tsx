@@ -1,6 +1,12 @@
 import dataFetch from "@/services/data-service";
 import { decodeToken } from "@/utils/decoder";
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import { useNavigate } from "react-router";
 
 interface AuthContextType {
@@ -10,6 +16,7 @@ interface AuthContextType {
   success: boolean;
   id: number;
   error: string | null;
+  isManager: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,10 +35,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const [token, setToken] = useState(initialToken);
   const [id, setId] = useState<number>(initialId!);
-
+  const [isManager, setIsManager] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      fetchManagerStatus();
+    }
+  }, [token]);
+
+  const fetchManagerStatus = async () => {
+    try {
+      const response = await dataFetch(
+        "api/user/manager/me/",
+        "GET",
+        {},
+        token!
+      );
+      setIsManager(response.is_manager);
+      console.log("Manager status:", response.is_manager);
+    } catch (error) {
+      console.error("Error fetching manager status:", error);
+    }
+  };
 
   const login = async (
     username: string,
@@ -78,11 +106,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     sessionStorage.removeItem("token");
     setSuccess(false);
     setId(0);
+    setIsManager(false);
     navigate("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ token, login, logout, success, id, error }}>
+    <AuthContext.Provider
+      value={{ token, login, logout, success, id, error, isManager }}
+    >
       {children}
     </AuthContext.Provider>
   );
