@@ -50,7 +50,7 @@ const AddStockForm = ({
     quantity: "",
     unit_price: "",
     expiration_date: null,
-    date_shelved: null,
+    date_shelved: new Date().toISOString().split("T")[0],
     supplier: "",
     is_stocked_by: id,
     image: "",
@@ -62,7 +62,12 @@ const AddStockForm = ({
     { label: "Description", key: "description", minLength: 3, maxLength: 255 },
     { label: "Unit price", key: "unit_price", type: "number" },
     { label: "Quantity", key: "quantity", type: "number" },
-    { label: "Date Shelved", key: "date_shelved", type: "date" },
+    {
+      label: "Date Shelved",
+      key: "date_shelved",
+      type: "date",
+      readOnly: true,
+    },
     { label: "Expiration Date", key: "expiration_date", type: "date" },
     // { label: "Status", key: "status", readOnly: true },
     { label: "Supplier", key: "supplier", type: "select" },
@@ -202,9 +207,8 @@ const AddStockForm = ({
         supplier: formData.supplier || undefined,
         image: selectedImageId || undefined,
         expiration_date: formData.expiration_date
-          ? formData.expiration_date
+          ? new Date(formData.expiration_date).toISOString()
           : null,
-        date_shelved: formData.date_shelved ? formData.date_shelved : null,
         is_stocked_by: id,
       };
 
@@ -280,6 +284,7 @@ const AddStockForm = ({
                   className={`border ${
                     errors[field.key] ? "border-rose-500" : ""
                   }`}
+                  readOnly={field.readOnly || false}
                 />
               )}
               {errors[field.key] && (

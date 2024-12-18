@@ -124,7 +124,7 @@ const InventoryPage = () => {
             className="bg-white text-black hover:bg-custom-char hover:text-white border border-gray-300 rounded-full"
             onClick={() => setIsStockPopupOpen(true)}
           >
-            <HousePlus className=" w-5 h-5" />
+            <PackagePlus className=" w-5 h-5" />
           </Button>
         </div>
       </div>
