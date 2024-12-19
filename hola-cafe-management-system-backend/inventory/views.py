@@ -491,6 +491,12 @@ class StockSupplierIsStockedByImageViewSet(viewsets.ModelViewSet):
     queryset = Stock.objects.all().select_related("image", "supplier", "is_stocked_by")
     serializer_class = StockSupplierIsStockedByImageSerializer
 
+    def get_queryset(self):
+        check_expired()
+        queryset = Stock.objects.all().select_related("image", "supplier", "is_stocked_by")
+        return queryset
+    
+
 class ProductCategoryImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Product.objects.all().select_related("image", "category")
